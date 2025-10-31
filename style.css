@@ -47,3 +47,34 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 .map-room.hidden { visibility: hidden; }
 .room-label { font-size: 14px; font-family: sans-serif; fill: #073642; text-anchor: middle; pointer-events: none; font-weight: bold; }
 .room-label.current { fill: #fdf6e3; }
+
+/* ADD THIS TO THE END of style.css */
+
+/* Style for bold keywords in the exits list */
+.log-exits strong {
+    color: #268bd2; /* A gentle blue to make it stand out */
+    font-weight: 600;
+}
+
+/* Style for the recast command log entry */
+.log-recast {
+    font-style: italic;
+    color: #859900; /* A pleasant green for corrections */
+    padding-left: 10px;
+    border-left: 3px solid #eee8d5;
+}
+
+/* Style for the highlighted, corrected part of a recast */
+.recast-ending {
+    text-decoration: underline;
+    font-weight: bold;
+    display: inline-block; /* Required for animation */
+    animation: jiggle 0.5s 2; /* Run the 'jiggle' animation twice */
+}
+
+/* The jiggle animation itself */
+@keyframes jiggle {
+    0%, 100% { transform: scale(1.0); }
+    25% { transform: scale(1.1) rotate(-2deg); }
+    75% { transform: scale(1.1) rotate(2deg); }
+}
