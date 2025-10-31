@@ -130,7 +130,68 @@ function setupMap() {
 }
 function setupMapInteraction() { elements.mapViewport.addEventListener('mousedown', (e) => { gameState.isDragging = true; elements.mapViewport.style.cursor = 'grabbing'; gameState.dragStart.x = e.clientX - gameState.panOffset.x; gameState.dragStart.y = e.clientY - gameState.panOffset.y; }); window.addEventListener('mousemove', (e) => { if (!gameState.isDragging) return; gameState.panOffset.x = e.clientX - gameState.dragStart.x; gameState.panOffset.y = e.clientY - gameState.dragStart.y; applyMapTransform(false); }); window.addEventListener('mouseup', () => { gameState.isDragging = false; elements.mapViewport.style.cursor = 'grab'; }); }
 async function applyMapTransform(animated = false) { if (!mapGroup) return; const targetVisualRotation = -gameState.playerFacing; let delta = targetVisualRotation - gameState.currentVisualRotation; if (delta > 180) delta -= 360; else if (delta < -180) delta += 360; const nextVisualRotation = gameState.currentVisualRotation + delta; const isLongTurn = Math.abs(delta) > 90; const animate = (rotation, scale) => { return new Promise(resolve => { const transitionDuration = animated ? 0.3 : 0; mapGroup.style.transition = `transform ${transitionDuration}s ease-in-out`; const playerRoom = rooms[gameState.currentRoom]; const px = playerRoom.x * mapSettings.GRID_SIZE; const py = playerRoom.y * mapSettings.GRID_SIZE; const viewbox = elements.mapViewport.getBoundingClientRect(); const centerX = viewbox.width / 2; const centerY = viewbox.height / 2; const pan = `translate(${gameState.panOffset.x}, ${gameState.panOffset.y})`; const recenter = `translate(${centerX}, ${centerY})`; const rot = `rotate(${rotation})`; const scaling = `scale(${scale})`; const centerOnPlayer = `translate(${-px}, ${-py})`; mapGroup.setAttribute('transform', `${pan} ${recenter} ${rot} ${scaling} ${centerOnPlayer}`); setTimeout(resolve, transitionDuration * 1000); }); }; if (animated && isLongTurn) { await animate(gameState.currentVisualRotation, 0.7); await sleep(100); await animate(nextVisualRotation, 0.7); await sleep(300); await animate(nextVisualRotation, 1.0); } else { await animate(nextVisualRotation, 1.0); } gameState.currentVisualRotation = nextVisualRotation; }
-function updateMapGraphics() { const { GRID_SIZE, ROOM_WIDTH, ROOM_HEIGHT } = mapSettings; const oldConnections = mapGroup.querySelectorAll('.map-connection'); oldConnections.forEach(conn => conn.remove()); for (const roomId in rooms) { if (gameState.visitedRooms.has(roomId)) { const room = rooms[roomId]; for (const dir in room.exits) { const targetRoomId = room.exits[dir]; if (targetRoomId && rooms[targetRoomId]) { const targetRoom = rooms[targetRoomId]; if (gameState.visitedRooms.has(targetRoomId)) { if (roomId < targetRoomId) { const line = document.createElementNS(SVG_NS, 'line'); line.setAttribute('x1', room.x * GRID_SIZE); line.setAttribute('y1', room.y * GRID_SIZE); line.setAttribute('x2', targetRoom.x * GRID_SIZE); line.setAttribute('y2', targetRoom.y * GRID_SIZE); line.setAttribute('class', 'map-connection'); mapGroup.prepend(line); } } else if (roomId === gameState.currentRoom) { const line = document.createElementNS(SVG_NS, 'line'); line.setAttribute('x1', room.x * GRID_SIZE); line.setAttribute('y1', room.y * GRID_SIZE); line.setAttribute('x2', (room.x + targetRoom.x) / 2 * GRID_SIZE); line.setAttribute('y2', (room.y + targetRoom.y) / 2 * GRID_SIZE); line.setAttribute('class', 'map-connection'); mapGroup.prepend(line); } } } } } for (const roomId in rooms) { const room = rooms[roomId]; const roomGroup = document.getElementById(`map-room-${roomId}`); const rect = roomGroup.querySelector('rect'); const label = roomGroup.querySelector('text'); roomGroup.setAttribute('transform', `translate(${room.x * GRID_SIZE}, ${room.y * GRID_SIZE})`); rect.setAttribute('x', -ROOM_WIDTH / 2); rect.setAttribute('y', -ROOM_HEIGHT / 2); rect.setAttribute('width', ROOM_WIDTH); rect.setAttribute('height', ROOM_HEIGHT); label.setAttribute('dy', `-${(label.children.length - 1) * 0.5}em`); roomGroup.classList.remove('current', 'hidden'); label.classList.remove('current'); if (roomId === gameState.currentRoom) { roomGroup.classList.add('current'); label.classList.add('current'); } else if (!gameState.visitedRooms.has(roomId)) { roomGroup.classList.add('hidden'); } }
+// REPLACE your old updateMapGraphics function with this one.
+
+// REPLACE your old updateMapGraphics function with this one.
+
+function updateMapGraphics() {
+    const { GRID_SIZE, ROOM_WIDTH, ROOM_HEIGHT } = mapSettings;
+
+    // (The logic for drawing connection lines is unchanged and correct)
+    const oldConnections = mapGroup.querySelectorAll('.map-connection');
+    oldConnections.forEach(conn => conn.remove());
+    for (const roomId in rooms) { if (gameState.visitedRooms.has(roomId)) { const room = rooms[roomId]; for (const dir in room.exits) { const targetRoomId = room.exits[dir]; if (targetRoomId && rooms[targetRoomId]) { const targetRoom = rooms[targetRoomId]; if (gameState.visitedRooms.has(targetRoomId)) { if (roomId < targetRoomId) { const line = document.createElementNS(SVG_NS, 'line'); line.setAttribute('x1', room.x * GRID_SIZE); line.setAttribute('y1', room.y * GRID_SIZE); line.setAttribute('x2', targetRoom.x * GRID_SIZE); line.setAttribute('y2', targetRoom.y * GRID_SIZE); line.setAttribute('class', 'map-connection'); mapGroup.prepend(line); } } else if (roomId === gameState.currentRoom) { const line = document.createElementNS(SVG_NS, 'line'); line.setAttribute('x1', room.x * GRID_SIZE); line.setAttribute('y1', room.y * GRID_SIZE); line.setAttribute('x2', (room.x + targetRoom.x) / 2 * GRID_SIZE); line.setAttribute('y2', (room.y + targetRoom.y) / 2 * GRID_SIZE); line.setAttribute('class', 'map-connection'); mapGroup.prepend(line); } } } } }
+
+    // --- THE FIX: TEXT ROTATION LOGIC NOW PREDICTS THE FINAL ROTATION ---
+    // 1. Calculate the final rotation angle the map WILL HAVE after the turn.
+    const targetVisualRotation = -gameState.playerFacing;
+    let delta = targetVisualRotation - gameState.currentVisualRotation;
+    if (delta > 180) delta -= 360;
+    else if (delta < -180) delta += 360;
+    const nextVisualRotation = gameState.currentVisualRotation + delta;
+    
+    // 2. Normalize this future angle to be between 0 and 359.
+    const normalizedNextAngle = (nextVisualRotation % 360 + 360) % 360;
+    const isUpsideDown = normalizedNextAngle > 90 && normalizedNextAngle < 270;
+    // --- END OF FIX PREDICTION LOGIC ---
+
+    // Update styles and positions for all rooms
+    for (const roomId in rooms) {
+        const room = rooms[roomId];
+        const roomGroup = document.getElementById(`map-room-${roomId}`);
+        const rect = roomGroup.querySelector('rect');
+        const label = roomGroup.querySelector('text');
+
+        roomGroup.setAttribute('transform', `translate(${room.x * GRID_SIZE}, ${room.y * GRID_SIZE})`);
+        rect.setAttribute('x', -ROOM_WIDTH / 2); rect.setAttribute('y', -ROOM_HEIGHT / 2);
+        rect.setAttribute('width', ROOM_WIDTH); rect.setAttribute('height', ROOM_HEIGHT);
+        label.setAttribute('dy', `-${(label.children.length - 1) * 0.5}em`);
+
+        // 3. Apply the 180-degree flip to the text based on the PREDICTED orientation.
+        if (isUpsideDown) {
+            label.setAttribute('transform', 'rotate(180)');
+        } else {
+            label.removeAttribute('transform');
+        }
+
+        roomGroup.classList.remove('current', 'hidden');
+        label.classList.remove('current');
+        if (roomId === gameState.currentRoom) {
+            roomGroup.classList.add('current');
+            label.classList.add('current');
+        } else if (!gameState.visitedRooms.has(roomId)) {
+            roomGroup.classList.add('hidden');
+        }
+    }
+
+    // Update the player marker (decoupled and correct)
+    const playerMarker = elements.playerMarker;
+    const viewbox = elements.mapViewport.getBoundingClientRect();
+    if (viewbox.width > 0 && playerMarker) {
+        const centerX = viewbox.width / 2;
+        const centerY = viewbox.height / 2;
+        playerMarker.setAttribute('transform', `translate(${centerX}, ${centerY}) rotate(${gameState.playerFacing})`);
+    }
 }
 
 // =============================================================================
