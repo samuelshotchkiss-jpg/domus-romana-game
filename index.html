@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+    <meta charset="UTF-8">
+    <title>Domus Romana Adventura</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="game.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <div id="map-ui-container">
+            <div class="map-label-top">PRŌRSUS</div>
+            <div class="map-side-labels">
+                <div class="left-label">AD SINISTRAM</div>
+                <div id="map-viewport">
+                    <svg id="map-svg">
+                        <!-- Define the player arrow marker here -->
+                        <defs>
+                            <symbol id="player-arrow" viewBox="-10 -10 20 20">
+                                <polygon points="0,-10 -8,8 0,2 8,8" fill="#cb4b16"/>
+                            </symbol>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="right-label">AD DEXTERAM</div>
+            </div>
+            <div class="map-label-bottom">RŪRSUS</div>
+        </div>
+        <div id="main-content">
+            <h2 id="room-title"></h2>
+            <p id="description"></p>
+            <p id="feedback"></p>
+            <form id="command-form">
+                <input type="text" id="command-input" placeholder="Quid nunc agis?" autocomplete="off">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
