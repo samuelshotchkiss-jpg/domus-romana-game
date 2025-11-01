@@ -54,46 +54,73 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 // ### 3. CORE GAME LOGIC
 // =============================================================================
 const opposite = { 'north': 'south', 'south': 'north', 'east': 'west', 'west': 'east', 'northwest': 'southeast', 'southeast': 'northwest', 'northeast': 'southwest', 'southwest': 'northeast' };
+// REPLACE your old processInput function with this new, correct version.
+// REPLACE your old processInput function with this one.
+// REPLACE your old processInput function with this one.
 
 async function processInput(command) {
     if (gameState.isPlayerActionLocked) return;
-    gameState.isPlayerActionLocked = true;
-    elements.commandInput.disabled = true;
 
-    // Log the player's raw command first.
-    logCommand(command, false);
+    // We no longer lock the input here, allowing the clarify path to manage it.
+    
+    const action = parseCommand(command);
+
+    if (action.needsRecast) {
+        logCommand(action.recast, true);
+        await sleep(500);
+    } else {
+        logCommand(command, false);
+    }
+    
     gameState.inputHistory.unshift(command);
     gameState.historyIndex = -1;
 
+    // Lock the input before performing an action that has an animation.
+    gameState.isPlayerActionLocked = true;
+    elements.commandInput.disabled = true;
+
     try {
-        const action = parseCommand(command);
-
-        if (action.needsRecast) {
-            logRecast(action.recast);
-            await sleep(500); // Wait for the jiggle to be seen.
-        }
-
         if (action.type === 'move') {
-            // **THE FIX**: performMove now only updates state and starts the animation.
-            // It returns 'true' on success.
             const moveSuccessful = await performMove(action.direction, action.newFacingAngle);
-            
-            // **THE FIX**: We log the new room description AFTER the move is complete.
             if (moveSuccessful) {
                 logRoom();
             }
         } else if (action.type === 'clarify') {
             askClarification(action.prompt, action.options);
+            
+            // **THE FIX IS HERE**: We must manually unlock the input after asking a question
+            // so the player can respond. We then exit the function.
+            gameState.isPlayerActionLocked = false;
+            elements.commandInput.disabled = false;
+            elements.commandInput.focus();
+            return; // Stop processing for this turn.
+            
         } else {
             setFeedback(action.feedback || "Nōn intellegō verba tua.");
         }
     } finally {
+        // This 'finally' block will now only run for successful moves or simple feedback.
         if (!gameState.clarificationState) {
             gameState.isPlayerActionLocked = false;
             elements.commandInput.disabled = false;
             elements.commandInput.focus();
         }
     }
+}
+
+// DELETE the entire old logRecast function. It is no longer needed.
+
+// REPLACE your old logCommand function with this new, simpler version.
+function logCommand(commandHtml, isRecast = false) {
+    const log = elements.gameLog;
+    const entry = document.createElement('div');
+    // Set the class based on whether this is a normal command or a recast.
+    entry.className = isRecast ? 'log-recast' : 'log-command';
+    entry.innerHTML = `> ${commandHtml}`;
+    log.appendChild(entry);
+    
+    // **THE FIX**: We scroll down immediately after adding the content.
+    log.scrollTop = log.scrollHeight;
 }
 
 function findVerb(normalizedCommand) {
@@ -113,6 +140,7 @@ function parseCommand(command) {
     const tokens = normalizedCommand.split(' ').filter(t => t);
     let recognizedTokens = new Set();
     
+    // --- 1. Handle Clarification Response (Unchanged) ---
     if (gameState.clarificationState) {
         for (const key in gameState.clarificationState.options) {
             if (normalizedCommand.includes(key)) {
@@ -128,37 +156,49 @@ function parseCommand(command) {
         return { type: 'feedback', feedback: `Nōn intellegō. ${gameState.clarificationState.prompt}` };
     }
 
-    if (gameState.currentRoom === 'atrium' && normalizedCommand.includes('cubicul')) {
-        return { type: 'clarify', prompt: "Utrum cubiculum?", options: { 'sororis': 'cubiculum_sororis', 'parentum': 'cubiculum_parentum' } };
-    }
-    if (gameState.currentRoom === 'atrium' && normalizedCommand.includes('ala')) {
-        return { type: 'clarify', prompt: "Utram ālam?", options: { 'larum': 'ala_larum', 'hermae': 'ala_hermae' } };
-    }
+    // --- 2. Check for Ambiguity (Unchanged) ---
+    const needsCubiculumClarification = gameState.currentRoom === 'atrium' && normalizedCommand.includes('cubicul') && !normalizedCommand.includes('sororis') && !normalizedCommand.includes('parentum');
+    if (needsCubiculumClarification) { return { type: 'clarify', prompt: "Utrum cubiculum?", options: { 'sororis': 'cubiculum_sororis', 'parentum': 'cubiculum_parentum' } }; }
+    const needsAlaClarification = gameState.currentRoom === 'atrium' && normalizedCommand.includes('ala') && !normalizedCommand.includes('larum') && !normalizedCommand.includes('hermae');
+    if (needsAlaClarification) { return { type: 'clarify', prompt: "Utram ālam?", options: { 'larum': 'ala_larum', 'hermae': 'ala_hermae' } }; }
 
+    // --- 3. Parse for Action (Revised Logic) ---
     const verbInfo = findVerb(normalizedCommand);
     if (verbInfo) recognizedTokens.add(verbInfo.playerWord);
 
     let landmarkInfo = null;
     let landmarkDir = null;
+
+    // **THE FIX - PART 1: A more intelligent landmark search.**
+    // We now find the BEST match, prioritizing aliases over general stems.
+    let bestMatch = { score: 0, id: null };
     for (const roomId in ROOM_NAMES) {
         const roomData = ROOM_NAMES[roomId];
-        const searchTerms = [...(roomData.stems || []), ...(roomData.aliases || [])];
-        for (const term of searchTerms) {
-            if (normalizedCommand.includes(term)) {
-                for (const dir in rooms[gameState.currentRoom].exits) {
-                    if (rooms[gameState.currentRoom].exits[dir] === roomId) {
-                        landmarkInfo = { id: roomId, data: roomData };
-                        landmarkDir = dir;
-                        // **THE FIX IS HERE**: Find the actual word the player typed that matched the stem/alias.
-                        const matchedToken = tokens.find(t => t.includes(term));
-                        if(matchedToken) recognizedTokens.add(matchedToken);
-                        break;
-                    }
-                }
-            }
-            if (landmarkInfo) break;
+        if (!rooms[gameState.currentRoom].exits[Object.keys(rooms[gameState.currentRoom].exits).find(dir => rooms[gameState.currentRoom].exits[dir] === roomId)]) continue;
+
+        let score = 0;
+        if (roomData.aliases && roomData.aliases.some(a => normalizedCommand.includes(a))) {
+            score += 10; // High score for a specific alias like 'sororis' or 'parentum'
         }
-        if (landmarkInfo) break;
+        if (roomData.stems && roomData.stems.some(s => normalizedCommand.includes(s))) {
+            score += 1; // Low score for a generic stem like 'cubicul'
+        }
+        if (score > bestMatch.score) {
+            bestMatch = { score, id: roomId };
+        }
+    }
+
+    if (bestMatch.id) {
+        const roomData = ROOM_NAMES[bestMatch.id];
+        landmarkInfo = { id: bestMatch.id, data: roomData };
+        landmarkDir = Object.keys(rooms[gameState.currentRoom].exits).find(dir => rooms[gameState.currentRoom].exits[dir] === bestMatch.id);
+        // Mark all related keywords as recognized
+        const allTerms = [...(roomData.stems || []), ...(roomData.aliases || [])];
+        tokens.forEach(token => {
+            if (allTerms.some(term => token.includes(term))) {
+                recognizedTokens.add(token);
+            }
+        });
     }
     
     const directions = ['prorsus', 'rursus', 'dexteram', 'sinistram'];
@@ -172,8 +212,11 @@ function parseCommand(command) {
     if (landmarkInfo) {
         if (!verbInfo && !foundPrep) return { type: 'feedback', feedback: "Quid vīs facere?" };
         const unknowns = tokens.filter(t => !recognizedTokens.has(t));
-        if (unknowns.length > 0) return { type: 'feedback', feedback: `Verbum '${landmarkInfo.data.stems[0]}' intellegō, sed verbum '${unknowns[0]}' nōn intellegō.` };
-        
+        if (unknowns.length > 0) {
+            // **THE FIX - PART 2: Use the full nominative name in the error message.**
+            const knownWord = landmarkInfo.data.nom.split(' ')[0]; // e.g., "Cubiculum"
+            return { type: 'feedback', feedback: `Verbum '${knownWord}' intellegō, sed verbum '${unknowns[0]}' nōn intellegō.` };
+        }
         const { recastHtml, needsRecast } = generateRecast(normalizedCommand, landmarkInfo.data, verbInfo, foundPrep);
         return { type: 'move', direction: landmarkDir, newFacingAngle: DIRECTION_ROTATIONS[landmarkDir], needsRecast, recast: recastHtml };
     }
@@ -249,6 +292,7 @@ function generateRecast(command, roomData, verbInfo, foundPrep) {
     return { recastHtml: `${verbHtml} ${prepHtml} ${recastWords.join(' ')}`, needsRecast };
 }
 
+// REPLACE your old performMove function with this one.
 async function performMove(moveDirection, newFacingAngle) {
     if (newFacingAngle === undefined) {
         console.error("CRITICAL ERROR: newFacingAngle is undefined. Move direction was:", moveDirection);
@@ -258,8 +302,6 @@ async function performMove(moveDirection, newFacingAngle) {
     const nextRoomId = rooms[gameState.currentRoom].exits[moveDirection];
     if (nextRoomId) {
         const previousRoomId = gameState.currentRoom;
-        
-        // Update the game state.
         gameState.currentRoom = nextRoomId;
         gameState.visitedRooms.add(nextRoomId);
         gameState.panOffset = { x: 0, y: 0 };
@@ -269,7 +311,7 @@ async function performMove(moveDirection, newFacingAngle) {
             gameState.playerFacing = 0;
         }
 
-        // Trigger the render and wait for it to complete.
+        // This function NO LONGER calls logRoom(). It only renders the map.
         await render(true); 
         setFeedback("");
         return true; // The move was successful.
@@ -304,26 +346,28 @@ async function render(animated = true) {
     await applyMapTransform(animated);
 }
 
+// REPLACE your old logCommand and logRecast functions with these.
+
 function logCommand(commandHtml, isRecast = false) {
     const log = elements.gameLog;
     const entry = document.createElement('div');
-    entry.className = isRecast ? 'log-recast' : 'log-command';
+    // This function now ONLY handles logging the initial, un-recasted command.
+    entry.className = 'log-command';
     entry.innerHTML = `> ${commandHtml}`;
     log.appendChild(entry);
-    // Don't scroll yet; let logRoom handle it.
+    // Do not scroll here; let the next function handle it.
 }
-
-// REPLACE your old logRecast function with this one.
 
 function logRecast(recastHtml) {
     const log = elements.gameLog;
-    // Find the last command log and replace its content.
-    const lastCommand = log.querySelector('.log-command:last-child, .log-recast:last-child');
+    // Find the last raw command in the log.
+    const lastCommand = log.querySelector('.log-command:last-child');
     if (lastCommand) {
+        // Replace its content with the green, jiggling version.
         lastCommand.innerHTML = `> ${recastHtml}`;
         lastCommand.className = 'log-recast';
         
-        // **THE FIX IS HERE**: Tell the log to scroll to the bottom.
+        // **THE FIX**: Now, scroll the log to show the recast.
         log.scrollTop = log.scrollHeight;
     }
 }
