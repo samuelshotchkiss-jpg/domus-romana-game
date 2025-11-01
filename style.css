@@ -6,14 +6,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
     position: relative; /* This is the anchor for the absolute overlay */
     margin-bottom: 20px;
 }
-#arrow-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* Allows clicks to pass through to the map below */
-}
+
 
 /* --- END OF FIX --- */
 

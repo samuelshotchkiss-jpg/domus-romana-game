@@ -2,28 +2,14 @@
 // ### 1. GAME DATA ###
 // All static data for the game, including room layouts, names, and vocabulary.
 // =============================================================================
-// ADD THIS NEW CONSTANT
-const VERBS = {
-    'move': {
-        first_person: 'eō',
-        stems: ['i', 'e'], // for eo, ire, it, etc.
-        infinitives: ['ire']
-    },
-    'walk': {
-        first_person: 'ambulō',
-        stems: ['ambul'],
-        infinitives: ['ambulare']
-    }
-};
-
 const rooms = {
     'via_west': { x: 0, y: -1, name: 'Via (West)', desc: 'Via est. Caelum nōn est clārum. Aqua ex caelō cadit.', exits: { south: 'taberna', east: 'via_east' } },
     'via_east': { x: 1, y: -1, name: 'Via (East)', desc: 'Iterum, via est. Aqua cadit. Magna domus est prope.', exits: { south: 'fauces', west: 'via_west' } },
     'taberna': { x: 0, y: 0, name: 'Taberna', desc: 'Hic est taberna. Mēnsa magna est. Multae rēs variae sunt in tabernā.', exits: { north: 'via_west' } },
     'fauces': { x: 1, y: 0, name: 'Fauces', desc: 'Hae sunt fauces. In murīs sunt multae imāginēs parentum. Te spectant.', exits: { north: 'via_east', south: 'atrium' } },
-    'atrium': { x: 1, y: 1, name: 'Atrium', desc: 'Hoc est atrium magnum. Murī sunt rubrī. Aqua ex caelō in impluvium cadit.', exits: { north: 'fauces', south: 'tablinum', east: 'cubiculum_matris_et_patris', west: 'cubiculum_sororis', southeast: 'ala_larum', southwest: 'ala_hermae' } },
+    'atrium': { x: 1, y: 1, name: 'Atrium', desc: 'Hoc est atrium magnum. Murī sunt rubrī. Aqua ex caelō in impluvium cadit.', exits: { north: 'fauces', south: 'tablinum', east: 'cubiculum_parentum', west: 'cubiculum_sororis', southeast: 'ala_larum', southwest: 'ala_hermae' } },
     'cubiculum_sororis': { x: 0, y: 1, name: 'Cubiculum Sorōris', desc: 'Hoc est cubiculum sorōris tuae. Est lectus et armārium.', exits: { east: 'atrium' } },
-    'cubiculum_matris_et_patris': { x: 2, y: 1, name: 'Cubiculum Mātris et Patris', desc: 'Hoc est cubiculum patris et mātris. Duo lectī sunt.', exits: { west: 'atrium' } },
+    'cubiculum_parentum': { x: 2, y: 1, name: 'Cubiculum Parentum', desc: 'Hoc est cubiculum parentum. Duo lectī sunt.', exits: { west: 'atrium' } },
     'ala_larum': { x: 2, y: 2, name: 'Ala Lārum', desc: 'Hic est ala. In alā est larārium. Deī domūs sunt in larāriō. Silentium est.', exits: { northwest: 'atrium' } },
     'ala_hermae': { x: 0, y: 2, name: 'Ala Hermae', desc: 'Hic est ala. Magna herma avī in angulō est.', exits: { northeast: 'atrium' } },
     'tablinum': { x: 1, y: 2, name: 'Tablinum', desc: 'Hoc est tablinum. Dominus saepe hic labōrat. Magna mēnsa in tablinō est.', exits: { north: 'atrium', south: 'peristylium' } },
@@ -34,31 +20,22 @@ const rooms = {
     'cella': { x: -1, y: 3, name: 'Cella', desc: 'Hic est cella. Multae amphorae in cellā sunt.', exits: { east: 'culina' } }
 };
 
-// REPLACE your old ROOM_NAMES object with this one
+const VERBS = {
+    'move': { first_person: 'eō', stems: ['i', 'e'], infinitives: ['ire'] },
+    'walk': { first_person: 'ambulō', stems: ['ambul'], infinitives: ['ambulare'] }
+};
+
 const ROOM_NAMES = {
-    'cubiculum_tuum': { nom: 'Cubiculum Tuum', acc: 'in Cubiculum Tuum', search: 'cubiculum tuum', stem: 'cubicul', aliases: ['meum', 'tuum'] },
-    'cubiculum_sororis': { nom: 'Cubiculum Sorōris', acc: 'in Cubiculum Sorōris', search: 'cubiculum sororis', stem: 'cubicul', aliases: ['sororis'] },
-    'cubiculum_matris_et_patris': { nom: 'Cubiculum Mātris et Patris', acc: 'in Cubiculum Mātris et Patris', search: 'cubiculum matris', stem: 'cubicul', aliases: ['matris', 'patris'] },
-    'ala_larum': { nom: 'Ala Lārum', acc: 'in Ālam Lārum', search: 'alam larum', stem: 'alam', aliases: ['larum'] },
-    'ala_hermae': { nom: 'Ala Hermae', acc: 'in Ālam Hermae', search: 'alam hermae', stem: 'alam', aliases: ['hermae'] },
-    'via_west': { nom: 'Via', acc: 'in Viam', search: 'viam', stem: 'via' },
-    'via_east': { nom: 'Via', acc: 'in Viam', search: 'viam', stem: 'via' },
-    'taberna': { nom: 'Taberna', acc: 'in Tabernam', search: 'tabernam', stem: 'tabern' },
-    'fauces': { nom: 'Fauces', acc: 'in Faucēs', search: 'fauces', stem: 'fauc' }, // Note the 3rd declension stem
-    'atrium': { nom: 'Atrium', acc: 'in Ātrium', search: 'atrium', stem: 'atri' },
-    'tablinum': { nom: 'Tablinum', acc: 'in Tablīnum', search: 'tablinum', stem: 'tablin' },
-    'peristylium': { nom: 'Peristylium', acc: 'in Peristȳlium', search: 'peristylium', stem: 'peristyli' },
-    'triclinium': { nom: 'Triclinium', acc: 'in Triclīnium', search: 'triclinium', stem: 'triclini' },
-    'culina': { nom: 'Culina', acc: 'in Culīnam', search: 'culinam', stem: 'culin' },
-    'cella': { nom: 'Cella', acc: 'in Cellam', search: 'cellam', stem: 'cell' },
+    'cubiculum_tuum': { nom: 'Cubiculum Tuum', acc: ['in', 'Cubiculum', 'Tuum'], stems: ['cubicul'], aliases: ['meum', 'tuum'] },
+    'cubiculum_sororis': { nom: 'Cubiculum Sorōris', acc: ['in', 'Cubiculum', 'Sorōris'], stems: ['cubicul'], aliases: ['sororis'] },
+    'cubiculum_parentum': { nom: 'Cubiculum Parentum', acc: ['in', 'Cubiculum', 'Parentum'], stems: ['cubicul'], aliases: ['parentum'] },
+    'ala_larum': { nom: 'Ala Lārum', acc: ['in', 'Ālam', 'Lārum'], stems: ['ala'], aliases: ['larum'] },
+    'ala_hermae': { nom: 'Ala Hermae', acc: ['in', 'Ālam', 'Hermae'], stems: ['ala'], aliases: ['hermae'] },
+    'via_west': { nom: 'Via', acc: ['in', 'Viam'], stems: ['via'] }, 'via_east': { nom: 'Via', acc: ['in', 'Viam'], stems: ['via'] }, 'taberna': { nom: 'Taberna', acc: ['in', 'Tabernam'], stems: ['tabern'] }, 'fauces': { nom: 'Fauces', acc: ['in', 'Faucēs'], stems: ['fauc'] }, 'atrium': { nom: 'Atrium', acc: ['in', 'Ātrium'], stems: ['atri'] }, 'tablinum': { nom: 'Tablinum', acc: ['in', 'Tablīnum'], stems: ['tablin'] }, 'peristylium': { nom: 'Peristylium', acc: ['in', 'Peristȳlium'], stems: ['peristyli'] }, 'triclinium': { nom: 'Triclinium', acc: ['in', 'Triclīnium'], stems: ['triclini'] }, 'culina': { nom: 'Culina', acc: ['in', 'Culīnam'], stems: ['culin'] }, 'cella': { nom: 'Cella', acc: ['in', 'Cellam'], stems: ['cell'] },
+    'cubiculum_generic': { stems: ['cubicul'] }, 'ala_generic': { stems: ['ala'] },
 };
 
-const VOCAB = {
-    CORE: new Set(['a', 'ab', 'videt', 'iam', 'ridet', 'fuit', 'vult', 'voluit', 'oculi', 'sentit', 'claudit', 'clare', 'surgit', 'mensa', 'iterum', 'aperit', 'perpetua', 'fere', 'mortalis', 'sitne', 'erat', 'erant', 'ubique', 'vidistine', 'nox', 'domi', 'subito', 'aliquid', 'audit', 'putat', 'parentes', 'varia', 'dei', 'venite', 'domus', 'imus', 'paro', 'via', 'apud', 'dominus', 'aqua', 'exspectat', 'discetis', 'spectate', 'servus', 'divites', 'intremus', 'hospites', 'laborat', 'dormit', 'dormio', 'mecum', 'sunt', 'est', 'in', 'non', 'hoc', 'sed', 'magna', 'ex', 'facere', 'habet', 'animus', 'multi', 'bona', 'bene', 'neque', 'urbs', 'ubi', 'caelum', 'ita', 'vero', 'nomen', 'minime', 'saepe', 'semper', 'noctua']),
-    OUTER: { 'affectus': 'affected', 'murmure': 'by the murmur', 'putat': 'thinks', 'esse': 'to be', 'sentire': 'to feel/sense', 'ianuam': 'door', 'caute': 'cautiously', 'tranquille': 'calmly', 'oculos': 'eyes', 'aperiunt': 'they open', 'ianuae': 'doors', 'aperta': 'open', 'apertam': 'open', 'apertum': 'open', 'armarium': 'closet', 'aperuerunt': 'they opened', 'armario': 'closet', 'inspicere': 'to inspect', 'atrio': 'atrium', 'investigat': 'investigates', 'inspectum': 'inspected', 'attat': 'Ah ha!', 'parentum': 'of the parents', 'parentes': 'parents', 'sonum': 'sound', 'murmur': 'murmur', 'cautus': 'cautious', 'romanus': 'Roman', 'clare': 'clearly', 'clarum': 'clear', 'claudit': 'closes', 'claudunt': 'they close', 'clausa': 'closed', 'clauserunt': 'they shut', 'clausis': 'closed', 'clausum': 'closed', 'coram': 'in the presence of', 'phantasmate': 'ghost', 'monstro': 'monster', 'cubiculi': 'of the bedroom', 'cubiculo': 'bedroom', 'culina': 'kitchen', 'culinam': 'kitchen', 'curiosum': 'curious', 'curiosus': 'curious', 'domi': 'at home', 'domus': 'house', 'dormiebam': 'I was sleeping', 'dormio': 'I sleep', 'dormire': 'to sleep', 'dormiturus': 'about to sleep', 'eram': 'I was', 'eramus': 'we were', 'erant': 'they were', 'erantne': 'were they?', 'erat': 'was', 'estne': 'is it?', 'et': 'and', 'evidentia': 'evidence', 'evidentiam': 'evidence', 'fere': 'almost', 'figurae': 'figures', 'figura': 'figure', 'figuram': 'figure', 'fui': 'I was', 'fuisse': 'to have been', 'fuit': 'it was', 'habebant': 'they had', 'habeo': 'I have', 'habesne': 'do you have?', 'habet': 'has', 'nauseam': 'nausea', 'insomniam': 'insomnia', 'horrifici': 'horrific', 'horrificissimum': 'very horrific', 'horrificissimus': 'very horrific', 'horrificos': 'horrific', 'horrificum': 'horrific', 'horrificus': 'horrific', 'horrorem': 'horror!', 'iam': 'now', 'ianua': 'door', 'immobiles': 'immobile', 'immobilis': 'immobile', 'quintus': 'Quintus', 'in': 'in', 'habere': 'to have', 'inspectum': 'inspected', 'inspiciens': 'inspecting', 'inspicit': 'inspects', 'investigans': 'investigating', 'investigare': 'to investigate', 'iterum': 'again', 'lecti': 'couches', 'lectis': 'couches', 'lectos': 'couches', 'lectum': 'couch', 'macte': 'well done!', 'mensa': 'table', 'mensam': 'table', 'monstra': 'monsters', 'monstrorum': 'of monsters', 'monstrum': 'monster', 'mortale': 'mortal', 'mortales': 'mortal', 'murmure': 'by a murmur', 'naturale': 'natural', 'naturales': 'natural', 'naturalis': 'natural', 'nocte': 'at night', 'noctem': 'night', 'non': 'not', 'nox': 'night', 'obscura': 'dark', 'obscuram': 'dark', 'obscuro': 'dark', 'obscuros': 'dark', 'obscurum': 'dark', 'oculis': 'eyes', 'peristylo': 'peristyle', 'peristylium': 'peristyle', 'perpetua': 'perpetual', 'perpetuam': 'perpetual', 'perterriti': 'terrified', 'perterritissimus': 'very terrified', 'perterritus': 'terrified', 'perturbate': 'pertubedly', 'perturbatissimus': 'very perturbed', 'perturbatus': 'perturbed', 'phantasmata': 'ghosts', 'phantasmatis': 'of a ghost', 'phantasmatum': 'of ghosts', 'putabam': 'I thought', 'putavit': 'thought', 'quinti': 'of Quintus', 'quinto': 'Quintus', 'reale': 'real', 'realem': 'real', 'reales': 'real', 'realia': 'real', 'realis': 'real', 'rident': 'they laugh', 'ridet': 'laughs', 'romae': 'in Rome', 'romani': 'Romans', 'sed': 'but', 'sentiens': 'sensing', 'sentit': 'senses', 'silentium': 'silence', 'sintne': 'could they be?', 'sitne': 'could it be?', 'soni': 'sounds', 'sonos': 'sounds', 'sonus': 'sound', 'stomachus': 'stomach', 'subito': 'suddenly!', 'sunt': 'they are', 'surgit': 'rises', 'surgunt': 'they rise', 'surrecta': 'was lifted up', 'surrecti': 'were lifted up', 'surrectis': 'lifted up', 'tablino': 'study', 'tablinum': 'study', 'tranquilla': 'tranquil', 'tranquillum': 'tranquil', 'tranquillus': 'tranquil', 'trinclinio': 'dining room', 'trinclinium': 'dining room', 'ubique': 'everywhere', 'videre': 'to see', 'videt': 'sees', 'vidistine': 'have you seen?', 'voluit': 'wanted', 'tres': 'three', 'parva': 'small' },
-    NOVUM: { 'amphorae': {lemma: 'amphora, -ae, f.', def: 'jar, amphora'}, 'columnae': {lemma: 'columna, -ae, f.', def: 'column, pillar'},'focus': {lemma: 'focus, -ī, m.', def: 'hearth, stove'},'hortus': {lemma: 'hortus, -ī, m.', def: 'garden'},'imāginēs': {lemma: 'imago, imaginis, f.', def: 'ancestral mask'},'murī': {lemma: 'murus, -ī, m.', def: 'wall'},'murīs': {lemma: 'murus, -ī, m.', def: 'wall'},'quoque': {lemma: 'quoque (adv.)', def: 'also, too'},'rēs': {lemma: 'rēs, reī, f.', def: 'thing, object'},'rubrī': {lemma: 'ruber, rubra, rubrum', def: 'red'},'lectus': {lemma: 'lectus, -ī, m.', def: 'bed, couch'},'lectī': {lemma: 'lectus, -ī, m.', def: 'bed, couch'},'tuum': {lemma: 'tuus, -a, -um', def: 'your'},'tuus': {lemma: 'tuus, -a, -um', def: 'your'},'patris': {lemma: 'pater, patris, m.', def: 'of the father'},'mātris': {lemma: 'mater, matris, f.', def: 'of the mother'},'sorōris': {lemma: 'soror, sororis, f.', def: 'of the sister'},'tuae': {lemma: 'tuus, -a, -um', def: 'your'},'herma': {lemma: 'herma, -ae, f.', def: 'herm, bust'},'avī': {lemma: 'avus, -ī, m.', def: 'of the grandfather'},'lārum': {lemma: 'lares, -ium, m.pl.', def: 'of the Lares (household gods)'}, }
-};
-
+const VOCAB = { CORE: new Set(['a', 'ab', 'videt', 'iam', 'ridet', 'fuit', 'vult', 'voluit', 'oculi', 'sentit', 'claudit', 'clare', 'surgit', 'mensa', 'iterum', 'aperit', 'perpetua', 'fere', 'mortalis', 'sitne', 'erat', 'erant', 'ubique', 'vidistine', 'nox', 'domi', 'subito', 'aliquid', 'audit', 'putat', 'parentes', 'varia', 'dei', 'venite', 'domus', 'imus', 'paro', 'via', 'apud', 'dominus', 'aqua', 'exspectat', 'discetis', 'spectate', 'servus', 'divites', 'intremus', 'hospites', 'laborat', 'dormit', 'dormio', 'mecum', 'sunt', 'est', 'in', 'non', 'hoc', 'sed', 'magna', 'ex', 'facere', 'habet', 'animus', 'multi', 'bona', 'bene', 'neque', 'urbs', 'ubi', 'caelum', 'ita', 'vero', 'nomen', 'minime', 'saepe', 'semper', 'noctua']), OUTER: { 'affectus': 'affected', 'murmure': 'by the murmur', 'putat': 'thinks', 'esse': 'to be', 'sentire': 'to feel/sense', 'ianuam': 'door', 'caute': 'cautiously', 'tranquille': 'calmly', 'oculos': 'eyes', 'aperiunt': 'they open', 'ianuae': 'doors', 'aperta': 'open', 'apertam': 'open', 'apertum': 'open', 'armarium': 'closet', 'aperuerunt': 'they opened', 'armario': 'closet', 'inspicere': 'to inspect', 'atrio': 'atrium', 'investigat': 'investigates', 'inspectum': 'inspected', 'attat': 'Ah ha!', 'parentum': 'of the parents', 'parentes': 'parents', 'sonum': 'sound', 'murmur': 'murmur', 'cautus': 'cautious', 'romanus': 'Roman', 'clare': 'clearly', 'clarum': 'clear', 'claudit': 'closes', 'claudunt': 'they close', 'clausa': 'closed', 'clauserunt': 'they shut', 'clausis': 'closed', 'clausum': 'closed', 'coram': 'in the presence of', 'phantasmate': 'ghost', 'monstro': 'monster', 'cubiculi': 'of the bedroom', 'cubiculo': 'bedroom', 'culina': 'kitchen', 'culinam': 'kitchen', 'curiosum': 'curious', 'curiosus': 'curious', 'domi': 'at home', 'domus': 'house', 'dormiebam': 'I was sleeping', 'dormio': 'I sleep', 'dormire': 'to sleep', 'dormiturus': 'about to sleep', 'eram': 'I was', 'eramus': 'we were', 'erant': 'they were', 'erantne': 'were they?', 'erat': 'was', 'estne': 'is it?', 'et': 'and', 'evidentia': 'evidence', 'evidentiam': 'evidence', 'fere': 'almost', 'figurae': 'figures', 'figura': 'figure', 'figuram': 'figure', 'fui': 'I was', 'fuisse': 'to have been', 'fuit': 'it was', 'habebant': 'they had', 'habeo': 'I have', 'habesne': 'do you have?', 'habet': 'has', 'nauseam': 'nausea', 'insomniam': 'insomnia', 'horrifici': 'horrific', 'horrificissimum': 'very horrific', 'horrificissimus': 'very horrific', 'horrificos': 'horrific', 'horrificum': 'horrific', 'horrificus': 'horrific', 'horrorem': 'horror!', 'iam': 'now', 'ianua': 'door', 'immobiles': 'immobile', 'immobilis': 'immobile', 'quintus': 'Quintus', 'in': 'in', 'habere': 'to have', 'inspectum': 'inspected', 'inspiciens': 'inspecting', 'inspicit': 'inspects', 'investigans': 'investigating', 'investigare': 'to investigate', 'iterum': 'again', 'lecti': 'couches', 'lectis': 'couches', 'lectos': 'couches', 'lectum': 'couch', 'macte': 'well done!', 'mensa': 'table', 'mensam': 'table', 'monstra': 'monsters', 'monstrorum': 'of monsters', 'monstrum': 'monster', 'mortale': 'mortal', 'mortales': 'mortal', 'murmure': 'by a murmur', 'naturale': 'natural', 'naturales': 'natural', 'naturalis': 'natural', 'nocte': 'at night', 'noctem': 'night', 'non': 'not', 'nox': 'night', 'obscura': 'dark', 'obscuram': 'dark', 'obscuro': 'dark', 'obscuros': 'dark', 'obscurum': 'dark', 'oculis': 'eyes', 'peristylo': 'peristyle', 'peristylium': 'peristyle', 'perpetua': 'perpetual', 'perpetuam': 'perpetual', 'perterriti': 'terrified', 'perterritissimus': 'very terrified', 'perterritus': 'terrified', 'perturbate': 'pertubedly', 'perturbatissimus': 'very perturbed', 'perturbatus': 'perturbed', 'phantasmata': 'ghosts', 'phantasmatis': 'of a ghost', 'phantasmatum': 'of ghosts', 'putabam': 'I thought', 'putavit': 'thought', 'quinti': 'of Quintus', 'quinto': 'Quintus', 'reale': 'real', 'realem': 'real', 'reales': 'real', 'realia': 'real', 'realis': 'real', 'rident': 'they laugh', 'ridet': 'laughs', 'romae': 'in Rome', 'romani': 'Romans', 'sed': 'but', 'sentiens': 'sensing', 'sentit': 'senses', 'silentium': 'silence', 'sintne': 'could they be?', 'sitne': 'could it be?', 'soni': 'sounds', 'sonos': 'sounds', 'sonus': 'sound', 'stomachus': 'stomach', 'subito': 'suddenly!', 'sunt': 'they are', 'surgit': 'rises', 'surgunt': 'they rise', 'surrecta': 'was lifted up', 'surrecti': 'were lifted up', 'surrectis': 'lifted up', 'tablino': 'study', 'tablinum': 'study', 'tranquilla': 'tranquil', 'tranquillum': 'tranquil', 'tranquillus': 'tranquil', 'trinclinio': 'dining room', 'trinclinium': 'dining room', 'ubique': 'everywhere', 'videre': 'to see', 'videt': 'sees', 'vidistine': 'have you seen?', 'voluit': 'wanted', 'tres': 'three', 'parva': 'small' }, NOVUM: { 'amphorae': {lemma: 'amphora, -ae, f.', def: 'jar, amphora'}, 'columnae': {lemma: 'columna, -ae, f.', def: 'column, pillar'},'focus': {lemma: 'focus, -ī, m.', def: 'hearth, stove'},'hortus': {lemma: 'hortus, -ī, m.', def: 'garden'},'imāginēs': {lemma: 'imago, imaginis, f.', def: 'ancestral mask'},'murī': {lemma: 'murus, -ī, m.', def: 'wall'},'murīs': {lemma: 'murus, -ī, m.', def: 'wall'},'quoque': {lemma: 'quoque (adv.)', def: 'also, too'},'rēs': {lemma: 'rēs, reī, f.', def: 'thing, object'},'rubrī': {lemma: 'ruber, rubra, rubrum', def: 'red'},'lectus': {lemma: 'lectus, -ī, m.', def: 'bed, couch'},'lectī': {lemma: 'lectus, -ī, m.', def: 'bed, couch'},'tuum': {lemma: 'tuus, -a, -um', def: 'your'},'tuus': {lemma: 'tuus, -a, -um', def: 'your'},'patris': {lemma: 'pater, patris, m.', def: 'of the father'},'mātris': {lemma: 'mater, matris, f.', def: 'of the mother'},'sorōris': {lemma: 'soror, sororis, f.', def: 'of the sister'},'tuae': {lemma: 'tuus, -a, -um', def: 'your'},'herma': {lemma: 'herma, -ae, f.', def: 'herm, bust'},'avī': {lemma: 'avus, -ī, m.', def: 'of the grandfather'},'lārum': {lemma: 'lares, -ium, m.pl.', def: 'of the Lares (household gods)'}, 'parentum': {lemma: 'parens, parentis, m/f.', def: 'of the parents'} }};
 const DIRECTION_ROTATIONS = { 'north': 0, 'south': 180, 'east': 90, 'west': 270, 'northeast': 45, 'northwest': 315, 'southeast': 135, 'southwest': 225 };
 const ANGLE_TO_DIRECTION = { 0: 'north', 45: 'northeast', 90: 'east', 135: 'southeast', 180: 'south', 225: 'southwest', 270: 'west', 315: 'northwest' };
 const sleep = (ms) => new Promise(res => setTimeout(res, ms));
@@ -67,20 +44,339 @@ const removeDiacritics = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/
 // =============================================================================
 // ### 2. GAME STATE
 // =============================================================================
-const gameState = { currentRoom: 'cubiculum_tuum', playerFacing: 270, currentVisualRotation: -270, visitedRooms: new Set(['cubiculum_tuum']), panOffset: { x: 0, y: 0 }, isDragging: false, dragStart: { x: 0, y: 0 }, isPlayerActionLocked: false, inputHistory: [], historyIndex: -1, clarificationState: null, };
+const gameState = { currentRoom: 'cubiculum_tuum', playerFacing: 270, currentVisualRotation: -270, visitedRooms: new Set(['cubiculum_tuum']), panOffset: { x: 0, y: 0 }, isDragging: false, dragStart: { x: 0, y: 0 }, isPlayerActionLocked: false, inputHistory: [], historyIndex: -1, clarificationState: null, hasRenderedFirstRoom: false };
 const mapSettings = { GRID_SIZE: 150, ROOM_WIDTH: 100, ROOM_HEIGHT: 60 };
 let elements = {};
 let mapGroup;
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 // =============================================================================
-// ### 3. INITIALIZATION
+// ### 3. CORE GAME LOGIC
 // =============================================================================
-// This block of code runs after the HTML is fully loaded.
-// It finds all the necessary elements and sets up the game.
+const opposite = { 'north': 'south', 'south': 'north', 'east': 'west', 'west': 'east', 'northwest': 'southeast', 'southeast': 'northwest', 'northeast': 'southwest', 'southwest': 'northeast' };
 
-const initializers = () => {
-    // Find and store references to all the elements that are already in the HTML.
+async function processInput(command) {
+    if (gameState.isPlayerActionLocked) return;
+    gameState.isPlayerActionLocked = true;
+    elements.commandInput.disabled = true;
+
+    // Log the player's raw command first.
+    logCommand(command, false);
+    gameState.inputHistory.unshift(command);
+    gameState.historyIndex = -1;
+
+    try {
+        const action = parseCommand(command);
+
+        if (action.needsRecast) {
+            logRecast(action.recast);
+            await sleep(500); // Wait for the jiggle to be seen.
+        }
+
+        if (action.type === 'move') {
+            // **THE FIX**: performMove now only updates state and starts the animation.
+            // It returns 'true' on success.
+            const moveSuccessful = await performMove(action.direction, action.newFacingAngle);
+            
+            // **THE FIX**: We log the new room description AFTER the move is complete.
+            if (moveSuccessful) {
+                logRoom();
+            }
+        } else if (action.type === 'clarify') {
+            askClarification(action.prompt, action.options);
+        } else {
+            setFeedback(action.feedback || "Nōn intellegō verba tua.");
+        }
+    } finally {
+        if (!gameState.clarificationState) {
+            gameState.isPlayerActionLocked = false;
+            elements.commandInput.disabled = false;
+            elements.commandInput.focus();
+        }
+    }
+}
+
+function findVerb(normalizedCommand) {
+    for (const key in VERBS) {
+        const verbData = VERBS[key];
+        const playerWord = normalizedCommand.split(' ').find(w => verbData.stems.some(s => w.startsWith(s)) || verbData.infinitives.includes(w));
+        if (playerWord) {
+            const isCorrect = removeDiacritics(playerWord) === removeDiacritics(verbData.first_person);
+            return { key, data: verbData, correct: verbData.first_person, playerWord, isCorrect };
+        }
+    }
+    return null;
+}
+
+function parseCommand(command) {
+    const normalizedCommand = removeDiacritics(command.toLowerCase().trim());
+    const tokens = normalizedCommand.split(' ').filter(t => t);
+    let recognizedTokens = new Set();
+    
+    if (gameState.clarificationState) {
+        for (const key in gameState.clarificationState.options) {
+            if (normalizedCommand.includes(key)) {
+                const targetRoomId = gameState.clarificationState.options[key];
+                for (const dir in rooms[gameState.currentRoom].exits) {
+                    if (rooms[gameState.currentRoom].exits[dir] === targetRoomId) {
+                        gameState.clarificationState = null;
+                        return { type: 'move', direction: dir, newFacingAngle: DIRECTION_ROTATIONS[dir], needsRecast: false };
+                    }
+                }
+            }
+        }
+        return { type: 'feedback', feedback: `Nōn intellegō. ${gameState.clarificationState.prompt}` };
+    }
+
+    if (gameState.currentRoom === 'atrium' && normalizedCommand.includes('cubicul')) {
+        return { type: 'clarify', prompt: "Utrum cubiculum?", options: { 'sororis': 'cubiculum_sororis', 'parentum': 'cubiculum_parentum' } };
+    }
+    if (gameState.currentRoom === 'atrium' && normalizedCommand.includes('ala')) {
+        return { type: 'clarify', prompt: "Utram ālam?", options: { 'larum': 'ala_larum', 'hermae': 'ala_hermae' } };
+    }
+
+    const verbInfo = findVerb(normalizedCommand);
+    if (verbInfo) recognizedTokens.add(verbInfo.playerWord);
+
+    let landmarkInfo = null;
+    let landmarkDir = null;
+    for (const roomId in ROOM_NAMES) {
+        const roomData = ROOM_NAMES[roomId];
+        const searchTerms = [...(roomData.stems || []), ...(roomData.aliases || [])];
+        for (const term of searchTerms) {
+            if (normalizedCommand.includes(term)) {
+                for (const dir in rooms[gameState.currentRoom].exits) {
+                    if (rooms[gameState.currentRoom].exits[dir] === roomId) {
+                        landmarkInfo = { id: roomId, data: roomData };
+                        landmarkDir = dir;
+                        // **THE FIX IS HERE**: Find the actual word the player typed that matched the stem/alias.
+                        const matchedToken = tokens.find(t => t.includes(term));
+                        if(matchedToken) recognizedTokens.add(matchedToken);
+                        break;
+                    }
+                }
+            }
+            if (landmarkInfo) break;
+        }
+        if (landmarkInfo) break;
+    }
+    
+    const directions = ['prorsus', 'rursus', 'dexteram', 'sinistram'];
+    let directionInfo = null;
+    for (const d of directions) { if (normalizedCommand.includes(d)) { directionInfo = { key: d }; d.split(' ').forEach(t => recognizedTokens.add(t)); } }
+    
+    const prepositions = ['in', 'ad'];
+    const foundPrep = prepositions.find(p => normalizedCommand.includes(p));
+    if (foundPrep) recognizedTokens.add(foundPrep);
+
+    if (landmarkInfo) {
+        if (!verbInfo && !foundPrep) return { type: 'feedback', feedback: "Quid vīs facere?" };
+        const unknowns = tokens.filter(t => !recognizedTokens.has(t));
+        if (unknowns.length > 0) return { type: 'feedback', feedback: `Verbum '${landmarkInfo.data.stems[0]}' intellegō, sed verbum '${unknowns[0]}' nōn intellegō.` };
+        
+        const { recastHtml, needsRecast } = generateRecast(normalizedCommand, landmarkInfo.data, verbInfo, foundPrep);
+        return { type: 'move', direction: landmarkDir, newFacingAngle: DIRECTION_ROTATIONS[landmarkDir], needsRecast, recast: recastHtml };
+    }
+
+    if (directionInfo) {
+        const unknowns = tokens.filter(t => !recognizedTokens.has(t) && !directions.includes(t) && t !== 'et' && t !== 'ad');
+        if (unknowns.length > 0) return { type: 'feedback', feedback: `Verbum '${directionInfo.key}' intellegō, sed ${unknowns.length > 1 ? 'verba' : 'verbum'} '${unknowns.join(' ')}' nōn intellegō.` };
+        const currentFacing = ANGLE_TO_DIRECTION[gameState.playerFacing];
+        const rursusDir = opposite[currentFacing];
+        const dexteramDir = ANGLE_TO_DIRECTION[(gameState.playerFacing + 90) % 360];
+        const sinistramDir = ANGLE_TO_DIRECTION[(gameState.playerFacing + 270) % 360];
+        const hasProrsus = normalizedCommand.includes('prorsus');
+        const hasRursus = normalizedCommand.includes('rursus');
+        const hasDexteram = normalizedCommand.includes('dexteram');
+        const hasSinistram = normalizedCommand.includes('sinistram');
+        let moveDirection = null, moveCommand = null, newFacingAngle = gameState.playerFacing;
+        
+        if ((hasProrsus || hasRursus) && (hasDexteram || hasSinistram)) {
+            const primary = hasProrsus ? currentFacing : rursusDir;
+            const secondary = hasDexteram ? dexteramDir : sinistramDir;
+            moveDirection = (primary.startsWith('north') || primary.startsWith('south')) ? (primary + secondary) : (secondary + primary);
+            moveCommand = `${hasProrsus ? 'prōrsus' : 'rūrsus'} et ${hasDexteram ? 'ad dexteram' : 'ad sinistram'}`;
+            newFacingAngle = DIRECTION_ROTATIONS[moveDirection];
+        }
+        else if (hasProrsus) { moveDirection = currentFacing; moveCommand = 'prōrsus'; } 
+        else if (hasRursus) { moveDirection = rursusDir; moveCommand = 'rūrsus'; newFacingAngle = (gameState.playerFacing + 180) % 360; } 
+        else if (hasDexteram) { moveDirection = dexteramDir; moveCommand = 'ad dexteram'; newFacingAngle = (gameState.playerFacing + 90) % 360; } 
+        else if (hasSinistram) { moveDirection = sinistramDir; moveCommand = 'ad sinistram'; newFacingAngle = (gameState.playerFacing + 270) % 360; }
+
+        if (moveDirection) {
+            const verbForRecast = verbInfo ? verbInfo.correct : 'eō';
+            const needsRecast = !verbInfo || !verbInfo.isCorrect;
+            return { type: 'move', direction: moveDirection, newFacingAngle, needsRecast, recast: `${verbForRecast} ${moveCommand}` };
+        }
+    }
+    
+    return { type: 'feedback', feedback: "Nōn intellegō verba tua." };
+}
+
+function generateRecast(command, roomData, verbInfo, foundPrep) {
+    const verbForRecast = verbInfo ? verbInfo.correct : 'eō';
+    let needsRecast = false;
+    let verbHtml = verbForRecast;
+    if (!verbInfo || !verbInfo.isCorrect) {
+        needsRecast = true;
+        if (verbInfo && verbInfo.key === 'walk') { verbHtml = `ambul<span class="recast-ending">ō</span>`; } 
+        else { verbHtml = `<span class="recast-ending">${verbForRecast}</span>`; }
+    }
+    let prepHtml = `in`;
+    if (command.includes('ad')) { prepHtml = 'ad'; } 
+    else if (!command.includes('in')) { needsRecast = true; prepHtml = `<span class="recast-ending">in</span>`; }
+    const playerWords = command.split(' ');
+    const correctWords = roomData.acc.slice(1);
+    const recastWords = [];
+    correctWords.forEach(correctWord => {
+        const correctClean = removeDiacritics(correctWord.toLowerCase());
+        const playerAttempt = playerWords.find(pWord => correctClean.startsWith(removeDiacritics(pWord)));
+        if (playerAttempt && removeDiacritics(playerAttempt) === correctClean) {
+            recastWords.push(correctWord);
+        } else {
+            needsRecast = true;
+            const endingMatch = correctWord.match(/(um|am|em|ēs|ōris|ī|ae|uum)$/i);
+            if (endingMatch) {
+                const ending = endingMatch[0];
+                const base = correctWord.slice(0, -ending.length);
+                recastWords.push(`${base}<span class="recast-ending">${ending}</span>`);
+            } else {
+                 recastWords.push(`<span class="recast-ending">${correctWord}</span>`);
+            }
+        }
+    });
+    if (!verbInfo) needsRecast = true;
+    return { recastHtml: `${verbHtml} ${prepHtml} ${recastWords.join(' ')}`, needsRecast };
+}
+
+async function performMove(moveDirection, newFacingAngle) {
+    if (newFacingAngle === undefined) {
+        console.error("CRITICAL ERROR: newFacingAngle is undefined. Move direction was:", moveDirection);
+        setFeedback("Error internus: Directio incerta est.");
+        return false; // The move was not successful.
+    }
+    const nextRoomId = rooms[gameState.currentRoom].exits[moveDirection];
+    if (nextRoomId) {
+        const previousRoomId = gameState.currentRoom;
+        
+        // Update the game state.
+        gameState.currentRoom = nextRoomId;
+        gameState.visitedRooms.add(nextRoomId);
+        gameState.panOffset = { x: 0, y: 0 };
+        gameState.playerFacing = newFacingAngle;
+
+        if ((previousRoomId === 'ala_larum' || previousRoomId === 'ala_hermae') && nextRoomId === 'atrium') {
+            gameState.playerFacing = 0;
+        }
+
+        // Trigger the render and wait for it to complete.
+        await render(true); 
+        setFeedback("");
+        return true; // The move was successful.
+    } else {
+        setFeedback("Nōn potes illāc īre.");
+        return false; // The move was not successful.
+    }
+}
+
+function askClarification(prompt, options) { gameState.clarificationState = { prompt, options }; let optionsString = Object.values(options).map(id => `&nbsp;&nbsp;- ${ROOM_NAMES[id].nom}`).join('<br>'); setFeedback(`${prompt}<br>${optionsString}`); }
+function setFeedback(message) { elements.feedback.innerHTML = message; }
+function generateExitsString() { const directions = [ { name: 'prōrsus', angle: 0 }, { name: 'rūrsus', angle: 180 }, { name: 'ad dexteram', angle: 90 }, { name: 'ad sinistram', angle: 270 }, { name: 'prōrsus et ad dexteram', angle: 45 }, { name: 'prōrsus et ad sinistram', angle: 315 }, { name: 'rūrsus et ad dexteram', angle: 135 }, { name: 'rūrsus et ad sinistram', angle: 225 } ]; const knownExits = []; const unknownExits = new Set(); const currentExits = rooms[gameState.currentRoom].exits; for (const dir of directions) { const targetAngle = (gameState.playerFacing + dir.angle + 360) % 360; const targetDir = ANGLE_TO_DIRECTION[targetAngle]; const targetRoomId = currentExits[targetDir]; if (targetRoomId) { if (gameState.visitedRooms.has(targetRoomId)) { knownExits.push(`<strong>${dir.name}</strong> ${ROOM_NAMES[targetRoomId].acc.join(' ')}`); } else { unknownExits.add(`<strong>${dir.name}</strong>`); } } } if (knownExits.length === 0 && unknownExits.size === 0) return ""; let html = ""; if (unknownExits.size > 0) { html += `Potes īre: ${[...unknownExits].join(', ')}.<br>`; } if (knownExits.length > 0) { if (unknownExits.size > 0) html += `Etiam potes īre:<br>`; else html += `Potes īre:<br>`; knownExits.forEach(exit => { html += `&nbsp;&nbsp;${exit}<br>`; }); } return html; }
+
+// =============================================================================
+// ### 5. MAP AND RENDERING LOGIC
+// =============================================================================
+function setupMap() { mapGroup = document.createElementNS(SVG_NS, 'g'); elements.mapSvg.appendChild(mapGroup); for (const roomId in rooms) { const room = rooms[roomId]; const roomGroup = document.createElementNS(SVG_NS, 'g'); roomGroup.id = `map-room-${roomId}`; roomGroup.classList.add('map-room'); const rect = document.createElementNS(SVG_NS, 'rect'); const label = document.createElementNS(SVG_NS, 'text'); label.classList.add('room-label'); const nameParts = room.name.replace(/[()]/g, '').split(' '); nameParts.forEach((part, index) => { const tspan = document.createElementNS(SVG_NS, 'tspan'); tspan.textContent = part; tspan.setAttribute('x', 0); tspan.setAttribute('dy', `${index * 1.2}em`); label.appendChild(tspan); }); roomGroup.appendChild(rect); roomGroup.appendChild(label); mapGroup.appendChild(roomGroup); } }
+function setupMapInteraction() { elements.mapViewport.addEventListener('mousedown', (e) => { gameState.isDragging = true; elements.mapViewport.style.cursor = 'grabbing'; gameState.dragStart.x = e.clientX - gameState.panOffset.x; gameState.dragStart.y = e.clientY - gameState.panOffset.y; }); window.addEventListener('mousemove', (e) => { if (!gameState.isDragging) return; gameState.panOffset.x = e.clientX - gameState.dragStart.x; gameState.panOffset.y = e.clientY - gameState.dragStart.y; applyMapTransform(false); }); window.addEventListener('mouseup', () => { gameState.isDragging = false; elements.mapViewport.style.cursor = 'grab'; }); }
+async function applyMapTransform(animated = false) { if (!mapGroup) return; const targetVisualRotation = -gameState.playerFacing; let delta = targetVisualRotation - gameState.currentVisualRotation; if (delta > 180) delta -= 360; else if (delta < -180) delta += 360; const nextVisualRotation = gameState.currentVisualRotation + delta; const isLongTurn = Math.abs(delta) > 90; const animate = (rotation, scale) => { return new Promise(resolve => { const transitionDuration = animated ? 0.3 : 0; mapGroup.style.transition = `transform ${transitionDuration}s ease-in-out`; const playerRoom = rooms[gameState.currentRoom]; const px = playerRoom.x * mapSettings.GRID_SIZE; const py = playerRoom.y * mapSettings.GRID_SIZE; const viewbox = elements.mapViewport.getBoundingClientRect(); const centerX = viewbox.width / 2; const centerY = viewbox.height / 2; const pan = `translate(${gameState.panOffset.x}, ${gameState.panOffset.y})`; const recenter = `translate(${centerX}, ${centerY})`; const rot = `rotate(${rotation})`; const scaling = `scale(${scale})`; const centerOnPlayer = `translate(${-px}, ${-py})`; mapGroup.setAttribute('transform', `${pan} ${recenter} ${rot} ${scaling} ${centerOnPlayer}`); setTimeout(resolve, transitionDuration * 1000); }); }; if (animated && isLongTurn) { await animate(gameState.currentVisualRotation, 0.7); await sleep(100); await animate(nextVisualRotation, 0.7); await sleep(300); await animate(nextVisualRotation, 1.0); } else { await animate(nextVisualRotation, 1.0); } gameState.currentVisualRotation = nextVisualRotation; }
+function updateMapGraphics() { const { GRID_SIZE, ROOM_WIDTH, ROOM_HEIGHT } = mapSettings; const oldConnections = mapGroup.querySelectorAll('.map-connection'); oldConnections.forEach(conn => conn.remove()); const targetVisualRotation = -gameState.playerFacing; let delta = targetVisualRotation - gameState.currentVisualRotation; if (delta > 180) delta -= 360; else if (delta < -180) delta += 360; const nextVisualRotation = gameState.currentVisualRotation + delta; const normalizedNextAngle = (nextVisualRotation % 360 + 360) % 360; const isUpsideDown = normalizedNextAngle > 90 && normalizedNextAngle < 270; for (const roomId in rooms) { if (gameState.visitedRooms.has(roomId)) { const room = rooms[roomId]; for (const dir in room.exits) { const targetRoomId = room.exits[dir]; if (targetRoomId && rooms[targetRoomId]) { const targetRoom = rooms[targetRoomId]; if (gameState.visitedRooms.has(targetRoomId)) { if (roomId < targetRoomId) { const line = document.createElementNS(SVG_NS, 'line'); line.setAttribute('x1', room.x * GRID_SIZE); line.setAttribute('y1', room.y * GRID_SIZE); line.setAttribute('x2', targetRoom.x * GRID_SIZE); line.setAttribute('y2', targetRoom.y * GRID_SIZE); line.setAttribute('class', 'map-connection'); mapGroup.prepend(line); } } else if (roomId === gameState.currentRoom) { const line = document.createElementNS(SVG_NS, 'line'); line.setAttribute('x1', room.x * GRID_SIZE); line.setAttribute('y1', room.y * GRID_SIZE); line.setAttribute('x2', (room.x + targetRoom.x) / 2 * GRID_SIZE); line.setAttribute('y2', (room.y + targetRoom.y) / 2 * GRID_SIZE); line.setAttribute('class', 'map-connection'); mapGroup.prepend(line); } } } } } for (const roomId in rooms) { const room = rooms[roomId]; const roomGroup = document.getElementById(`map-room-${roomId}`); const rect = roomGroup.querySelector('rect'); const label = roomGroup.querySelector('text'); roomGroup.setAttribute('transform', `translate(${room.x * GRID_SIZE}, ${room.y * GRID_SIZE})`); rect.setAttribute('x', -ROOM_WIDTH / 2); rect.setAttribute('y', -ROOM_HEIGHT / 2); rect.setAttribute('width', ROOM_WIDTH); rect.setAttribute('height', ROOM_HEIGHT); label.setAttribute('dy', `-${(label.children.length - 1) * 0.5}em`); if (isUpsideDown) { label.setAttribute('transform', 'rotate(180)'); } else { label.removeAttribute('transform'); } roomGroup.classList.remove('current', 'hidden'); label.classList.remove('current'); if (roomId === gameState.currentRoom) { roomGroup.classList.add('current'); label.classList.add('current'); } else if (!gameState.visitedRooms.has(roomId)) { roomGroup.classList.add('hidden'); } } }
+
+// REPLACE THE ENTIRE "RENDERING AND LOGGING" SECTION WITH THIS BLOCK.
+
+// =============================================================================
+// ### 6. RENDERING AND LOGGING
+// =============================================================================
+
+async function render(animated = true) {
+    // This function is only for visual updates.
+    // Logging now happens in processInput and performMove.
+    updateMapGraphics();
+    await applyMapTransform(animated);
+}
+
+function logCommand(commandHtml, isRecast = false) {
+    const log = elements.gameLog;
+    const entry = document.createElement('div');
+    entry.className = isRecast ? 'log-recast' : 'log-command';
+    entry.innerHTML = `> ${commandHtml}`;
+    log.appendChild(entry);
+    // Don't scroll yet; let logRoom handle it.
+}
+
+// REPLACE your old logRecast function with this one.
+
+function logRecast(recastHtml) {
+    const log = elements.gameLog;
+    // Find the last command log and replace its content.
+    const lastCommand = log.querySelector('.log-command:last-child, .log-recast:last-child');
+    if (lastCommand) {
+        lastCommand.innerHTML = `> ${recastHtml}`;
+        lastCommand.className = 'log-recast';
+        
+        // **THE FIX IS HERE**: Tell the log to scroll to the bottom.
+        log.scrollTop = log.scrollHeight;
+    }
+}
+function logRoom() {
+    const log = elements.gameLog;
+    // Clear the log ONLY on the very first render.
+    if (!gameState.hasRenderedFirstRoom) {
+        log.innerHTML = '';
+        gameState.hasRenderedFirstRoom = true;
+    }
+    const room = rooms[gameState.currentRoom];
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    const title = document.createElement('h3');
+    title.className = 'log-room-title';
+    title.innerHTML = processDescription(room.name);
+    const desc = document.createElement('p');
+    desc.className = 'log-description';
+    desc.innerHTML = processDescription(room.desc);
+    const exits = document.createElement('div');
+    exits.className = 'log-exits';
+    exits.innerHTML = generateExitsString();
+
+    entry.appendChild(title);
+    entry.appendChild(desc);
+    if (exits.innerHTML) entry.appendChild(exits);
+
+    log.appendChild(entry);
+    log.scrollTop = log.scrollHeight; // Scroll to bottom.
+}
+
+function processDescription(text) {
+    const words = text.split(/([ \t\n\r]+)/);
+    return words.map(word => {
+        if (!word.trim()) return word;
+        const cleanWord = removeDiacritics(word.toLowerCase().replace(/[.,!?;]/g, ''));
+        let info;
+        if (VOCAB.NOVUM[cleanWord]) {
+            info = VOCAB.NOVUM[cleanWord];
+            return `<span class="vocab novum">${word}<span class="tooltip">${info.lemma}<br>${info.def}</span></span>`;
+        } else if (VOCAB.OUTER[cleanWord]) {
+            info = VOCAB.OUTER[cleanWord];
+            return `<span class="vocab">${word}<span class="tooltip">${info}</span></span>`;
+        }
+        return word;
+    }).join('');
+}
+// =============================================================================
+// ### 7. INITIALIZATION
+// =============================================================================
+// This block runs once after the page is loaded.
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Find all static HTML elements.
     elements = { 
         gameLog: document.getElementById('game-log'), 
         feedback: document.getElementById('feedback'), 
@@ -88,21 +384,20 @@ const initializers = () => {
         commandInput: document.getElementById('command-input'), 
         mapViewport: document.getElementById('map-viewport'), 
         mapSvg: document.getElementById('map-svg'),
-        // Note: playerMarker is NOT here yet.
     };
 
-    // **THE FIX**: This sequence is crucial.
-    // 1. Create all the dynamic SVG elements, INCLUDING the player marker.
+    // 2. Create the dynamic SVG elements for the map.
     setupMap();
     
-    // 2. NOW that the player marker has been created, we can safely find it.
-
-    // 3. With all elements found and stored, we can run the rest of the setup.
+    // 3. Now that SVG elements exist, find the player marker.
+    
+    // 4. Set up user interaction and perform the initial render.
     setupMapInteraction();
-    render(false);
+    logRoom(); // Log the first room description
+    render(false); // Render the map
     elements.commandInput.focus();
 
-    // Handle command submission when the player presses Enter.
+    // 5. Set up event listeners for player commands.
     elements.commandForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const command = elements.commandInput.value;
@@ -111,8 +406,6 @@ const initializers = () => {
         }
         elements.commandInput.value = '';
     });
-
-    // Handle command history navigation with arrow keys.
     elements.commandInput.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowUp') {
             e.preventDefault();
@@ -131,388 +424,4 @@ const initializers = () => {
             }
         }
     });
-};
-
-document.addEventListener('DOMContentLoaded', initializers);
-
-// =============================================================================
-// ### 4. CORE GAME LOGIC
-// =============================================================================
-// REPLACE THE ENTIRE "CORE GAME LOGIC" SECTION WITH THIS BLOCK
-// REPLACE THE ENTIRE "CORE GAME LOGIC" SECTION WITH THIS BLOCK.
-
-// =============================================================================
-// ### 4. CORE GAME LOGIC
-// =============================================================================
-const opposite = { 'north': 'south', 'south': 'north', 'east': 'west', 'west': 'east', 'northwest': 'southeast', 'southeast': 'northwest', 'northeast': 'southwest', 'southwest': 'northeast' };
-
-/**
- * The main entry point for player input. It orchestrates parsing, logging, and execution.
- */
-async function processInput(command) {
-    if (gameState.isPlayerActionLocked) return;
-    gameState.isPlayerActionLocked = true;
-    elements.commandInput.disabled = true;
-
-    logCommand(command);
-    gameState.inputHistory.unshift(command);
-    gameState.historyIndex = -1;
-
-    try {
-        // The parser returns a plan of action.
-        const action = parseCommand(command);
-
-        // If the parser determined a recast is needed, log it and wait.
-        if (action.needsRecast) {
-            logRecast(action.recast);
-            await sleep(500);
-        }
-
-        // Execute the action determined by the parser.
-        if (action.type === 'move') {
-            await performMove(action.direction);
-        } else if (action.type === 'clarify') {
-            askClarification(action.prompt, action.options);
-        } else {
-            setFeedback(action.feedback || "Nōn intellegō verba tua.");
-        }
-    } finally {
-        // This block always runs, ensuring the input is re-enabled.
-        if (!gameState.clarificationState) {
-            gameState.isPlayerActionLocked = false;
-            elements.commandInput.disabled = false;
-            elements.commandInput.focus();
-        }
-    }
-}
-
-/**
- * The parser's brain. It analyzes a command string and returns an "action object"
- * describing what the game should do.
- */
-function parseCommand(command) {
-    const normalizedCommand = removeDiacritics(command.toLowerCase().trim());
-    
-    // --- 1. Handle Clarification Response ---
-    if (gameState.clarificationState) {
-        for (const key in gameState.clarificationState.options) {
-            if (normalizedCommand.includes(key)) {
-                const targetRoomId = gameState.clarificationState.options[key];
-                for (const dir in rooms[gameState.currentRoom].exits) {
-                    if (rooms[gameState.currentRoom].exits[dir] === targetRoomId) {
-                        gameState.clarificationState = null;
-                        return { type: 'move', direction: dir, needsRecast: false };
-                    }
-                }
-            }
-        }
-        return { type: 'feedback', feedback: `Nōn intellegō. ${gameState.clarificationState.prompt}` };
-    }
-
-    // --- 2. Check for Ambiguity ---
-    if (gameState.currentRoom === 'atrium' && normalizedCommand.includes('cubicul')) {
-        return { type: 'clarify', prompt: "Utrum cubiculum?", options: { 'sororis': 'cubiculum_sororis', 'matris': 'cubiculum_matris_et_patris' } };
-    }
-    if (gameState.currentRoom === 'atrium' && normalizedCommand.includes('ala')) {
-        return { type: 'clarify', prompt: "Utram ālam?", options: { 'larum': 'ala_larum', 'hermae': 'ala_hermae' } };
-    }
-
-    // --- 3. Parse for Action (Verb + Noun or Direction) ---
-    let foundVerb = null;
-    for (const key in VERBS) {
-        const verbData = VERBS[key];
-        if (verbData.stems.some(s => normalizedCommand.includes(s)) || verbData.infinitives.some(i => normalizedCommand.includes(i))) {
-            foundVerb = verbData.first_person;
-            break;
-        }
-    }
-
-    // A. Check for Landmark Navigation
-    for (const roomId in ROOM_NAMES) {
-        const roomData = ROOM_NAMES[roomId];
-        const searchTerms = [roomData.stem, ...(roomData.aliases || [])];
-        for (const term of searchTerms) {
-            if (normalizedCommand.includes(term)) {
-                for (const dir in rooms[gameState.currentRoom].exits) {
-                    if (rooms[gameState.currentRoom].exits[dir] === roomId) {
-                        const verbForRecast = foundVerb || 'eō';
-                        const needsRecast = !normalizedCommand.includes(roomData.search) || !normalizedCommand.includes(verbForRecast);
-                        const ending = roomData.acc.split(' ').pop();
-                        const highlightedAcc = roomData.acc.replace(ending, `<span class="recast-ending">${ending}</span>`);
-                        return { type: 'move', direction: dir, needsRecast: needsRecast, recast: `${verbForRecast} ${highlightedAcc}` };
-                    }
-                }
-            }
-        }
-    }
-
-    // B. Check for Directional Navigation
-    const currentFacing = ANGLE_TO_DIRECTION[gameState.playerFacing];
-    const rursusDir = opposite[currentFacing];
-    const dexteramDir = ANGLE_TO_DIRECTION[(gameState.playerFacing + 90) % 360];
-    const sinistramDir = ANGLE_TO_DIRECTION[(gameState.playerFacing + 270) % 360];
-    const hasProrsus = normalizedCommand.includes('prorsus');
-    const hasRursus = normalizedCommand.includes('rursus');
-    const hasDexteram = normalizedCommand.includes('dexteram');
-    const hasSinistram = normalizedCommand.includes('sinistram');
-
-    let moveDirection = null;
-    let moveCommand = null;
-    
-    if ((hasProrsus || hasRursus) && (hasDexteram || hasSinistram)) {
-        const primary = hasProrsus ? currentFacing : rursusDir;
-        const secondary = hasDexteram ? dexteramDir : sinistramDir;
-        moveDirection = (primary.startsWith('north') || primary.startsWith('south')) ? (primary + secondary) : (secondary + primary);
-        moveCommand = `${hasProrsus ? 'prōrsus' : 'rūrsus'} et ${hasDexteram ? 'ad dexteram' : 'ad sinistram'}`;
-    }
-    else if (hasProrsus) { moveDirection = currentFacing; moveCommand = 'prōrsus'; } 
-    else if (hasRursus) { moveDirection = rursusDir; moveCommand = 'rūrsus'; } 
-    else if (hasDexteram) { moveDirection = dexteramDir; moveCommand = 'ad dexteram'; } 
-    else if (hasSinistram) { moveDirection = sinistramDir; moveCommand = 'ad sinistram'; }
-
-    if (moveDirection) {
-        const verbForRecast = foundVerb || 'eō';
-        const needsRecast = !normalizedCommand.includes(verbForRecast) || !normalizedCommand.includes(moveCommand.split(' ')[0]);
-        return { type: 'move', direction: moveDirection, needsRecast: needsRecast, recast: `${verbForRecast} ${moveCommand}` };
-    }
-    
-    return { type: 'feedback' };
-}
-
-/**
- * Executes the move action, updating the game state.
- */
-async function performMove(moveDirection) {
-    const nextRoomId = rooms[gameState.currentRoom].exits[moveDirection];
-    if (nextRoomId) {
-        const previousRoomId = gameState.currentRoom;
-        
-        gameState.currentRoom = nextRoomId;
-        gameState.visitedRooms.add(nextRoomId);
-        gameState.panOffset = { x: 0, y: 0 };
-        gameState.playerFacing = DIRECTION_ROTATIONS[moveDirection];
-
-        if ((previousRoomId === 'ala_larum' || previousRoomId === 'ala_hermae') && nextRoomId === 'atrium') {
-            gameState.playerFacing = 0;
-        }
-
-        await render(true); 
-        setFeedback("");
-    } else {
-        setFeedback("Nōn potes illāc īre.");
-    }
-}
-
-function askClarification(prompt, options) {
-    gameState.clarificationState = { prompt, options };
-    let optionsString = Object.values(options).map(id => `&nbsp;&nbsp;- ${ROOM_NAMES[id].nom}`).join('<br>');
-    setFeedback(`${prompt}<br>${optionsString}`);
-}
-
-function setFeedback(message) {
-    elements.feedback.innerHTML = message;
-}
-
-function generateExitsString() {
-    const directions = [ { name: 'prōrsus', angle: 0 }, { name: 'rūrsus', angle: 180 }, { name: 'ad dexteram', angle: 90 }, { name: 'ad sinistram', angle: 270 }, { name: 'prōrsus et ad dexteram', angle: 45 }, { name: 'prōrsus et ad sinistram', angle: 315 }, { name: 'rūrsus et ad dexteram', angle: 135 }, { name: 'rūrsus et ad sinistram', angle: 225 } ];
-    const knownExits = [];
-    const unknownExits = new Set();
-    const currentExits = rooms[gameState.currentRoom].exits;
-    for (const dir of directions) {
-        const targetAngle = (gameState.playerFacing + dir.angle + 360) % 360;
-        const targetDir = ANGLE_TO_DIRECTION[targetAngle];
-        const targetRoomId = currentExits[targetDir];
-        if (targetRoomId) {
-            if (gameState.visitedRooms.has(targetRoomId)) {
-                knownExits.push(`<strong>${dir.name}</strong> ${ROOM_NAMES[targetRoomId].acc}`);
-            } else {
-                unknownExits.add(`<strong>${dir.name}</strong>`);
-            }
-        }
-    }
-    if (knownExits.length === 0 && unknownExits.size === 0) return "";
-    let html = "";
-    if (unknownExits.size > 0) {
-        html += `Potes īre: ${[...unknownExits].join(', ')}.<br>`;
-    }
-    if (knownExits.length > 0) {
-        if (unknownExits.size > 0) html += `Etiam potes īre:<br>`;
-        else html += `Potes īre:<br>`;
-        knownExits.forEach(exit => { html += `&nbsp;&nbsp;${exit}<br>`; });
-    }
-    return html;
-}
-// =============================================================================
-// ### 5. MAP AND RENDERING LOGIC
-// =============================================================================
-
-function setupMap() {
-    mapGroup = document.createElementNS(SVG_NS, 'g');
-    elements.mapSvg.appendChild(mapGroup);
-    for (const roomId in rooms) { const room = rooms[roomId]; const roomGroup = document.createElementNS(SVG_NS, 'g'); roomGroup.id = `map-room-${roomId}`; roomGroup.classList.add('map-room'); const rect = document.createElementNS(SVG_NS, 'rect'); const label = document.createElementNS(SVG_NS, 'text'); label.classList.add('room-label'); const nameParts = room.name.replace(/[()]/g, '').split(' '); nameParts.forEach((part, index) => { const tspan = document.createElementNS(SVG_NS, 'tspan'); tspan.textContent = part; tspan.setAttribute('x', 0); tspan.setAttribute('dy', `${index * 1.2}em`); label.appendChild(tspan); }); roomGroup.appendChild(rect); roomGroup.appendChild(label); mapGroup.appendChild(roomGroup); }
-}
-function setupMapInteraction() { elements.mapViewport.addEventListener('mousedown', (e) => { gameState.isDragging = true; elements.mapViewport.style.cursor = 'grabbing'; gameState.dragStart.x = e.clientX - gameState.panOffset.x; gameState.dragStart.y = e.clientY - gameState.panOffset.y; }); window.addEventListener('mousemove', (e) => { if (!gameState.isDragging) return; gameState.panOffset.x = e.clientX - gameState.dragStart.x; gameState.panOffset.y = e.clientY - gameState.dragStart.y; applyMapTransform(false); }); window.addEventListener('mouseup', () => { gameState.isDragging = false; elements.mapViewport.style.cursor = 'grab'; }); }
-async function applyMapTransform(animated = false) { if (!mapGroup) return; const targetVisualRotation = -gameState.playerFacing; let delta = targetVisualRotation - gameState.currentVisualRotation; if (delta > 180) delta -= 360; else if (delta < -180) delta += 360; const nextVisualRotation = gameState.currentVisualRotation + delta; const isLongTurn = Math.abs(delta) > 90; const animate = (rotation, scale) => { return new Promise(resolve => { const transitionDuration = animated ? 0.3 : 0; mapGroup.style.transition = `transform ${transitionDuration}s ease-in-out`; const playerRoom = rooms[gameState.currentRoom]; const px = playerRoom.x * mapSettings.GRID_SIZE; const py = playerRoom.y * mapSettings.GRID_SIZE; const viewbox = elements.mapViewport.getBoundingClientRect(); const centerX = viewbox.width / 2; const centerY = viewbox.height / 2; const pan = `translate(${gameState.panOffset.x}, ${gameState.panOffset.y})`; const recenter = `translate(${centerX}, ${centerY})`; const rot = `rotate(${rotation})`; const scaling = `scale(${scale})`; const centerOnPlayer = `translate(${-px}, ${-py})`; mapGroup.setAttribute('transform', `${pan} ${recenter} ${rot} ${scaling} ${centerOnPlayer}`); setTimeout(resolve, transitionDuration * 1000); }); }; if (animated && isLongTurn) { await animate(gameState.currentVisualRotation, 0.7); await sleep(100); await animate(nextVisualRotation, 0.7); await sleep(300); await animate(nextVisualRotation, 1.0); } else { await animate(nextVisualRotation, 1.0); } gameState.currentVisualRotation = nextVisualRotation; }
-// REPLACE your old updateMapGraphics function with this one.
-
-// REPLACE your old updateMapGraphics function with this one.
-
-function updateMapGraphics() {
-    const { GRID_SIZE, ROOM_WIDTH, ROOM_HEIGHT } = mapSettings;
-
-    // (The logic for drawing connection lines is unchanged and correct)
-    const oldConnections = mapGroup.querySelectorAll('.map-connection');
-    oldConnections.forEach(conn => conn.remove());
-    for (const roomId in rooms) { if (gameState.visitedRooms.has(roomId)) { const room = rooms[roomId]; for (const dir in room.exits) { const targetRoomId = room.exits[dir]; if (targetRoomId && rooms[targetRoomId]) { const targetRoom = rooms[targetRoomId]; if (gameState.visitedRooms.has(targetRoomId)) { if (roomId < targetRoomId) { const line = document.createElementNS(SVG_NS, 'line'); line.setAttribute('x1', room.x * GRID_SIZE); line.setAttribute('y1', room.y * GRID_SIZE); line.setAttribute('x2', targetRoom.x * GRID_SIZE); line.setAttribute('y2', targetRoom.y * GRID_SIZE); line.setAttribute('class', 'map-connection'); mapGroup.prepend(line); } } else if (roomId === gameState.currentRoom) { const line = document.createElementNS(SVG_NS, 'line'); line.setAttribute('x1', room.x * GRID_SIZE); line.setAttribute('y1', room.y * GRID_SIZE); line.setAttribute('x2', (room.x + targetRoom.x) / 2 * GRID_SIZE); line.setAttribute('y2', (room.y + targetRoom.y) / 2 * GRID_SIZE); line.setAttribute('class', 'map-connection'); mapGroup.prepend(line); } } } } }
-
-    // --- THE FIX: TEXT ROTATION LOGIC NOW PREDICTS THE FINAL ROTATION ---
-    // 1. Calculate the final rotation angle the map WILL HAVE after the turn.
-    const targetVisualRotation = -gameState.playerFacing;
-    let delta = targetVisualRotation - gameState.currentVisualRotation;
-    if (delta > 180) delta -= 360;
-    else if (delta < -180) delta += 360;
-    const nextVisualRotation = gameState.currentVisualRotation + delta;
-    
-    // 2. Normalize this future angle to be between 0 and 359.
-    const normalizedNextAngle = (nextVisualRotation % 360 + 360) % 360;
-    const isUpsideDown = normalizedNextAngle > 90 && normalizedNextAngle < 270;
-    // --- END OF FIX PREDICTION LOGIC ---
-
-    // Update styles and positions for all rooms
-    for (const roomId in rooms) {
-        const room = rooms[roomId];
-        const roomGroup = document.getElementById(`map-room-${roomId}`);
-        const rect = roomGroup.querySelector('rect');
-        const label = roomGroup.querySelector('text');
-
-        roomGroup.setAttribute('transform', `translate(${room.x * GRID_SIZE}, ${room.y * GRID_SIZE})`);
-        rect.setAttribute('x', -ROOM_WIDTH / 2); rect.setAttribute('y', -ROOM_HEIGHT / 2);
-        rect.setAttribute('width', ROOM_WIDTH); rect.setAttribute('height', ROOM_HEIGHT);
-        label.setAttribute('dy', `-${(label.children.length - 1) * 0.5}em`);
-
-        // 3. Apply the 180-degree flip to the text based on the PREDICTED orientation.
-        if (isUpsideDown) {
-            label.setAttribute('transform', 'rotate(180)');
-        } else {
-            label.removeAttribute('transform');
-        }
-
-        roomGroup.classList.remove('current', 'hidden');
-        label.classList.remove('current');
-        if (roomId === gameState.currentRoom) {
-            roomGroup.classList.add('current');
-            label.classList.add('current');
-        } else if (!gameState.visitedRooms.has(roomId)) {
-            roomGroup.classList.add('hidden');
-        }
-    }
-
-    // Update the player marker (decoupled and correct)
-    const playerMarker = elements.playerMarker;
-    const viewbox = elements.mapViewport.getBoundingClientRect();
-    if (viewbox.width > 0 && playerMarker) {
-        const centerX = viewbox.width / 2;
-        const centerY = viewbox.height / 2;
-        playerMarker.setAttribute('transform', `translate(${centerX}, ${centerY}) rotate(${gameState.playerFacing})`);
-    }
-}
-
-// =============================================================================
-// ### 6. RENDERING AND LOGGING
-// =============================================================================
-// REPLACE the entire "RENDERING AND LOGGING" section at the end of your file with this block.
-
-// =============================================================================
-// ### 6. RENDERING AND LOGGING
-// =============================================================================
-
-/**
- * The main render function. It is now ASYNCHRONOUS to allow it to wait for
- * the map animation to complete before finishing. It orchestrates all visual updates.
- */
-async function render(animated = true) {
-    // **THE FIX**: This line was missing. It ensures the room description is always logged.
-    logRoom(); 
-    
-    updateMapGraphics();
-    await applyMapTransform(animated);
-}
-
-/**
- * Appends the player's raw command to the game log.
- */
-function logCommand(command) {
-    const log = elements.gameLog;
-    const entry = document.createElement('div');
-    entry.className = 'log-command';
-    entry.innerHTML = `> ${command}`;
-    log.appendChild(entry);
-    log.scrollTop = log.scrollHeight;
-}
-
-/**
- * Appends a recast, grammatically correct version of the player's command to the log.
- */
-function logRecast(recastHtml) {
-    const log = elements.gameLog;
-    const entry = document.createElement('div');
-    entry.className = 'log-recast';
-    entry.innerHTML = `> ${recastHtml}`;
-    log.appendChild(entry);
-    log.scrollTop = log.scrollHeight;
-}
-
-/**
- * Appends the current room's title, description, and exits to the game log.
- * Handles the special case of the very first render.
- */
-function logRoom() {
-    const log = elements.gameLog;
-    const room = rooms[gameState.currentRoom];
-    
-    // On the very first load, this function is called once to clear the log
-    // and show the starting room. We can detect this because the log is empty.
-    if (!log.hasChildNodes()) {
-        const entry = document.createElement('div');
-        entry.className = 'log-entry';
-
-        const title = document.createElement('h3');
-        title.className = 'log-room-title';
-        title.innerHTML = processDescription(room.name);
-        
-        const desc = document.createElement('p');
-        desc.className = 'log-description';
-        desc.innerHTML = processDescription(room.desc);
-
-        const exits = document.createElement('div');
-        exits.className = 'log-exits';
-        exits.innerHTML = generateExitsString();
-
-        entry.appendChild(title);
-        entry.appendChild(desc);
-        if (exits.innerHTML) entry.appendChild(exits);
-
-        log.appendChild(entry);
-        log.scrollTop = log.scrollHeight;
-    }
-}
-
-/**
- * Parses a string of text and wraps known vocabulary words in HTML for tooltips.
- */
-function processDescription(text) {
-    const words = text.split(/([ \t\n\r]+)/);
-    return words.map(word => {
-        if (!word.trim()) return word;
-        const cleanWord = removeDiacritics(word.toLowerCase().replace(/[.,!?;]/g, ''));
-        let info;
-        if (VOCAB.NOVUM[cleanWord]) {
-            info = VOCAB.NOVUM[cleanWord];
-            return `<span class="vocab novum">${word}<span class="tooltip">${info.lemma}<br>${info.def}</span></span>`;
-        } else if (VOCAB.OUTER[cleanWord]) {
-            info = VOCAB.OUTER[cleanWord];
-            return `<span class="vocab">${word}<span class="tooltip">${info}</span></span>`;
-        }
-        return word;
-    }).join('');
-}
+});
