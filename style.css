@@ -26,7 +26,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 .log-description { font-size: 1.1em; line-height: 1.6; }
 .log-exits { margin-top: 20px; padding-top: 15px; border-top: 2px solid #eee8d5; font-style: italic; color: #657b83; }
 
-#feedback { color: #dc322f; font-style: italic; height: 1.2em; }
 #command-input { width: 100%; box-sizing: border-box; padding: 10px; font-size: 1em; border: 1px solid #93a1a1; border-radius: 4px; background-color: #fdf6e3; color: #073642; }
 
 .vocab { position: relative; display: inline-block; cursor: help; background-color: #eee8d5; padding: 0 4px; border-radius: 3px; }
@@ -70,4 +69,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
     0%, 100% { transform: scale(1.0); }
     25% { transform: scale(1.1) rotate(-2deg); }
     75% { transform: scale(1.1) rotate(2deg); }
+}
+/* ADD THIS BLOCK to the end of style.css */
+.log-error {
+    color: #dc322f; /* The same red as the old feedback */
+    font-style: italic;
+    padding-left: 10px;
+    margin-bottom: 15px; /* Match spacing of other log entries */
 }
