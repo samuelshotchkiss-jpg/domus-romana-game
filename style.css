@@ -97,3 +97,26 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
     padding-left: 10px;
     margin-bottom: 15px; /* Match spacing of other log entries */
 }
+
+/* Add this new rule to style.css */
+
+/* Style for vocab words specifically inside a red error message */
+.log-error .vocab {
+    background-color: rgba(220, 50, 47, 0.1); /* A very faint, transparent red */
+}
+
+/* Add this new rule to style.css */
+
+/* Style for vocab words specifically inside a yellow room title */
+.log-room-title .vocab {
+    color: #cb4b16; /* Solarized Orange for better contrast and a "link" feel */
+    background-color: #eee8d5; /* The standard light tan vocab background */
+    font-weight: 600; /* A slightly bolder font to make it pop */
+}
+/* Add this new rule to style.css */
+
+/* Style for vocab words inside the blue, bolded exit directions */
+.log-exits strong .vocab {
+    color: inherit; /* This keeps the text blue */
+    background-color: rgba(38, 139, 210, 0.05); /* An even SUBTLER 5% transparent blue */
+}
