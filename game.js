@@ -132,59 +132,43 @@ function findVerb(normalizedCommand) {
     return null;
 }
 
+// REPLACE your entire "parseCommand" function with this final, smarter version.
 function parseCommand(command) {
     const normalizedCommand = removeDiacritics(command.toLowerCase().trim());
     
-    // IN game.js, REPLACE the entire `if (gameState.clarificationState)` block
-// at the top of the `parseCommand` function with this corrected version.
+    if (gameState.clarificationState) {
+        for (const key in gameState.clarificationState.options) {
+            const targetRoomId = gameState.clarificationState.options[key];
+            const roomData = ROOM_NAMES[targetRoomId];
+            const stem = roomData.clarification_stem;
 
-// IN game.js, REPLACE the entire `if (gameState.clarificationState)` block
-// at the top of the `parseCommand` function with this corrected version.
+            if (stem && normalizedCommand.includes(stem)) {
+                const wasCorrected = true;
+                const cleanedCommand = normalizedCommand.replace(/[.,!?;]/g, '');
+                const isClarificationPerfect = (cleanedCommand === key);
+                let recastHtml = roomData.recast;
 
-if (gameState.clarificationState) {
-    for (const key in gameState.clarificationState.options) {
-        const targetRoomId = gameState.clarificationState.options[key];
-        const roomData = ROOM_NAMES[targetRoomId];
-        const stem = roomData.clarification_stem;
-
-        // Use the new stem to check if the player's command includes it.
-        if (stem && normalizedCommand.includes(stem)) {
-            // A response to a clarification is always part of a "recast" sequence.
-            const wasCorrected = true;
-
-            // Check for perfection by comparing the cleaned input to the expected key.
-            const cleanedCommand = normalizedCommand.replace(/[.,!?;]/g, '');
-            const isClarificationPerfect = (cleanedCommand === key);
-
-            let recastHtml = roomData.recast;
-
-            // Only add the jiggling effect if the clarification was NOT perfect.
-            if (!isClarificationPerfect && recastHtml) {
-                // This regex is now more general to find common endings.
-                const endingMatch = recastHtml.match(/(um|am|em|ēs|is|ī|ae|us)$/i);
-                if (endingMatch) {
-                    const ending = endingMatch[0];
-                    const base = recastHtml.slice(0, -ending.length);
-                    recastHtml = `${base}<span class="recast-ending">${ending}</span>`;
-                } else {
-                    recastHtml = `<span class="recast-ending">${recastHtml}</span>`;
+                if (!isClarificationPerfect && recastHtml) {
+                    const endingMatch = recastHtml.match(/(um|am|em|ēs|is|ī|ae|us)$/i);
+                    if (endingMatch) {
+                        const ending = endingMatch[0];
+                        const base = recastHtml.slice(0, -ending.length);
+                        recastHtml = `${base}<span class="recast-ending">${ending}</span>`;
+                    } else {
+                        recastHtml = `<span class="recast-ending">${recastHtml}</span>`;
+                    }
                 }
-            }
 
-            gameState.clarificationState = null; // Clear state now that we have a match.
-            for (const dir in rooms[gameState.currentRoom].exits) {
-                if (rooms[gameState.currentRoom].exits[dir] === targetRoomId) {
-                    return { type: 'move', direction: dir, newFacingAngle: DIRECTION_ROTATIONS[dir], wasCorrected: wasCorrected, recast: recastHtml };
+                gameState.clarificationState = null;
+                for (const dir in rooms[gameState.currentRoom].exits) {
+                    if (rooms[gameState.currentRoom].exits[dir] === targetRoomId) {
+                        return { type: 'move', direction: dir, newFacingAngle: DIRECTION_ROTATIONS[dir], wasCorrected: wasCorrected, recast: recastHtml };
+                    }
                 }
             }
         }
+        return { type: 'feedback', feedback: `Nōn intellegō. ${gameState.clarificationState.prompt}` };
     }
-    // If the loop completes without finding a matching stem, then we truly don't understand.
-    return { type: 'feedback', feedback: `Nōn intellegō. ${gameState.clarificationState.prompt}` };
-}
-    // ================================================================= //
-    // ### BUG FIX END ###
-    // ================================================================= //
 
     const verbInfo = findVerb(normalizedCommand);
     let landmarkInfo = null;
@@ -193,7 +177,8 @@ if (gameState.clarificationState) {
 
     for (const roomId in ROOM_NAMES) {
         const roomData = ROOM_NAMES[roomId];
-        if (!Object.values(rooms[gameState.currentRoom].exits).includes(roomId)) continue;
+        // Allow matching against ALL rooms, not just exits, for better error messages.
+        // if (!Object.values(rooms[gameState.currentRoom].exits).includes(roomId)) continue;
         let score = 0;
         if (roomData.aliases && roomData.aliases.some(a => normalizedCommand.includes(a))) { score += 10; }
         if (roomData.stems && roomData.stems.some(s => normalizedCommand.includes(s))) { score += 1; }
@@ -205,6 +190,25 @@ if (gameState.clarificationState) {
         landmarkDir = Object.keys(rooms[gameState.currentRoom].exits).find(dir => rooms[gameState.currentRoom].exits[dir] === bestMatch.id);
     }
     
+    // --- START OF NEW, SMARTER ERROR HANDLING ---
+    if (landmarkInfo) {
+        // Case 1: Player is trying to go to the room they are already in.
+        if (landmarkInfo.id === gameState.currentRoom) {
+            return { type: 'feedback', feedback: `Iam es in ${landmarkInfo.data.nom}.` };
+        }
+
+        // Case 2: Player names a valid room that is not a direct exit.
+        if (!landmarkDir) {
+            return { type: 'feedback', feedback: 'Nōn potes illūc īre.' };
+        }
+        
+        // If we get here, it's a valid, reachable room, so proceed.
+        if (!verbInfo && !normalizedCommand.includes('in') && !normalizedCommand.includes('ad')) return { type: 'feedback', feedback: "Quid vīs facere?" };
+        const { recastHtml, wasCorrected } = generateRecast(normalizedCommand, landmarkInfo.data, verbInfo);
+        return { type: 'move', direction: landmarkDir, newFacingAngle: DIRECTION_ROTATIONS[landmarkDir], wasCorrected, recast: recastHtml };
+    }
+    // --- END OF NEW, SMARTER ERROR HANDLING ---
+
     const needsCubiculumClarification = gameState.currentRoom === 'atrium' && normalizedCommand.includes('cubicul') && !normalizedCommand.includes('sororis') && !normalizedCommand.includes('parentum');
     if (needsCubiculumClarification) {
         const { recastHtml, wasCorrected } = generateRecast(normalizedCommand, { acc: ['in', 'Cubiculum'] }, verbInfo);
@@ -215,12 +219,6 @@ if (gameState.clarificationState) {
     if (needsAlaClarification) {
         const { recastHtml, wasCorrected } = generateRecast(normalizedCommand, { acc: ['in', 'Alam'] }, verbInfo);
         return { type: 'clarify', prompt: "Utram ālam?", options: { 'larum': 'ala_larum', 'hermae': 'ala_hermae' }, wasCorrected, recast: recastHtml };
-    }
-
-    if (landmarkInfo) {
-        if (!verbInfo && !normalizedCommand.includes('in') && !normalizedCommand.includes('ad')) return { type: 'feedback', feedback: "Quid vīs facere?" };
-        const { recastHtml, wasCorrected } = generateRecast(normalizedCommand, landmarkInfo.data, verbInfo);
-        return { type: 'move', direction: landmarkDir, newFacingAngle: DIRECTION_ROTATIONS[landmarkDir], wasCorrected, recast: recastHtml };
     }
 
     let moveDirection = null, moveCommand = null, newFacingAngle = gameState.playerFacing;
@@ -243,6 +241,7 @@ if (gameState.clarificationState) {
         return { type: 'move', direction: moveDirection, newFacingAngle, wasCorrected, recast: `${verbForRecast} ${moveCommand}` };
     }
     
+    // Only if ALL other checks fail do we admit we don't understand the words.
     return { type: 'feedback', feedback: "Nōn intellegō verba tua." };
 }
 
