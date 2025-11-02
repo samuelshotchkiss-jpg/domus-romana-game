@@ -2,6 +2,8 @@
 // ### 1. GAME DATA ###
 // All static data for the game, including room layouts, names, and vocabulary.
 // =============================================================================
+const removeDiacritics = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
 const rooms = {
     'via_west': { x: 0, y: -1, name: 'Via (West)', desc: 'Via est. Caelum nōn est clārum. Aqua ex caelō cadit.', exits: { south: 'taberna', east: 'via_east' } },
     'via_east': { x: 1, y: -1, name: 'Via (East)', desc: 'Iterum, via est. Aqua cadit. Magna domus est prope.', exits: { south: 'fauces', west: 'via_west' } },
@@ -46,19 +48,117 @@ const ROOM_NAMES = {
 };
 
 // REPLACE your entire VOCAB object with this cleaned and de-duplicated version.
-const VOCAB = {
-    CORE: new Set(['a', 'ab', 'ad', 'aliquid', 'ambulare', 'ambulō', 'animus', 'aperit', 'apud', 'aqua', 'atque', 'audit', 'aut', 'bene', 'bona', 'caelum', 'claudit', 'culina', 'de', 'dei', 'dicit', 'discetis', 'diu', 'dominus', 'domi', 'domus', 'dormio', 'dormit', 'e', 'ego', 'enim', 'eo', 'es', 'esse', 'est', 'et', 'ex', 'exspectat', 'facere', 'fere', 'fuit', 'habet', 'hic', 'hoc', 'hospites', 'iam', 'in', 'intremus', 'intro', 'ipse', 'ira', 'ire', 'is', 'ita', 'itaque', 'iterum', 'laborat', 'lectus', 'magna', 'magnus', 'mecum', 'meus', 'mihi', 'minime', 'mortalis', 'multi', 'neque', 'nomen', 'non', 'nox', 'nunc', 'oculi', 'omnia', 'parentes', 'paro', 'pater', 'per', 'peristylum', 'perpetua', 'post', 'potest', 'prope', 'puer', 'puella', 'putat', 'quae', 'quam', 'quem', 'qui', 'quid', 'quo', 'quoque', 'respondet', 'res', 'ridet', 'saepe', 'sed', 'semper', 'sentit', 'servus', 'sic', 'silentium', 'solus', 'spectate', 'statim', 'subito', 'sum', 'sunt', 'surgit', 'suus', 'taberna', 'tablinum', 'tamen', 'tandem', 'te', 'tu', 'tum', 'tuus', 'ubi', 'urbs', 'varia', 'venite', 'vero', 'via', 'videt', 'vidistine', 'vir', 'vult', 'voluit']),
-    OUTER: {
-        'affectus': 'affected', 'aperta': 'open', 'apertam': 'open', 'apertum': 'open', 'aperuerunt': 'they opened', 'aperiunt': 'they open', 'armarium': 'closet', 'armario': 'closet', 'attat': 'Ah ha!', 'atrio': 'atrium', 'caute': 'cautiously', 'cautus': 'cautious', 'clare': 'clearly', 'clarum': 'clear', 'clausa': 'closed', 'clauserunt': 'they shut', 'clausis': 'closed', 'clausum': 'closed', 'coram': 'in the presence of', 'cubiculi': 'of the bedroom', 'cubiculo': 'bedroom', 'culinam': 'kitchen', 'curiosum': 'curious', 'curiosus': 'curious', 'dormiebam': 'I was sleeping', 'dormire': 'to sleep', 'dormiturus': 'about to sleep', 'eram': 'I was', 'eramus': 'we were', 'erant': 'they were', 'erantne': 'were they?', 'erat': 'was', 'estne': 'is it?', 'evidentia': 'evidence', 'evidentiam': 'evidence', 'figura': 'figure', 'figurae': 'figures', 'figuram': 'figure', 'fui': 'I was', 'fuisse': 'to have been', 'habebant': 'they had', 'habeo': 'I have', 'habere': 'to have', 'habesne': 'do you have?', 'horrifici': 'horrific', 'horrificissimum': 'very horrific', 'horrificissimus': 'very horrific', 'horrificos': 'horrific', 'horrificum': 'horrific', 'horrificus': 'horrific', 'horrorem': 'horror!', 'ianua': 'door', 'ianuae': 'doors', 'ianuam': 'door', 'immobiles': 'immobile', 'immobilis': 'immobile', 'insomniam': 'insomnia', 'inspectum': 'inspected', 'inspicere': 'to inspect', 'inspiciens': 'inspecting', 'inspicit': 'inspects', 'investigans': 'investigating', 'investigare': 'to investigate', 'investigat': 'investigates', 'lecti': 'couches', 'lectis': 'couches', 'lectos': 'couches', 'lectum': 'couch', 'macte': 'well done!', 'mensa': 'table', 'mensam': 'table', 'monstra': 'monsters', 'monstro': 'monster', 'monstrorum': 'of monsters', 'monstrum': 'monster', 'mortale': 'mortal', 'mortales': 'mortal', 'murmur': 'murmur', 'murmure': 'by a murmur', 'naturale': 'natural', 'naturales': 'natural', 'naturalis': 'natural', 'nauseam': 'nausea', 'nocte': 'at night', 'noctem': 'night', 'obscura': 'dark', 'obscuram': 'dark', 'obscuro': 'dark', 'obscuros': 'dark', 'obscurum': 'dark', 'oculis': 'eyes', 'parentum': 'of the parents', 'peristylo': 'peristyle', 'perpetuam': 'perpetual', 'perterriti': 'terrified', 'perterritissimus': 'very terrified', 'perterritus': 'terrified', 'perturbate': 'pertubedly', 'perturbatissimus': 'very perturbed', 'perturbatus': 'perturbed', 'phantasmata': 'ghosts', 'phantasmate': 'ghost', 'phantasmatis': 'of a ghost', 'phantasmatum': 'of ghosts', 'putabam': 'I thought', 'putavit': 'thought', 'quintus': 'Quintus', 'quinti': 'of Quintus', 'quinto': 'Quintus', 'reale': 'real', 'realem': 'real', 'reales': 'real', 'realia': 'real', 'realis': 'real', 'rident': 'they laugh', 'romae': 'in Rome', 'romani': 'Romans', 'romanus': 'Roman', 'sentiens': 'sensing', 'sitne': 'could it be?', 'sintne': 'could they be?', 'soni': 'sounds', 'sonos': 'sounds', 'sonum': 'sound', 'sonus': 'sound', 'stomachus': 'stomach', 'surgunt': 'they rise', 'surrecta': 'was lifted up', 'surrecti': 'were lifted up', 'surrectis': 'lifted up', 'tablino': 'study', 'tranquilla': 'tranquil', 'tranquille': 'calmly', 'tranquillum': 'tranquil', 'tranquillus': 'tranquil', 'tres': 'three', 'triclinio': 'dining room', 'triclinium': 'dining room', 'ubique': 'everywhere', 'videre': 'to see', 'parva': 'small'
-    },
-    NOVUM: {
-        'amphorae': { lemma: 'amphora, -ae, f.', def: 'jar, amphora' }, 'avī': { lemma: 'avus, -ī, m.', def: 'of the grandfather' }, 'columnae': { lemma: 'columna, -ae, f.', def: 'column, pillar' }, 'focus': { lemma: 'focus, -ī, m.', def: 'hearth, stove' }, 'herma': { lemma: 'herma, -ae, f.', def: 'herm, bust' }, 'hortus': { lemma: 'hortus, -ī, m.', def: 'garden' }, 'imāginēs': { lemma: 'imago, imaginis, f.', def: 'ancestral mask' }, 'lārum': { lemma: 'lares, -ium, m.pl.', def: 'of the Lares (household gods)' }, 'mātris': { lemma: 'mater, matris, f.', def: 'of the mother' }, 'murī': { lemma: 'murus, -ī, m.', def: 'wall' }, 'murīs': { lemma: 'murus, -ī, m.', def: 'wall' }, 'patris': { lemma: 'pater, patris, m.', def: 'of the father' }, 'rēs': { lemma: 'rēs, reī, f.', def: 'thing, object' }, 'rubrī': { lemma: 'ruber, rubra, rubrum', def: 'red' }, 'sorōris': { lemma: 'soror, sororis, f.', def: 'of the sister' }, 'tuae': { lemma: 'tuus, -a, -um', def: 'your' }
-    }
+// DELETE your entire old VOCAB object and REPLACE it with this block.
+
+// The single source of truth for all vocabulary in the game.
+// DELETE the VOCAB_LEMMA object from the previous step and REPLACE it with this corrected version.
+
+// The single source of truth for all vocabulary in the game.
+// DELETE VOCAB_LEMMA and the formToLemmaKey builder loop, and
+// REPLACE it all with this single, correctly ordered block.
+
+const VOCAB_LEMMA = {
+    'a': { lemma: 'ā/ab (+abl.)', def: 'from, away from, by', level: 'core', forms: ['a', 'ab'] },
+    'ad': { lemma: 'ad (+acc.)', def: 'to, toward, at', level: 'core', forms: ['ad'] },
+    'aliquid': { lemma: 'aliquid', def: 'something', level: 'core', forms: ['aliquid'] },
+    'amphora': { lemma: 'amphora, -ae, f.', def: 'jar, amphora', level: 'novum', forms: ['amphora', 'amphorae'] },
+    'apertus': { lemma: 'apertus, -a, -um', def: 'open', level: 'outer', forms: ['apertus', 'aperta', 'apertum', 'aperit', 'aperiunt', 'aperuerunt'] },
+    'aqua': { lemma: 'aqua, -ae, f.', def: 'water', level: 'core', forms: ['aqua'] },
+    'armarium': { lemma: 'armārium, -ī, n.', def: 'closet, cupboard', level: 'outer', forms: ['armarium', 'armario'] },
+    'avus': { lemma: 'avus, -ī, m.', def: 'grandfather', level: 'novum', forms: ['avus', 'avī'] },
+    'cautus': { lemma: 'cautus, -a, -um', def: 'cautious', level: 'outer', forms: ['cautus', 'caute'] },
+    'clarus': { lemma: 'clārus, -a, -um', def: 'clear, bright, famous', level: 'outer', forms: ['clarus', 'clarum', 'clare'] },
+    'clausus': { lemma: 'clausus, -a, -um', def: 'closed', level: 'outer', forms: ['clausus', 'clausa', 'clausum', 'claudit', 'claudunt', 'clauserunt', 'clausis'] },
+    'columna': { lemma: 'columna, -ae, f.', def: 'column, pillar', level: 'novum', forms: ['columna', 'columnae'] },
+    'cubiculum': { lemma: 'cubiculum, -ī, n.', def: 'bedroom', level: 'outer', forms: ['cubiculum', 'cubiculo', 'cubiculi'] },
+    'cum': { lemma: 'cum (+abl.)', def: 'with', level: 'core', forms: ['mecum'] },
+    'curiosus': { lemma: 'cūriōsus, -a, -um', def: 'curious', level: 'outer', forms: ['curiosus', 'curiosum'] },
+    'de': { lemma: 'dē (+abl.)', def: 'from, down from, about', level: 'core', forms: ['de'] },
+    'dico': { lemma: 'dīcō, dīcere, dīxī', def: 'to say, speak', level: 'core', forms: ['dicit'] },
+    'domus': { lemma: 'domus, -ūs, f.', def: 'house, home', level: 'core', forms: ['domus', 'domi'] },
+    'dormio': { lemma: 'dormiō, dormīre, dormīvī', def: 'to sleep', level: 'core', forms: ['dormio', 'dormit', 'dormire', 'dormiebam', 'dormiturus'] },
+    'eo': { lemma: 'eō, īre, iī/īvī', def: 'to go', level: 'core', forms: ['eo', 'ire', 'it'] },
+    'et': { lemma: 'et (conj.)', def: 'and', level: 'core', forms: ['et'] },
+    'figura': { lemma: 'figūra, -ae, f.', def: 'figure, shape', level: 'outer', forms: ['figura', 'figurae', 'figuram'] },
+    'focus': { lemma: 'focus, -ī, m.', def: 'hearth, stove', level: 'novum', forms: ['focus'] },
+    'habeo': { lemma: 'habeō, -ēre, -uī', def: 'to have, hold', level: 'core', forms: ['habet', 'habeo', 'habere', 'habesne', 'habebant'] },
+    'herma': { lemma: 'herma, -ae, f.', def: 'herm, bust', level: 'novum', forms: ['herma'] },
+    'hic': { lemma: 'hic, haec, hoc', def: 'this, these', level: 'core', forms: ['hic', 'haec', 'hoc'] },
+    'horrificus': { lemma: 'horrificus, -a, -um', def: 'horrific', level: 'outer', forms: ['horrificus', 'horrificum', 'horrifici', 'horrificos', 'horrificissimus'] },
+    'hortus': { lemma: 'hortus, -ī, m.', def: 'garden', level: 'novum', forms: ['hortus'] },
+    'iam': { lemma: 'iam (adv.)', def: 'now, already', level: 'core', forms: ['iam'] },
+    'ianua': { lemma: 'iānua, -ae, f.', def: 'door', level: 'outer', forms: ['ianua', 'ianuae', 'ianuam'] },
+    'imago': { lemma: 'imāgō, -inis, f.', def: 'image, bust, ancestral mask', level: 'novum', forms: ['imago', 'imaginis', 'imaginem', 'imagines', 'imāginēs'] },
+    'immobilis': { lemma: 'immōbilis, -e', def: 'immobile', level: 'outer', forms: ['immobilis', 'immobiles'] },
+    'in': { lemma: 'in (+abl./acc.)', def: 'in, on, into, onto', level: 'core', forms: ['in'] },
+    'inspicio': { lemma: 'īnspiciō, -ere, -spexī', def: 'to inspect, examine', level: 'outer', forms: ['inspicit', 'inspiciens', 'inspicere', 'inspectum'] },
+    'investigo': { lemma: 'investīgō, -āre, -āvī', def: 'to investigate', level: 'outer', forms: ['investigat', 'investigans', 'investigare'] },
+    'is': { lemma: 'is, ea, id', def: 'he, she, it, that', level: 'core', forms: ['is', 'ea', 'id'] },
+    'iterum': { lemma: 'iterum (adv.)', def: 'again', level: 'core', forms: ['iterum'] },
+    'lar': { lemma: 'Lār, Laris, m.', def: 'household god', level: 'novum', forms: ['lar', 'lares', 'larum'] },
+    'lectus': { lemma: 'lectus, -ī, m.', def: 'bed, couch', level: 'core', forms: ['lectus', 'lectum', 'lecti', 'lectos', 'lectis'] },
+    'magnus': { lemma: 'magnus, -a, -um', def: 'large, great', level: 'core', forms: ['magnus', 'magna', 'magnum'] },
+    'mater': { lemma: 'māter, mātris, f.', def: 'mother', level: 'novum', forms: ['mater', 'matris'] },
+    'mensa': { lemma: 'mēnsa, -ae, f.', def: 'table', level: 'outer', forms: ['mensa', 'mensam'] },
+    'mortalis': { lemma: 'mortālis, -e', def: 'mortal', level: 'core', forms: ['mortalis', 'mortale'] },
+    'murus': { lemma: 'murus, -ī, m.', def: 'wall', level: 'novum', forms: ['murus', 'muri', 'murī', 'murīs'] },
+    'naturalis': { lemma: 'nātūrālis, -e', def: 'natural', level: 'outer', forms: ['naturalis', 'naturale', 'naturales'] },
+    'nox': { lemma: 'nox, noctis, f.', def: 'night', level: 'core', forms: ['nox', 'noctem', 'nocte'] },
+    'obscurus': { lemma: 'obscūrus, -a, -um', def: 'dark, obscure', level: 'outer', forms: ['obscurus', 'obscurum', 'obscura', 'obscuram', 'obscuro', 'obscuros'] },
+    'oculus': { lemma: 'oculus, -ī, m.', def: 'eye', level: 'core', forms: ['oculi', 'oculis', 'oculos'] },
+    'parvus': { lemma: 'parvus, -a, -um', def: 'small', level: 'outer', forms: ['parvus', 'parva'] },
+    'pater': { lemma: 'pater, patris, m.', def: 'father, parent', level: 'core', forms: ['pater', 'patris', 'parentes', 'parentum'] },
+    'peristylum': { lemma: 'peristylum, -ī, n.', def: 'peristyle', level: 'outer', forms: ['peristylum', 'peristylo'] },
+    'perterritus': { lemma: 'perterritus, -a, -um', def: 'terrified', level: 'outer', forms: ['perterritus', 'perterriti', 'perterritissimus'] },
+    'perturbatus': { lemma: 'perturbātus, -a, -um', def: 'disturbed, perturbed', level: 'outer', forms: ['perturbatus', 'perturbate', 'perturbatissimus'] },
+    'puto': { lemma: 'putō, putāre, putāvī', def: 'to think', level: 'core', forms: ['putat', 'putavit', 'putabam'] },
+    'qui': { lemma: 'quī, quae, quod', def: 'who, which', level: 'core', forms: ['qui', 'quae', 'quod', 'quem'] },
+    'quintus': { lemma: 'Quīntus, -ī, m.', def: 'Quintus', level: 'outer', forms: ['quintus', 'quinti', 'quinto'] },
+    'quoque': { lemma: 'quoque (adv.)', def: 'also, too', level: 'novum', forms: ['quoque'] },
+    'realis': { lemma: 'reālis, -e', def: 'real', level: 'outer', forms: ['realis', 'reale', 'realem', 'reales', 'realia'] },
+    'res': { lemma: 'rēs, reī, f.', def: 'thing, matter, object', level: 'core', forms: ['res', 'rēs'] },
+    'rideo': { lemma: 'rīdeō, rīdēre, rīsī', def: 'to laugh, smile', level: 'core', forms: ['ridet', 'rident'] },
+    'romanus': { lemma: 'Rōmānus, -a, -um', def: 'Roman', level: 'outer', forms: ['romanus', 'romani', 'romae'] },
+    'ruber': { lemma: 'ruber, rubra, rubrum', def: 'red', level: 'novum', forms: ['ruber', 'rubra', 'rubrum', 'rubri', 'rubrī'] },
+    'saepe': { lemma: 'saepe (adv.)', def: 'often', level: 'core', forms: ['saepe'] },
+    'semper': { lemma: 'semper (adv.)', def: 'always', level: 'core', forms: ['semper'] },
+    'sentio': { lemma: 'sentiō, sentīre, sēnsī', def: 'to feel, sense, perceive', level: 'core', forms: ['sentit', 'sentiens', 'sentire'] },
+    'sonus': { lemma: 'sonus, -ī, m.', def: 'sound', level: 'outer', forms: ['sonus', 'sonum', 'soni', 'sonos'] },
+    'soror': { lemma: 'soror, sorōris, f.', def: 'sister', level: 'novum', forms: ['soror', 'sorōris'] },
+    'subito': { lemma: 'subitō (adv.)', def: 'suddenly', level: 'core', forms: ['subito'] },
+    'sum': { lemma: 'sum, esse, fuī', def: 'to be', level: 'core', forms: ['sum', 'esse', 'fuit', 'fui', 'fuisse', 'es', 'est', 'estne', 'sunt', 'eram', 'erat', 'erant', 'eramus', 'erantne', 'sitne', 'sintne'] },
+    'surgo': { lemma: 'surgō, surgere, surrēxī', def: 'to get up, rise', level: 'core', forms: ['surgit', 'surgunt', 'surrecta', 'surrecti', 'surrectis'] },
+    'tranquillus': { lemma: 'tranquillus, -a, -um', def: 'calm, tranquil', level: 'outer', forms: ['tranquillus', 'tranquilla', 'tranquillum', 'tranquille'] },
+    'tres': { lemma: 'trēs, tria', def: 'three', level: 'outer', forms: ['tres'] },
+    'triclinium': { lemma: 'trīclīnium, -ī, n.', def: 'dining room', level: 'outer', forms: ['triclinium', 'triclinio'] },
+    'tu': { lemma: 'tū, tuī', def: 'you (s.)', level: 'core', forms: ['tu', 'te', 'tibi'] },
+    'tuus': { lemma: 'tuus, -a, -um', def: 'your (s.)', level: 'core', forms: ['tuus', 'tuum', 'tua', 'tuae'] },
+    'ubique': { lemma: 'ubique (adv.)', def: 'everywhere', level: 'outer', forms: ['ubique'] },
+    'video': { lemma: 'videō, vidēre, vīdī', def: 'to see', level: 'core', forms: ['videt', 'vidistine', 'videre'] },
+    'volo': { lemma: 'volō, velle, voluī', def: 'to want, wish', level: 'core', forms: ['vult', 'voluit'] },
 };
+
+// This map allows us to quickly find the lemma for any given word form.
+// For example, formToLemmaKey['murīs'] will return the key 'murus'.
+
+// 1. We create the empty object first.
+let formToLemmaKey = {};
+
+// 2. Then, we loop through the data and fill the object.
+// This code runs once when the script first loads.
+for (const key in VOCAB_LEMMA) {
+    const lemmaData = VOCAB_LEMMA[key];
+    for (const form of lemmaData.forms) {
+        // We clean the form to match how it will be looked up later.
+        const cleanForm = removeDiacritics(form.toLowerCase());
+        formToLemmaKey[cleanForm] = key;
+    }
+}
+// This map will be populated at startup for fast lookups.
+// It will map a form like "murīs" back to its lemma key "murus".
 const DIRECTION_ROTATIONS = { 'north': 0, 'south': 180, 'east': 90, 'west': 270, 'northeast': 45, 'northwest': 315, 'southeast': 135, 'southwest': 225 };
 const ANGLE_TO_DIRECTION = { 0: 'north', 45: 'northeast', 90: 'east', 135: 'southeast', 180: 'south', 225: 'southwest', 270: 'west', 315: 'northwest' };
 const sleep = (ms) => new Promise(res => setTimeout(res, ms));
-const removeDiacritics = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
 // =============================================================================
 // ### 2. GAME STATE
@@ -396,21 +496,63 @@ function logRoom() {
     log.appendChild(entry);
     log.scrollTop = log.scrollHeight;
 }
+function setupTooltipListeners() {
+    const log = elements.gameLog;
+    const tooltip = elements.tooltip;
 
-function processDescription(text) {
-    const words = text.split(/([ \t\n\r]+)/);
-    return words.map(word => {
-        if (!word.trim()) return word;
-        const cleanWord = removeDiacritics(word.toLowerCase().replace(/[.,!?;]/g, ''));
-        let info;
-        if (VOCAB.NOVUM[cleanWord]) {
-            info = VOCAB.NOVUM[cleanWord];
-            return `<span class="vocab novum">${word}<span class="tooltip">${info.lemma}<br>${info.def}</span></span>`;
-        } else if (VOCAB.OUTER[cleanWord]) {
-            info = VOCAB.OUTER[cleanWord];
-            return `<span class="vocab">${word}<span class="tooltip">${info}</span></span>`;
+    log.addEventListener('mouseover', (e) => {
+        const vocabSpan = e.target.closest('.vocab');
+        if (!vocabSpan) return;
+
+        // Get the data we stored in the span
+        const lemma = vocabSpan.dataset.lemma;
+        const def = vocabSpan.dataset.def;
+        tooltip.innerHTML = `${lemma}<br>${def}`;
+
+        // Position the tooltip above the word
+        const rect = vocabSpan.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
+        
+        let top = rect.top - tooltipRect.height - 5; // 5px buffer
+        let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+
+        // Prevent it from going off the left/right of the screen
+        if (left < 0) left = 5;
+        if (left + tooltipRect.width > window.innerWidth) {
+            left = window.innerWidth - tooltipRect.width - 5;
         }
-        return word;
+
+        tooltip.style.top = `${top}px`;
+        tooltip.style.left = `${left}px`;
+        tooltip.classList.add('visible');
+    });
+
+    log.addEventListener('mouseout', (e) => {
+        const vocabSpan = e.target.closest('.vocab');
+        if (vocabSpan) {
+            tooltip.classList.remove('visible');
+        }
+    });
+}
+
+// In your processDescription function...
+function processDescription(text) {
+    const wordsAndSeparators = text.split(/([ \t\n\r.,!?;]+)/);
+
+    return wordsAndSeparators.map(part => {
+        if (!part.trim()) return part;
+        const cleanWord = removeDiacritics(part.toLowerCase());
+        const lemmaKey = formToLemmaKey[cleanWord];
+        if (!lemmaKey) { return part; }
+        const lemmaData = VOCAB_LEMMA[lemmaKey];
+        if (lemmaData.level === 'core') { return part; }
+
+        // --- REPLACEMENT START ---
+        // Instead of creating a nested span, embed the data directly into the main span.
+        const vocabClass = lemmaData.level === 'novum' ? 'vocab novum' : 'vocab';
+        return `<span class="${vocabClass}" data-lemma="${lemmaData.lemma}" data-def="${lemmaData.def}">${part}</span>`;
+        // --- REPLACEMENT END ---
+
     }).join('');
 }
 // =============================================================================
@@ -425,6 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
         commandInput: document.getElementById('command-input'), 
         mapViewport: document.getElementById('map-viewport'), 
         mapSvg: document.getElementById('map-svg'),
+        tooltip: document.getElementById('tooltip'), // <-- ADD THIS LINE
     };
 
     // 2. Create the dynamic SVG elements for the map.
@@ -434,6 +577,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 4. Set up user interaction and perform the initial render.
     setupMapInteraction();
+    setupTooltipListeners(); // <-- ADD THIS LINE
     logRoom(); // Log the first room description
     render(false); // Render the map
     elements.commandInput.focus();
