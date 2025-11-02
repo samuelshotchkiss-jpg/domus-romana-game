@@ -142,6 +142,7 @@ function findVerb(normalizedCommand) {
 }
 
 // REPLACE your entire "parseCommand" function with this final, smarter version.
+// REPLACE your entire "parseCommand" function with this correctly ordered version.
 function parseCommand(command) {
     const normalizedCommand = removeDiacritics(command.toLowerCase().trim());
     
@@ -180,44 +181,9 @@ function parseCommand(command) {
     }
 
     const verbInfo = findVerb(normalizedCommand);
-    let landmarkInfo = null;
-    let landmarkDir = null;
-    let bestMatch = { score: 0, id: null };
 
-    for (const roomId in ROOM_NAMES) {
-        const roomData = ROOM_NAMES[roomId];
-        // Allow matching against ALL rooms, not just exits, for better error messages.
-        // if (!Object.values(rooms[gameState.currentRoom].exits).includes(roomId)) continue;
-        let score = 0;
-        if (roomData.aliases && roomData.aliases.some(a => normalizedCommand.includes(a))) { score += 10; }
-        if (roomData.stems && roomData.stems.some(s => normalizedCommand.includes(s))) { score += 1; }
-        if (score > bestMatch.score) { bestMatch = { score, id: roomId }; }
-    }
-
-    if (bestMatch.id) {
-        landmarkInfo = { id: bestMatch.id, data: ROOM_NAMES[bestMatch.id] };
-        landmarkDir = Object.keys(rooms[gameState.currentRoom].exits).find(dir => rooms[gameState.currentRoom].exits[dir] === bestMatch.id);
-    }
-    
-    // --- START OF NEW, SMARTER ERROR HANDLING ---
-    if (landmarkInfo) {
-        // Case 1: Player is trying to go to the room they are already in.
-        if (landmarkInfo.id === gameState.currentRoom) {
-            return { type: 'feedback', feedback: `Iam es in ${landmarkInfo.data.nom}.` };
-        }
-
-        // Case 2: Player names a valid room that is not a direct exit.
-        if (!landmarkDir) {
-            return { type: 'feedback', feedback: 'Nōn potes illūc īre.' };
-        }
-        
-        // If we get here, it's a valid, reachable room, so proceed.
-        if (!verbInfo && !normalizedCommand.includes('in') && !normalizedCommand.includes('ad')) return { type: 'feedback', feedback: "Quid vīs facere?" };
-        const { recastHtml, wasCorrected } = generateRecast(normalizedCommand, landmarkInfo.data, verbInfo);
-        return { type: 'move', direction: landmarkDir, newFacingAngle: DIRECTION_ROTATIONS[landmarkDir], wasCorrected, recast: recastHtml };
-    }
-    // --- END OF NEW, SMARTER ERROR HANDLING ---
-
+    // --- LOGIC REORDERING START ---
+    // 1. Check for ambiguous commands FIRST. This is the critical change.
     const needsCubiculumClarification = gameState.currentRoom === 'atrium' && normalizedCommand.includes('cubicul') && !normalizedCommand.includes('sororis') && !normalizedCommand.includes('parentum');
     if (needsCubiculumClarification) {
         const { recastHtml, wasCorrected } = generateRecast(normalizedCommand, { acc: ['in', 'Cubiculum'] }, verbInfo);
@@ -230,27 +196,73 @@ function parseCommand(command) {
         return { type: 'clarify', prompt: "Utram ālam?", options: { 'larum': 'ala_larum', 'hermae': 'ala_hermae' }, wasCorrected, recast: recastHtml };
     }
 
+    // 2. NOW, look for a specific, unambiguous landmark.
+    let landmarkInfo = null;
+    let landmarkDir = null;
+    let bestMatch = { score: 0, id: null };
+
+    for (const roomId in ROOM_NAMES) {
+        const roomData = ROOM_NAMES[roomId];
+        let score = 0;
+        if (roomData.aliases && roomData.aliases.some(a => normalizedCommand.includes(a))) { score += 10; }
+        if (roomData.stems && roomData.stems.some(s => normalizedCommand.includes(s))) { score += 1; }
+        if (score > bestMatch.score) { bestMatch = { score, id: roomId }; }
+    }
+
+    if (bestMatch.id) {
+        landmarkInfo = { id: bestMatch.id, data: ROOM_NAMES[bestMatch.id] };
+        landmarkDir = Object.keys(rooms[gameState.currentRoom].exits).find(dir => rooms[gameState.currentRoom].exits[dir] === bestMatch.id);
+    }
+    
+    if (landmarkInfo) {
+        if (landmarkInfo.id === gameState.currentRoom) {
+            return { type: 'feedback', feedback: `Iam es in ${landmarkInfo.data.nom}.` };
+        }
+        if (!landmarkDir) {
+            return { type: 'feedback', feedback: 'Nōn potes illūc īre.' };
+        }
+        if (!verbInfo && !normalizedCommand.includes('in') && !normalizedCommand.includes('ad')) return { type: 'feedback', feedback: "Quid vīs facere?" };
+        const { recastHtml, wasCorrected } = generateRecast(normalizedCommand, landmarkInfo.data, verbInfo);
+        return { type: 'move', direction: landmarkDir, newFacingAngle: DIRECTION_ROTATIONS[landmarkDir], wasCorrected, recast: recastHtml };
+    }
+    // --- LOGIC REORDERING END ---
+
+    // 3. If no landmark was found, check for directional commands.
     let moveDirection = null, moveCommand = null, newFacingAngle = gameState.playerFacing;
     const hasProrsus = normalizedCommand.includes('prorsus');
     const hasRursus = normalizedCommand.includes('rursus');
     const hasDexteram = normalizedCommand.includes('dexteram');
     const hasSinistram = normalizedCommand.includes('sinistram');
-    if (hasProrsus || hasRursus || hasDexteram || hasSinistram) {
-        const currentFacing = ANGLE_TO_DIRECTION[gameState.playerFacing];
-        const rursusDir = opposite[currentFacing];
-        const dexteramDir = ANGLE_TO_DIRECTION[(gameState.playerFacing + 90) % 360];
-        const sinistramDir = ANGLE_TO_DIRECTION[(gameState.playerFacing + 270) % 360];
-        if (hasProrsus) { moveDirection = currentFacing; moveCommand = 'prōrsus'; } 
-        else if (hasRursus) { moveDirection = rursusDir; moveCommand = 'rūrsus'; newFacingAngle = (gameState.playerFacing + 180) % 360; } 
-        else if (hasDexteram) { moveDirection = dexteramDir; moveCommand = 'ad dexteram'; newFacingAngle = (gameState.playerFacing + 90) % 360; } 
-        else if (hasSinistram) { moveDirection = sinistramDir; moveCommand = 'ad sinistram'; newFacingAngle = (gameState.playerFacing + 270) % 360; }
-        
+    const currentFacing = ANGLE_TO_DIRECTION[gameState.playerFacing];
+    const rursusDir = opposite[currentFacing];
+    const dexteramDir = ANGLE_TO_DIRECTION[(gameState.playerFacing + 90) % 360];
+    const sinistramDir = ANGLE_TO_DIRECTION[(gameState.playerFacing + 270) % 360];
+
+    if (normalizedCommand.includes('prorsus et ad dexteram')) {
+        moveDirection = ANGLE_TO_DIRECTION[(gameState.playerFacing + 45) % 360]; moveCommand = 'prōrsus et ad dexteram'; newFacingAngle = (gameState.playerFacing + 45) % 360;
+    } else if (normalizedCommand.includes('prorsus et ad sinistram')) {
+        moveDirection = ANGLE_TO_DIRECTION[(gameState.playerFacing + 315) % 360]; moveCommand = 'prōrsus et ad sinistram'; newFacingAngle = (gameState.playerFacing + 315) % 360;
+    } else if (normalizedCommand.includes('rursus et ad dexteram')) {
+        moveDirection = ANGLE_TO_DIRECTION[(gameState.playerFacing + 135) % 360]; moveCommand = 'rūrsus et ad dexteram'; newFacingAngle = (gameState.playerFacing + 135) % 360;
+    } else if (normalizedCommand.includes('rursus et ad sinistram')) {
+        moveDirection = ANGLE_TO_DIRECTION[(gameState.playerFacing + 225) % 360]; moveCommand = 'rūrsus et ad sinistram'; newFacingAngle = (gameState.playerFacing + 225) % 360;
+    } else if (hasDexteram) {
+        moveDirection = dexteramDir; moveCommand = 'ad dexteram'; newFacingAngle = (gameState.playerFacing + 90) % 360;
+    } else if (hasSinistram) {
+        moveDirection = sinistramDir; moveCommand = 'ad sinistram'; newFacingAngle = (gameState.playerFacing + 270) % 360;
+    } else if (hasProrsus) {
+        moveDirection = currentFacing; moveCommand = 'prōrsus';
+    } else if (hasRursus) {
+        moveDirection = rursusDir; moveCommand = 'rūrsus'; newFacingAngle = (gameState.playerFacing + 180) % 360;
+    }
+    
+    if (moveDirection && moveCommand) {
         const verbForRecast = verbInfo ? verbInfo.correct : 'eō';
         const wasCorrected = !verbInfo || !verbInfo.isCorrect;
         return { type: 'move', direction: moveDirection, newFacingAngle, wasCorrected, recast: `${verbForRecast} ${moveCommand}` };
     }
     
-    // Only if ALL other checks fail do we admit we don't understand the words.
+    // 4. Finally, if all else fails, we don't understand the words.
     return { type: 'feedback', feedback: "Nōn intellegō verba tua." };
 }
 
