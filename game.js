@@ -28,27 +28,24 @@ const VERBS = {
 };
 
 
-// REPLACE your old ROOM_NAMES object with this new one.
+// REPLACE your entire ROOM_NAMES object with this new, lemma-driven version.
 const ROOM_NAMES = {
-    'cubiculum_tuum': { nom: 'Cubiculum Tuum', acc: ['in', 'Cubiculum', 'Tuum'], stems: ['cubicul'], aliases: ['meum', 'tuum'] },
-    'cubiculum_sororis': { nom: 'Cubiculum Sorōris', acc: ['in', 'Cubiculum', 'Sorōris'], stems: ['cubicul'], aliases: ['sororis'], recast: 'Sorōris', clarification_stem: 'soror' },
-    'cubiculum_parentum': { nom: 'Cubiculum Parentum', acc: ['in', 'Cubiculum', 'Parentum'], stems: ['cubicul'], aliases: ['parentum'], recast: 'Parentum', clarification_stem: 'parent' },
-    'ala_larum': { nom: 'Ala Lārum', acc: ['in', 'Ālam', 'Lārum'], stems: ['ala'], aliases: ['larum'], recast: 'Lārum', clarification_stem: 'lar' },
-    'ala_hermae': { nom: 'Ala Hermae', acc: ['in', 'Ālam', 'Hermae'], stems: ['ala'], aliases: ['hermae'], recast: 'Hermae', clarification_stem: 'herm' },
-    'via_west': { nom: 'Via', acc: ['in', 'Viam'], stems: ['via'] },
-    'via_east': { nom: 'Via', acc: ['in', 'Viam'], stems: ['via'] },
-    'taberna': { nom: 'Taberna', acc: ['in', 'Tabernam'], stems: ['tabern'] },
-    'fauces': { nom: 'Fauces', acc: ['in', 'Faucēs'], stems: ['fauc'] },
-    'atrium': { nom: 'Atrium', acc: ['in', 'Ātrium'], stems: ['atri'] },
-    'tablinum': { nom: 'Tablinum', acc: ['in', 'Tablīnum'], stems: ['tablin'] },
-    'peristylum': { nom: 'peristylum', acc: ['in', 'Peristȳlum'], stems: ['peristyl'] },
-    'triclinium': { nom: 'Triclinium', acc: ['in', 'Triclīnium'], stems: ['triclini'] },
-    'culina': { nom: 'Culina', acc: ['in', 'Culīnam'], stems: ['culin'] },
-    'cella': { nom: 'Cella', acc: ['in', 'Cellam'], stems: ['cell'] },
+    'cubiculum_tuum': { nom: 'Cubiculum Tuum', acc: ['in', 'Cubiculum', 'Tuum'], requiredLemmas: ['cubiculum', 'tuus'] },
+    'cubiculum_sororis': { nom: 'Cubiculum Sorōris', acc: ['in', 'Cubiculum', 'Sorōris'], requiredLemmas: ['cubiculum', 'soror'], recast: 'Sorōris' },
+    'cubiculum_parentum': { nom: 'Cubiculum Parentum', acc: ['in', 'Cubiculum', 'Parentum'], requiredLemmas: ['cubiculum', 'parens'], recast: 'Parentum' },
+    'ala_larum': { nom: 'Ala Lārum', acc: ['in', 'Ālam', 'Lārum'], requiredLemmas: ['ala', 'lar'], recast: 'Lārum' },
+    'ala_hermae': { nom: 'Ala Hermae', acc: ['in', 'Ālam', 'Hermae'], requiredLemmas: ['ala', 'herma'], recast: 'Hermae' },
+    'via_west': { nom: 'Via', acc: ['in', 'Viam'], requiredLemmas: ['via'] },
+    'via_east': { nom: 'Via', acc: ['in', 'Viam'], requiredLemmas: ['via'] },
+    'taberna': { nom: 'Taberna', acc: ['in', 'Tabernam'], requiredLemmas: ['taberna'] },
+    'fauces': { nom: 'Fauces', acc: ['in', 'Faucēs'], requiredLemmas: ['fauces'] },
+    'atrium': { nom: 'Atrium', acc: ['in', 'Ātrium'], requiredLemmas: ['atrium'] },
+    'tablinum': { nom: 'Tablinum', acc: ['in', 'Tablīnum'], requiredLemmas: ['tablinum'] },
+    'peristylum': { nom: 'Peristylum', acc: ['in', 'Peristȳlum'], requiredLemmas: ['peristylum'] },
+    'triclinium': { nom: 'Triclinium', acc: ['in', 'Triclīnium'], requiredLemmas: ['triclinium'] },
+    'culina': { nom: 'Culina', acc: ['in', 'Culīnam'], requiredLemmas: ['culina'] },
+    'cella': { nom: 'Cella', acc: ['in', 'Cellam'], requiredLemmas: ['cella'] },
 };
-
-// DELETE the old VOCAB_LEMMA object and its builder loop.
-// REPLACE it with this final, production-ready version.
 
 // DELETE the old VOCAB_LEMMA object and its builder loop.
 // REPLACE it with this final, audited, and alphabetized version.
@@ -111,6 +108,7 @@ const VOCAB_LEMMA = {
     'magnus': { pos:'adj', lemma: 'magnus, -a, -um', def: ['large', 'great'], level: 'core', forms: {'magnus':{}, 'magna':{}, 'magnum':{}} },
     'mater': { pos:'noun', lemma: 'māter, mātris, f.', def: 'mother', level: 'novum', forms: {'mater':{num:'sg'}, 'matris':{num:'sg', case:'gen'}} },
     'mensa': { pos:'noun', lemma: 'mēnsa, -ae, f.', def: 'table', level: 'outer', forms: {'mensa':{num:'sg'}, 'mēnsa':{num:'sg'}, 'mensam':{num:'sg', case:'acc'}} },
+    'meus': { pos:'adj', lemma: 'meus, -a, -um', def: 'my, mine', level: 'core', forms: { 'meum':{} } },
     'mortalis': { pos:'adj', lemma: 'mortālis, -e', def: 'mortal', level: 'core', forms: {'mortalis':{}, 'mortale':{}} },
     'multus': { pos:'adj', lemma: 'multus, -a, -um', def: 'many, much', level: 'core', forms: { 'multae':{num:'pl'} } },
     'murmur': { pos:'noun', lemma: 'murmur, murmuris, n.', def: ['a murmur', 'rumbling'], level: 'outer', forms: {'murmur':{num:'sg'}, 'murmure':{num:'sg', case:'abl'}} },
@@ -118,9 +116,9 @@ const VOCAB_LEMMA = {
     'non': { pos:'adv', lemma: 'nōn (adv.)', def: 'not', level: 'core', forms: { 'nōn':{} } },
     'nox': { pos:'noun', lemma: 'nox, noctis, f.', def: 'night', level: 'core', forms: {'nox':{num:'sg'}, 'noctem':{num:'sg', case:'acc'}, 'nocte':{num:'sg', case:'abl'}} },
     'oculus': { pos:'noun', lemma: 'oculus, -ī, m.', def: 'eye', level: 'core', forms: {'oculi':{num:'pl'}, 'oculis':{num:'pl', case:'abl'}, 'oculos':{num:'pl', case:'acc'}} },
+    'parens': { pos:'noun', lemma: 'parēns, parentis, m./f.', def: 'parent', level: 'core', forms: { 'parentum':{num:'pl', case:'gen'}, 'parentes':{num:'pl'} } },
     'parvus': { pos:'adj', lemma: 'parvus, -a, -um', def: 'small', level: 'outer', forms: {'parvus':{}, 'parva':{}} },
-    'pater': { pos:'noun', lemma: 'pater, patris, m.', def: ['father', 'parent'], level: 'core', forms: { 'pater':{num:'sg'}, 'patris':{num:'sg', case:'gen'}, 'parentes':{num:'pl'}, 'parentum':{num:'pl', case:'gen'} } },
-    'peristylum': { pos:'noun', lemma: 'peristylum, -ī, n.', def: 'peristyle', level: 'outer', forms: { 'peristylum':{num:'sg'}, 'peristylō':{num:'sg', case:'abl'} } },
+    'pater': { pos:'noun', lemma: 'pater, patris, m.', def: 'father', level: 'core', forms: { 'pater':{num:'sg'}, 'patris':{num:'sg', case:'gen'} } },    'peristylum': { pos:'noun', lemma: 'peristylum, -ī, n.', def: 'peristyle', level: 'outer', forms: { 'peristylum':{num:'sg'}, 'peristylō':{num:'sg', case:'abl'} } },
     'phantasma': { pos:'noun', lemma: 'phantasma, -atis, n.', def: ['ghost', 'apparition'], level: 'outer', forms: {'phantasma':{}, 'phantasmate':{case:'abl'}, 'phantasmatis':{case:'gen'}, 'phantasmata':{}, 'phantasmatum':{case:'gen', num:'pl'}} },
     'possum': { pos:'verb', lemma: 'possum, posse, potuī', def: 'to be able, can', level: 'core', forms: { 'possum':{person:1, num:'sg', tense:'present'}, 'potes':{person:2, num:'sg', tense:'present'} } },
     'prope': { pos:'adv', lemma: 'prope (adv.)', def: 'near, nearby', level: 'core', forms: { 'prope':{} } },
@@ -322,99 +320,193 @@ function parseDefinitionQuery(command) {
     
     return null; // This was not a definition query.
 }
+
+// Add this new helper function right before 'parseCommand'.
+
+/**
+ * The bridge between the parser and the vocabulary engine.
+ * Takes a word and returns all known grammatical data about it.
+ * @param {string} word The word form to look up.
+ * @returns {object|null} An object with lemma and form data, or null if not found.
+ */
+function getLemmaDataFromWord(word) {
+    const cleanWord = removeDiacritics(word.toLowerCase());
+    const lemmaKey = formToLemmaKey[cleanWord];
+
+    if (!lemmaKey) return null; // The word is not in our dictionary.
+
+    const lemmaData = VOCAB_LEMMA[lemmaKey];
+    
+    // Find the specific form entry that matches the word.
+    const formKey = Object.keys(lemmaData.forms).find(f => removeDiacritics(f.toLowerCase()) === cleanWord);
+    
+    // This check is important. It's possible for a word to be in formToLemmaKey
+    // but not have a direct entry in its own lemma's forms object if there are homographs
+    // we handle later. For now, it's a good safeguard.
+    if (!formKey) return null;
+
+    const formData = lemmaData.forms[formKey];
+
+    // Return a combined object with all the information we have.
+    return {
+        lemmaKey: lemmaKey,     // e.g., 'parens'
+        lemma: lemmaData.lemma,   // e.g., 'parēns, parentis, m./f.'
+        pos: lemmaData.pos,       // e.g., 'noun'
+        def: lemmaData.def,       // e.g., 'parent'
+        level: lemmaData.level,   // e.g., 'core'
+        form: formData            // e.g., { num: 'pl', case: 'gen' }
+    };
+}
 // REPLACE your entire "parseCommand" function with this final, smarter version.
 // REPLACE your entire "parseCommand" function with this correctly ordered version.
+// REPLACE your entire 'parseCommand' function with this new, lemma-aware version.
 function parseCommand(command) {
-        const definitionQuery = parseDefinitionQuery(command);
+    const definitionQuery = parseDefinitionQuery(command);
     if (definitionQuery) {
         return { type: 'define', word: definitionQuery, recast: command };
     }
-    
+
     const normalizedCommand = removeDiacritics(command.toLowerCase().trim());
-    
-    if (gameState.clarificationState) {
-        for (const key in gameState.clarificationState.options) {
-            const targetRoomId = gameState.clarificationState.options[key];
-            const roomData = ROOM_NAMES[targetRoomId];
-            const stem = roomData.clarification_stem;
+    const commandWords = normalizedCommand.split(' ');
+    const commandLemmas = commandWords.map(word => {
+        const data = getLemmaDataFromWord(word);
+        return data ? data.lemmaKey : null;
+    }).filter(Boolean); // Create an array of lemma keys from the command
+    if (commandLemmas.includes('meus')) { commandLemmas.push('tuus'); }
+    const verbInfo = findVerb(normalizedCommand);
 
-            if (stem && normalizedCommand.includes(stem)) {
-                const wasCorrected = true;
-                const cleanedCommand = normalizedCommand.replace(/[.,!?;]/g, '');
-                const isClarificationPerfect = (cleanedCommand === key);
-                let recastHtml = roomData.recast;
+// REPLACE the 'if (gameState.clarificationState)' block with this final version.
 
-                if (!isClarificationPerfect && recastHtml) {
-                    const endingMatch = recastHtml.match(/(um|am|em|ēs|is|ī|ae|us)$/i);
-                    if (endingMatch) {
-                        const ending = endingMatch[0];
-                        const base = recastHtml.slice(0, -ending.length);
-                        recastHtml = `${base}<span class="recast-ending">${ending}</span>`;
-                    } else {
-                        recastHtml = `<span class="recast-ending">${recastHtml}</span>`;
-                    }
+if (gameState.clarificationState) {
+    const commandWords = command.toLowerCase().trim().split(' ').map(w => removeDiacritics(w));
+    const commandLemmas = commandWords.map(w => getLemmaDataFromWord(w)?.lemmaKey).filter(Boolean);
+
+    const options = Object.values(gameState.clarificationState.options);
+    const firstOptionLemmas = ROOM_NAMES[options[0]].requiredLemmas;
+    const secondOptionLemmas = ROOM_NAMES[options[1]].requiredLemmas;
+    const sharedLemma = firstOptionLemmas.find(lemma => secondOptionLemmas.includes(lemma));
+
+    for (const key in gameState.clarificationState.options) {
+        const targetRoomId = gameState.clarificationState.options[key];
+        const roomData = ROOM_NAMES[targetRoomId];
+        const distinguishingLemma = roomData.requiredLemmas.find(l => l !== sharedLemma);
+
+        if (commandLemmas.includes(distinguishingLemma)) {
+            const correctDistinguishingForm = roomData.recast; // e.g., 'Sorōris'
+            const correctDistinguishingClean = removeDiacritics(correctDistinguishingForm.toLowerCase());
+            const userAttempt = commandWords.find(w => getLemmaDataFromWord(w)?.lemmaKey === distinguishingLemma);
+            
+            // --- NEW "EQUAL PREFERENCE" LOGIC ---
+            let isPerfect = false;
+            let recastHtml = "";
+
+            const userTypedLongForm = commandLemmas.includes(sharedLemma);
+
+            if (userTypedLongForm) {
+                // User intended the long form. The recast should be the long form.
+                const correctSharedForm = roomData.acc[1]; // e.g., 'Cubiculum'
+                recastHtml = `${correctSharedForm} ${correctDistinguishingForm}`;
+                // It's perfect if they got both words right and didn't add extra junk.
+                if (userAttempt === correctDistinguishingClean && commandWords.includes(removeDiacritics(correctSharedForm.toLowerCase())) && commandWords.length === 2) {
+                    isPerfect = true;
                 }
+            } else {
+                // User intended the short form. The recast should be the short form.
+                recastHtml = correctDistinguishingForm;
+                // It's perfect if they got the one word right and it's the only word.
+                if (userAttempt === correctDistinguishingClean && commandWords.length === 1) {
+                    isPerfect = true;
+                }
+            }
 
-                gameState.clarificationState = null;
-                for (const dir in rooms[gameState.currentRoom].exits) {
-                    if (rooms[gameState.currentRoom].exits[dir] === targetRoomId) {
-                        return { type: 'move', direction: dir, newFacingAngle: DIRECTION_ROTATIONS[dir], wasCorrected: wasCorrected, recast: recastHtml };
-                    }
+            if (!isPerfect) {
+                // If not perfect, apply the jiggle to the DISTINGUISHING word in the recast.
+                 const endingMatch = correctDistinguishingForm.match(/(is|um)$/i);
+                if (endingMatch) {
+                    const ending = endingMatch[0];
+                    const base = correctDistinguishingForm.slice(0, -ending.length);
+                    const jiggledWord = `${base}<span class="recast-ending">${ending}</span>`;
+                    recastHtml = recastHtml.replace(correctDistinguishingForm, jiggledWord);
+                } else {
+                    recastHtml = recastHtml.replace(correctDistinguishingForm, `<span class="recast-ending">${correctDistinguishingForm}</span>`);
+                }
+            }
+             // --- END OF NEW LOGIC ---
+
+            gameState.clarificationState = null;
+            for (const dir in rooms[gameState.currentRoom].exits) {
+                if (rooms[gameState.currentRoom].exits[dir] === targetRoomId) {
+                    return { type: 'move', direction: dir, newFacingAngle: DIRECTION_ROTATIONS[dir], wasCorrected: true, recast: recastHtml };
                 }
             }
         }
-        return { type: 'feedback', feedback: `Nōn intellegō. ${gameState.clarificationState.prompt}` };
     }
-
-    const verbInfo = findVerb(normalizedCommand);
-
-    // --- LOGIC REORDERING START ---
-    // 1. Check for ambiguous commands FIRST. This is the critical change.
-    const needsCubiculumClarification = gameState.currentRoom === 'atrium' && normalizedCommand.includes('cubicul') && !normalizedCommand.includes('sororis') && !normalizedCommand.includes('parentum');
+    return { type: 'feedback', feedback: `Nōn intellegō. ${gameState.clarificationState.prompt}` };
+}
+    // --- REFACTORED AMBIGUITY AND LANDMARK LOGIC ---
+    const needsCubiculumClarification = commandLemmas.includes('cubiculum') && !commandLemmas.includes('soror') && !commandLemmas.includes('parens') && gameState.currentRoom === 'atrium';
     if (needsCubiculumClarification) {
         const { recastHtml, wasCorrected } = generateRecast(normalizedCommand, { acc: ['in', 'Cubiculum'] }, verbInfo);
         return { type: 'clarify', prompt: "Utrum cubiculum?", options: { 'sororis': 'cubiculum_sororis', 'parentum': 'cubiculum_parentum' }, wasCorrected, recast: recastHtml };
     }
 
-    const needsAlaClarification = gameState.currentRoom === 'atrium' && normalizedCommand.includes('ala') && !normalizedCommand.includes('larum') && !normalizedCommand.includes('hermae');
+    const needsAlaClarification = commandLemmas.includes('ala') && !commandLemmas.includes('lar') && !commandLemmas.includes('herma') && gameState.currentRoom === 'atrium';
     if (needsAlaClarification) {
         const { recastHtml, wasCorrected } = generateRecast(normalizedCommand, { acc: ['in', 'Alam'] }, verbInfo);
         return { type: 'clarify', prompt: "Utram ālam?", options: { 'larum': 'ala_larum', 'hermae': 'ala_hermae' }, wasCorrected, recast: recastHtml };
     }
 
-    // 2. NOW, look for a specific, unambiguous landmark.
-    let landmarkInfo = null;
-    let landmarkDir = null;
-    let bestMatch = { score: 0, id: null };
+// Find and REPLACE the landmark-finding loop in 'parseCommand'.
 
+    // --- REPLACEMENT START ---
+    let bestMatch = { score: 0, id: null };
     for (const roomId in ROOM_NAMES) {
         const roomData = ROOM_NAMES[roomId];
-        let score = 0;
-        if (roomData.aliases && roomData.aliases.some(a => normalizedCommand.includes(a))) { score += 10; }
-        if (roomData.stems && roomData.stems.some(s => normalizedCommand.includes(s))) { score += 1; }
-        if (score > bestMatch.score) { bestMatch = { score, id: roomId }; }
+        // Score is the number of matching lemmas.
+        const score = roomData.requiredLemmas.filter(lemma => commandLemmas.includes(lemma)).length;
+        
+        // As long as there is at least one match, it's a candidate.
+        if (score > bestMatch.score) {
+            bestMatch = { score, id: roomId };
+        }
     }
+    // --- REPLACEMENT END ---
+
+// REPLACE your entire "if (bestMatch.id)" block with this one.
+
+// REPLACE your entire "if (bestMatch.id)" block with this final version.
 
     if (bestMatch.id) {
-        landmarkInfo = { id: bestMatch.id, data: ROOM_NAMES[bestMatch.id] };
-        landmarkDir = Object.keys(rooms[gameState.currentRoom].exits).find(dir => rooms[gameState.currentRoom].exits[dir] === bestMatch.id);
-    }
-    
-    if (landmarkInfo) {
+        const landmarkInfo = { id: bestMatch.id, data: ROOM_NAMES[bestMatch.id] };
+        const landmarkDir = Object.keys(rooms[gameState.currentRoom].exits).find(dir => rooms[gameState.currentRoom].exits[dir] === bestMatch.id);
+
         if (landmarkInfo.id === gameState.currentRoom) {
             return { type: 'feedback', feedback: `Iam es in ${landmarkInfo.data.nom}.` };
         }
+        
+        // --- THIS IS THE KEY CHANGE ---
+        // If we found any valid room match, but there's no verb or preposition...
+        if (!verbInfo && !normalizedCommand.includes('in') && !normalizedCommand.includes('ad')) {
+            // ...ask them what they want to do IN that specific room.
+            // This is now the universal behavior for all rooms.
+            const roomName = landmarkInfo.data.nom;
+            return { type: 'feedback', feedback: `Quid in "${roomName}" facere vīs?` };
+        }
+        // --- END OF THE CHANGE ---
+
+        // If we get here, it means a verb or preposition WAS present,
+        // but the destination might not be a direct exit.
         if (!landmarkDir) {
             return { type: 'feedback', feedback: 'Nōn potes illūc īre.' };
         }
-        if (!verbInfo && !normalizedCommand.includes('in') && !normalizedCommand.includes('ad')) return { type: 'feedback', feedback: "Quid vīs facere?" };
+        
         const { recastHtml, wasCorrected } = generateRecast(normalizedCommand, landmarkInfo.data, verbInfo);
         return { type: 'move', direction: landmarkDir, newFacingAngle: DIRECTION_ROTATIONS[landmarkDir], wasCorrected, recast: recastHtml };
     }
-    // --- LOGIC REORDERING END ---
 
-    // 3. If no landmark was found, check for directional commands.
+    // --- DIRECTIONAL LOGIC (UNCHANGED) ---
     let moveDirection = null, moveCommand = null, newFacingAngle = gameState.playerFacing;
+    // ... (This entire block is the same as before) ...
     const hasProrsus = normalizedCommand.includes('prorsus');
     const hasRursus = normalizedCommand.includes('rursus');
     const hasDexteram = normalizedCommand.includes('dexteram');
@@ -448,43 +540,83 @@ function parseCommand(command) {
         return { type: 'move', direction: moveDirection, newFacingAngle, wasCorrected, recast: `${verbForRecast} ${moveCommand}` };
     }
     
-    // 4. Finally, if all else fails, we don't understand the words.
     return { type: 'feedback', feedback: "Nōn intellegō verba tua." };
 }
 
+// REPLACE your old 'generateRecast' function with this new, intelligent version.
+
 function generateRecast(command, roomData, verbInfo) {
-    const verbForRecast = verbInfo ? verbInfo.correct : 'eō';
     let wasCorrected = false;
+    
+    // Part 1: Handle the Verb
+    const verbForRecast = verbInfo ? verbInfo.correct : 'eō';
     let verbHtml = verbForRecast;
     if (!verbInfo || !verbInfo.isCorrect) {
         wasCorrected = true;
-        if (verbInfo && verbInfo.key === 'walk') { verbHtml = `ambul<span class="recast-ending">ō</span>`; } 
-        else { verbHtml = `<span class="recast-ending">${verbForRecast}</span>`; }
-    }
-    let prepHtml = `in`;
-    if (command.includes('ad')) { prepHtml = 'ad'; } 
-    else if (!command.includes('in')) { wasCorrected = true; prepHtml = `<span class="recast-ending">in</span>`; }
-    const playerWords = command.split(' ');
-    const correctWords = roomData.acc.slice(1);
-    const recastWords = [];
-    correctWords.forEach(correctWord => {
-        const correctClean = removeDiacritics(correctWord.toLowerCase());
-        const playerAttempt = playerWords.find(pWord => correctClean.startsWith(removeDiacritics(pWord)));
-        if (playerAttempt && removeDiacritics(playerAttempt) === correctClean) {
-            recastWords.push(correctWord);
+        if (verbInfo && verbInfo.key === 'walk') {
+            verbHtml = `ambul<span class="recast-ending">ō</span>`;
         } else {
-            wasCorrected = true;
-            const endingMatch = correctWord.match(/(um|am|em|ēs|ōris|ī|ae|uum)$/i);
-            if (endingMatch) {
-                const ending = endingMatch[0];
-                const base = correctWord.slice(0, -ending.length);
-                recastWords.push(`${base}<span class="recast-ending">${ending}</span>`);
-            } else {
-                 recastWords.push(`<span class="recast-ending">${correctWord}</span>`);
-            }
+            verbHtml = `<span class="recast-ending">${verbForRecast}</span>`;
         }
-    });
-    if (!verbInfo) wasCorrected = true;
+    }
+    if (!verbInfo) wasCorrected = true; // Missing verb is a correction.
+
+    // Part 2: Handle the Preposition
+    let prepHtml = `in`;
+    if (command.includes('ad')) {
+        prepHtml = 'ad';
+    } else if (!command.includes('in')) {
+        wasCorrected = true;
+        prepHtml = `<span class="recast-ending">in</span>`;
+    }
+
+    // Part 3: Handle the Destination (The Smart Part)
+    const commandWords = command.toLowerCase().trim().split(' ');
+    const commandLemmas = commandWords.map(w => getLemmaDataFromWord(w)?.lemmaKey);
+
+    const correctAccWords = roomData.acc.slice(1); // e.g., ['Cubiculum', 'Parentum']
+    const recastWords = [];
+
+    for (let correctWord of correctAccWords) { // Note: changed from const to let
+        // --- ADD THIS NEW BLOCK: THE RECAST POV FIX ---
+        // For this specific room, the player's correct form is "Meum", not "Tuum".
+        if (roomData === ROOM_NAMES['cubiculum_tuum'] && correctWord.toLowerCase() === 'tuum') {
+            correctWord = 'Meum';
+        }
+        const correctLemmaData = getLemmaDataFromWord(correctWord);
+        if (!correctLemmaData) { // Safeguard
+            recastWords.push(correctWord);
+            continue;
+        }
+        
+        // Does the user's command contain the necessary lemma?
+        if (commandLemmas.includes(correctLemmaData.lemmaKey)) {
+            // Yes. Now, did they type the form correctly?
+            const userAttempt = commandWords.find(w => getLemmaDataFromWord(w)?.lemmaKey === correctLemmaData.lemmaKey);
+            const correctClean = removeDiacritics(correctWord.toLowerCase());
+
+            if (userAttempt === correctClean) {
+                // Perfect match. No jiggle.
+                recastWords.push(correctWord);
+            } else {
+                // The form is wrong. Jiggle the ending.
+                wasCorrected = true;
+                const endingMatch = correctWord.match(/(um|am|em|ēs|is|ī|ae|us)$/i);
+                if (endingMatch) {
+                    const ending = endingMatch[0];
+                    const base = correctWord.slice(0, -ending.length);
+                    recastWords.push(`${base}<span class="recast-ending">${ending}</span>`);
+                } else {
+                    recastWords.push(`<span class="recast-ending">${correctWord}</span>`);
+                }
+            }
+        } else {
+            // No. The entire word is missing. Jiggle the whole word.
+            wasCorrected = true;
+            recastWords.push(`<span class="recast-ending">${correctWord}</span>`);
+        }
+    }
+
     return { recastHtml: `${verbHtml} ${prepHtml} ${recastWords.join(' ')}`, wasCorrected };
 }
 
