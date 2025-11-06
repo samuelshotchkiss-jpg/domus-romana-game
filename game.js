@@ -96,7 +96,7 @@ const VOCAB_LEMMA = {
     'imago': { pos:'noun', lemma: 'imāgō, -inis, f.', def: ['image', 'bust', 'ancestral mask'], level: 'novum', forms: { 'imago':{num:'sg'}, 'imaginis':{num:'sg', case:'gen'}, 'imaginem':{num:'sg', case:'acc'}, 'imagines':{num:'pl'}, 'imāginēs':{num:'pl'} } },
     'impluvium': { pos:'noun', lemma: 'impluvium, -ī, n.', def: 'impluvium (water basin)', level: 'novum', forms: { 'impluvium':{num:'sg'} } },
     'in': { pos:'prep', lemma: 'in (+abl./acc.)', def: 'in, on, into, onto', level: 'core', forms: {'in':{}} },
-    'intellego': { pos:'verb', lemma: 'intellegō, -ere, -lēxī', def: 'to understand', level: 'novum', forms: { 'intellegō':{person:1, num:'sg', tense:'present'} } },
+    'intellego': { pos:'verb', lemma: 'intellegō, -ere, -lēxī', def: 'to understand', level: 'novum', forms: { 'intellegō':{person:1, num:'sg', tense:'present' }, 'intellegis':{person:2, num:'sg', tense:'present' } } },
     'is': { pos:'pronoun', lemma: 'is, ea, id', def: ['he', 'she', 'it', 'that'], level: 'core', forms: {'is':{}, 'ea':{}, 'id':{}} },
     'iterum': { pos:'adv', lemma: 'iterum (adv.)', def: 'again', level: 'core', forms: {'iterum':{}} },
     'laboro': { pos:'verb', lemma: 'labōrō, -āre, -āvī', def: 'to work', level: 'core', forms: { 'labōrat':{person:3, num:'sg', tense:'present'} } },
@@ -143,6 +143,7 @@ const VOCAB_LEMMA = {
     'soror': { pos:'noun', lemma: 'soror, sorōris, f.', def: 'sister', level: 'novum', forms: {'soror':{num:'sg'}, 'sorōris':{num:'sg', case:'gen'}} },
     'specto': { pos:'verb', lemma: 'spectō, -āre, -āvī', def: 'to watch, look at', level: 'core', forms: { 'spectant':{person:3, num:'pl', tense:'present'} } },
     'subito': { pos:'adv', lemma: 'subitō (adv.)', def: 'suddenly', level: 'core', forms: {'subito':{}} },
+    'sui': { pos:'pronoun', lemma: 'sui, sibi, se, se', def: 'himself/herself/itself/themselves', level: 'core', forms: { 'sibi':{case:'dat', def:'for himself/herself/itself/themselves'} } },
     'sum': { pos:'verb', lemma: 'sum, esse, fuī', def: 'to be', level: 'core', forms: { 'sum':{person:1, num:'sg', tense:'present', def:'I am'}, 'esse':{}, 'fuit':{person:3, num:'sg', tense:'perfect', def:'was'}, 'fui':{person:1, num:'sg', tense:'perfect', def:'I was'}, 'fuisse':{}, 'es':{person:2, num:'sg', tense:'present', def:'you are'}, 'est':{person:3, num:'sg', tense:'present'}, 'estne':{person:3, num:'sg', tense:'present', enclitic:'ne'}, 'sunt':{person:3, num:'pl', tense:'present'}, 'eram':{person:1, num:'sg', tense:'imperfect', def:'I was'}, 'erat':{person:3, num:'sg', tense:'imperfect'}, 'erant':{person:3, num:'pl', tense:'imperfect'}, 'eramus':{person:1, num:'pl', tense:'imperfect'}, 'erantne':{person:3, num:'pl', tense:'imperfect', enclitic:'ne'}, 'sitne':{person:3, num:'sg', tense:'present', mood:'subjunctive', enclitic:'ne'}, 'sintne':{person:3, num:'pl', tense:'present', mood:'subjunctive', enclitic:'ne'} } },
     'surgo': { pos:'verb', lemma: 'surgō, surgere, surrēxī', def: ['to get up', 'to rise'], level: 'core', forms: {'surgit':{person:3, num:'sg', tense:'present'}, 'surgunt':{person:3, num:'pl', tense:'present'}, 'surrecta':{}, 'surrecti':{}, 'surrectis':{}} },
     'taberna': { pos:'noun', lemma: 'taberna, -ae, f.', def: ['shop', 'inn'], level: 'core', forms: { 'taberna':{num:'sg'}, 'tabernā':{num:'sg', case:'abl'}, 'tabernam':{num:'sg', case:'acc'} } },
@@ -158,9 +159,23 @@ const VOCAB_LEMMA = {
     'via': { pos:'noun', lemma: 'via, -ae, f.', def: ['road', 'way', 'street'], level: 'core', forms: { 'via':{num:'sg'}, 'viam':{num:'sg', case:'acc'} } },
     'video': { pos:'verb', lemma: 'videō, vidēre, vīdī', def: 'to see', level: 'core', forms: {'videt':{person:3, num:'sg', tense:'present'}, 'vidistine':{person:2, num:'sg', tense:'perfect', enclitic:'ne'}, 'videre':{}} },
     'volo': { pos:'verb', lemma: 'volō, velle, voluī', def: ['to want', 'to wish'], level: 'core', forms: {'vult':{person:3, num:'sg', tense:'present'}, 'voluit':{person:3, num:'sg', tense:'perfect'}} },
-    'volo_velle_mean': { pos:'verb', lemma: 'volō, velle, voluī (sibi vult)', def: 'to mean, signify', level: 'novum', forms: { 'vult':{person:3, num:'sg', tense:'present'} } },
 };
+// Add this new object after the VOCAB_LEMMA block in the GAME DATA section.
 
+const IDIOMS = {
+    'sibi vult': {
+        def: 'means, signifies',
+        componentLemmas: ['sui', 'volo']
+    },
+    'ad dexteram': {
+        def: 'to the right',
+        componentLemmas: ['ad', 'dexter']
+    },
+    'ad sinistram': {
+        def: 'to the left',
+        componentLemmas: ['ad', 'sinister']
+    }
+};
 // This map allows us to quickly find the lemma for any given word form.
 let formToLemmaKey = {};
 
@@ -237,22 +252,39 @@ async function processInput(command) {
             elements.commandInput.focus();
             return;
         // --- ADD THIS NEW BLOCK ---
-        } else if (action.type === 'define') {
-            const cleanWord = removeDiacritics(action.word.toLowerCase());
-            const lemmaKey = formToLemmaKey[cleanWord];
-            
-            if (lemmaKey) {
-                const lemmaData = VOCAB_LEMMA[lemmaKey];
-                const formKey = Object.keys(lemmaData.forms).find(f => removeDiacritics(f.toLowerCase()) === cleanWord);
-                const formData = lemmaData.forms[formKey];
-                
-                const definition = buildDefinition(lemmaData, formData);
-                
-                // We use setFeedback to display the result, as it's a direct response.
-                setFeedback(`'${action.word}' significat: ${definition}`);
-            } else {
-                setFeedback(`Hoc verbum '${action.word}' nōn intellegō.`);
-            }
+// In 'processInput', REPLACE the 'define' action block.
+// In 'processInput', REPLACE the entire 'define' action block.
+// In 'processInput', REPLACE the entire 'define' action block with this simpler version.
+
+} else if (action.type === 'define') {
+    if (action.word === 'EMPTY_QUERY') {
+        setFeedback('Quod verbum nōn intellegis?');
+        return;
+    }
+
+    const cleanQuery = removeDiacritics(action.word.toLowerCase());
+    let definitionString = ''; // We are now just creating a simple string.
+
+    if (IDIOMS[cleanQuery]) {
+        // For idioms, the definition is just the main definition string.
+        definitionString = `"${IDIOMS[cleanQuery].def}"`;
+    } else {
+        // For single words, we use the grammar engine.
+        const lemmaKey = formToLemmaKey[cleanQuery];
+        if (lemmaKey) {
+            const lemmaData = VOCAB_LEMMA[lemmaKey];
+            const formKey = Object.keys(lemmaData.forms).find(f => removeDiacritics(f.toLowerCase()) === cleanQuery);
+            const formData = lemmaData.forms[formKey];
+            definitionString = buildDefinition(lemmaData, formData);
+        }
+    }
+    
+    if (definitionString) {
+        // Pass the raw strings to setFeedback.
+        setFeedback(`'${action.word}' significat: ${definitionString}`);
+    } else {
+        setFeedback(`Hoc verbum '${action.word}' nōn intellegō.`);
+    }
         // --- END OF NEW BLOCK ---
         } else if (action.type === 'move') {
             logCommand(action.recast, action.wasCorrected, true);
@@ -291,37 +323,54 @@ function findVerb(normalizedCommand) {
  * @param {string} command The raw command from the user.
  * @returns {string|null} The Latin word to be defined, or null if it's not a definition query.
  */
+// REPLACE your entire 'parseDefinitionQuery' function with this new, safer version.
+
+// REPLACE your entire 'parseDefinitionQuery' function with this final version.
+
 function parseDefinitionQuery(command) {
     const normalized = command.toLowerCase().trim().replace(/[?!.,]/g, '');
     
-    // Define the trigger phrases and their synonyms
-    const triggers = ['quid significat', 'quid sibi vult'];
-    
-    // Check if the command contains any of our trigger phrases
-    const triggerUsed = triggers.find(t => normalized.includes(t));
+    // Define the question phrases we're looking for. Order matters: check for the longest first.
+    const questionPhrases = ['quid sibi vult', 'quid significat'];
 
-    if (triggerUsed) {
-        // The word to define is whatever is left after removing the trigger phrase.
-        let targetWord = normalized.replace(triggerUsed, '').trim();
-        return targetWord;
-    }
-    
-    // Also handle flexible word order (e.g., "verbum quid significat")
-    if (normalized.includes('quid')) {
-        let potentialTriggers = ['significat', 'sibi vult'];
-        let flexibleTriggerUsed = potentialTriggers.find(t => normalized.includes(t));
-        
-        if (flexibleTriggerUsed) {
-            // Remove all the grammar words to isolate the target word.
-            let targetWord = normalized.replace('quid', '').replace(flexibleTriggerUsed, '').trim();
-            return targetWord;
+    for (const phrase of questionPhrases) {
+        if (normalized.includes(phrase)) {
+            // We found a question. The target is whatever is left over.
+            let target = normalized.replace(phrase, '').trim();
+            
+            if (target) {
+                return target;
+            } else {
+                // The command was ONLY the question phrase (e.g., "quid sibi vult").
+                // This means the user wants to define the phrase itself.
+                // But "quid sibi vult" isn't an idiom, "sibi vult" is.
+                if (phrase === 'quid sibi vult') return 'sibi vult';
+                if (phrase === 'quid significat') return 'EMPTY_QUERY';
+            }
         }
     }
     
+    // Handle flexible order, e.g., "[target] quid significat"
+    const words = normalized.split(' ').filter(Boolean);
+    if (words.includes('quid') || words.includes('significat')) {
+        const grammarWords = ['quid', 'significat'];
+        const targetWords = words.filter(w => !grammarWords.includes(w));
+        if (targetWords.length > 0) {
+            return targetWords.join(' ');
+        }
+    }
+    if (words.includes('sibi') && words.includes('vult')) {
+        const grammarWords = ['quid', 'sibi', 'vult'];
+        const targetWords = words.filter(w => !grammarWords.includes(w));
+        if (targetWords.length > 0) {
+            return targetWords.join(' ');
+        }
+    }
+
+
     return null; // This was not a definition query.
 }
-
-// Add this new helper function right before 'parseCommand'.
+// Add this function right before 'parseCommand' if it was deleted.
 
 /**
  * The bridge between the parser and the vocabulary engine.
@@ -333,30 +382,28 @@ function getLemmaDataFromWord(word) {
     const cleanWord = removeDiacritics(word.toLowerCase());
     const lemmaKey = formToLemmaKey[cleanWord];
 
-    if (!lemmaKey) return null; // The word is not in our dictionary.
+    if (!lemmaKey) return null;
 
     const lemmaData = VOCAB_LEMMA[lemmaKey];
     
-    // Find the specific form entry that matches the word.
     const formKey = Object.keys(lemmaData.forms).find(f => removeDiacritics(f.toLowerCase()) === cleanWord);
     
-    // This check is important. It's possible for a word to be in formToLemmaKey
-    // but not have a direct entry in its own lemma's forms object if there are homographs
-    // we handle later. For now, it's a good safeguard.
     if (!formKey) return null;
 
     const formData = lemmaData.forms[formKey];
 
-    // Return a combined object with all the information we have.
     return {
-        lemmaKey: lemmaKey,     // e.g., 'parens'
-        lemma: lemmaData.lemma,   // e.g., 'parēns, parentis, m./f.'
-        pos: lemmaData.pos,       // e.g., 'noun'
-        def: lemmaData.def,       // e.g., 'parent'
-        level: lemmaData.level,   // e.g., 'core'
-        form: formData            // e.g., { num: 'pl', case: 'gen' }
+        lemmaKey: lemmaKey,
+        lemma: lemmaData.lemma,
+        pos: lemmaData.pos,
+        def: lemmaData.def,
+        level: lemmaData.level,
+        form: formData
     };
 }
+
+
+// Your parseCommand function should start right after this.
 // REPLACE your entire "parseCommand" function with this final, smarter version.
 // REPLACE your entire "parseCommand" function with this correctly ordered version.
 // REPLACE your entire 'parseCommand' function with this new, lemma-aware version.
@@ -643,12 +690,14 @@ async function performMove(moveDirection, newFacingAngle) {
 
 function askClarification(prompt, options) { gameState.clarificationState = { prompt, options }; let optionsString = Object.values(options).map(id => `&nbsp;&nbsp;- ${ROOM_NAMES[id].nom}`).join('<br>'); setFeedback(`${prompt}<br>${optionsString}`); }
 
+// VERIFY that your 'setFeedback' function looks exactly like this.
+
 function setFeedback(message) {
     const log = elements.gameLog;
     const entry = document.createElement('div');
     entry.className = 'log-error';
     
-    // The key change: Process the error message for vocabulary!
+    // This is the magic line. It processes EVERYTHING given to setFeedback.
     entry.innerHTML = processDescription(message);
     
     log.appendChild(entry);
@@ -770,6 +819,10 @@ function logRoom() {
     log.appendChild(entry);
     log.scrollTop = log.scrollHeight;
 }
+// REPLACE your entire 'setupTooltipListeners' function with this new one.
+
+// REPLACE your entire 'setupTooltipListeners' function with this new one.
+
 function setupTooltipListeners() {
     const log = elements.gameLog;
     const tooltip = elements.tooltip;
@@ -778,23 +831,45 @@ function setupTooltipListeners() {
         const vocabSpan = e.target.closest('.vocab');
         if (!vocabSpan) return;
 
-        // Get the data we stored in the span
-        const lemma = vocabSpan.dataset.lemma;
-        const def = vocabSpan.dataset.def;
-        tooltip.innerHTML = def;
+        let tooltipHtml = '';
 
-        // Position the tooltip above the word
+        if (vocabSpan.classList.contains('idiom')) {
+            const idiomDef = vocabSpan.dataset.idiomDef;
+            const componentLemmas = vocabSpan.dataset.componentLemmas.split(',');
+            const originalWords = vocabSpan.textContent.split(' ');
+
+            tooltipHtml = `<span class="idiom-def">"${idiomDef}"</span>`;
+            
+componentLemmas.forEach((lemmaKey, index) => {
+                const lemmaData = VOCAB_LEMMA[lemmaKey.trim()];
+                const originalWord = originalWords[index] || '';
+                if (lemmaData && originalWord) {
+                    // Find the specific form data for the word used in the idiom
+                    const formData = lemmaData.forms[originalWord];
+                    // Use our grammar engine to build the definition. It will use the
+                    // form's specific 'def' if it exists.
+                    const definition = buildDefinition(lemmaData, formData || {});
+                    tooltipHtml += `<div><span class="component-word">${originalWord}</span>: ${definition}</div>`;
+                }
+            });
+        } else {
+            const def = vocabSpan.dataset.def;
+            tooltipHtml = def;
+        }
+        
+        tooltip.innerHTML = tooltipHtml;
+
         const rect = vocabSpan.getBoundingClientRect();
         const tooltipRect = tooltip.getBoundingClientRect();
         
-        let top = rect.top - tooltipRect.height - 5; // 5px buffer
+        let top = rect.top - tooltipRect.height - 5;
         let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
 
-        // Prevent it from going off the left/right of the screen
         if (left < 0) left = 5;
         if (left + tooltipRect.width > window.innerWidth) {
             left = window.innerWidth - tooltipRect.width - 5;
         }
+        if (top < 0) top = rect.bottom + 5;
 
         tooltip.style.top = `${top}px`;
         tooltip.style.left = `${left}px`;
@@ -802,8 +877,7 @@ function setupTooltipListeners() {
     });
 
     log.addEventListener('mouseout', (e) => {
-        const vocabSpan = e.target.closest('.vocab');
-        if (vocabSpan) {
+        if (e.target.closest('.vocab')) {
             tooltip.classList.remove('visible');
         }
     });
@@ -811,61 +885,51 @@ function setupTooltipListeners() {
 
 // In your processDescription function...
 // REPLACE your entire old 'processDescription' function with this new one.
+// REPLACE your entire old 'processDescription' function with this new one.
+
 function processDescription(text) {
-    // Regex to find words with our special override tags, e.g., "murīs[abl|with the walls]"
-    // It captures three groups: 1=word, 2=grammar_tag, 3=override_definition
+    let processedText = text;
+
+    // --- IDIOM PRE-PROCESSING STEP ---
+    // Before we do anything else, find and wrap our known idioms.
+    for (const idiom in IDIOMS) {
+        // Use a Regex with word boundaries (\b) to avoid partial matches.
+        const regex = new RegExp(`\\b${idiom}\\b`, 'gi');
+        processedText = processedText.replace(regex, (match) => {
+            const idiomData = IDIOMS[idiom];
+            // Wrap the found idiom in a special span with all the data it needs.
+            return `<span class="idiom vocab" data-idiom-def="${idiomData.def}" data-component-lemmas="${idiomData.componentLemmas.join(',')}">${match}</span>`;
+        });
+    }
+
     const overrideRegex = /(\w+)\[([^|]+)\|([^\]]+)\]/g;
-    
-    // First, replace all override tags with a special, temporary HTML element
-    // that holds the data for us. We do this to protect it from the word-splitting logic.
-    const protectedText = text.replace(overrideRegex, (match, word, tag, def) => {
+    const protectedText = processedText.replace(overrideRegex, (match, word, tag, def) => {
         return `<dataspan class="override" data-word="${word}" data-def="${def}"></dataspan>`;
     });
 
-    // Now, split the text into words and separators, as before.
     const wordsAndSeparators = protectedText.split(/([ \t\n\r.,!?;]+)/);
 
     return wordsAndSeparators.map(part => {
-        // If the part is a separator, return it.
         if (!part.trim()) return part;
-
-        // Check if this part is one of our temporary override elements.
-        if (part.startsWith('<dataspan')) {
-            // Create a temporary element to easily read its data attributes
-            const tempEl = document.createElement('div');
-            tempEl.innerHTML = part;
-            const dataSpan = tempEl.firstChild;
-
-            const word = dataSpan.dataset.word;
-            const overrideDef = dataSpan.dataset.def;
-            
-            const cleanWord = removeDiacritics(word.toLowerCase());
-            const lemmaKey = formToLemmaKey[cleanWord];
-            const lemmaData = VOCAB_LEMMA[lemmaKey];
-
-            // If for some reason the word isn't in the dictionary, just show the word.
-            if (!lemmaKey || !lemmaData) return word;
-
-            const vocabClass = lemmaData.level === 'novum' ? 'vocab novum' : 'vocab';
-            // Build the tooltip using the OVERRIDE definition
-            return `<span class="${vocabClass}" data-lemma="${lemmaData.lemma}" data-def="${overrideDef}">${word}</span>`;
+        
+        // If the part is an idiom span or an override dataspan, it's already processed. Return it.
+        if (part.startsWith('<span class="idiom') || part.startsWith('<dataspan')) {
+            return part;
         }
 
-        // --- If it's a normal word (no override), proceed with the engine ---
-        const cleanWord = removeDiacritics(part.toLowerCase());
+// This is the key fix: We now strip away quotes before looking up the word.
+        const cleanWord = removeDiacritics(part.toLowerCase().replace(/['"]/g, ''));
         const lemmaKey = formToLemmaKey[cleanWord];
 
-        if (!lemmaKey) return part; // Not in our dictionary.
+        if (!lemmaKey) return part;
 
         const lemmaData = VOCAB_LEMMA[lemmaKey];
-        if (lemmaData.level === 'core') return part; // Core words get no tooltip.
+        if (lemmaData.level === 'core') return part;
 
-        // Find the specific form data that matches the current word
         const formKey = Object.keys(lemmaData.forms).find(f => removeDiacritics(f.toLowerCase()) === cleanWord);
-        if (!formKey) return part; // Should be rare, but a good safeguard.
+        if (!formKey) return part;
         const formData = lemmaData.forms[formKey];
         
-        // Use our grammar engine to build the definition!
         const definition = buildDefinition(lemmaData, formData);
 
         const vocabClass = lemmaData.level === 'novum' ? 'vocab novum' : 'vocab';
@@ -873,7 +937,6 @@ function processDescription(text) {
 
     }).join('');
 }
-
 
 // REPLACE your entire 'buildDefinition' function with this corrected version.
 
@@ -919,12 +982,23 @@ function buildDefinition(lemmaData, formData) {
         }
         
         // --- VERB LOGIC ---
+// In 'buildDefinition', REPLACE the entire VERB LOGIC block.
+
+        // --- VERB LOGIC ---
         if (lemmaData.pos === 'verb' && formData.tense) {
             let baseVerb = currentDef.replace('to ', '');
             
             if (formData.tense === 'present') {
                 if (formData.person === 3 && formData.num === 'sg') {
-                    currentDef = baseVerb + 's';
+                    // --- NEW, SMARTER CONJUGATION ---
+                    if (baseVerb.endsWith('y') && !['a','e','i','o','u'].includes(baseVerb.slice(-2,-1))) {
+                        // If it ends in a consonant + y (e.g., signify, cry)
+                        currentDef = baseVerb.slice(0, -1) + 'ies'; // signify -> signifies
+                    } else {
+                        // Otherwise, just add 's' (e.g., want -> wants)
+                        currentDef = baseVerb + 's';
+                    }
+                    // --- END OF NEW LOGIC ---
                 } else {
                     currentDef = baseVerb;
                 }
