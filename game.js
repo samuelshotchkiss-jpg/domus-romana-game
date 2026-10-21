@@ -5,21 +5,21 @@
 const removeDiacritics = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
 const rooms = {
-    'via_west': { x: 0, y: -1, name: 'Via', desc: 'Via est. Caelum nōn est clārum. Aqua ex caelō cadit.', exits: { south: 'taberna', east: 'via_east' } },
-    'via_east': { x: 1, y: -1, name: 'Via', desc: 'Iterum, via est. Aqua cadit. Magna domus est prope.', exits: { south: 'fauces', west: 'via_west' } },
-    'taberna': { x: 0, y: 0, name: 'Taberna', desc: 'Hic est taberna. Mēnsa magna est. Multae rēs variae sunt in tabernā.', exits: { north: 'via_west' } },
-    'fauces': { x: 1, y: 0, name: 'Faucēs', desc: 'Hae sunt fauces. In murīs sunt multae imāginēs parentum. Te spectant.', exits: { north: 'via_east', south: 'atrium' } },
-    'atrium': { x: 1, y: 1, name: 'Ātrium', desc: 'Hoc est atrium magnum. Murī sunt rubrī. Aqua ex caelō in impluvium cadit.', exits: { north: 'fauces', south: 'tablinum', east: 'cubiculum_parentum', west: 'cubiculum_sororis', southeast: 'ala_larum', southwest: 'ala_hermae' } },
-    'cubiculum_sororis': { x: 0, y: 1, name: 'Cubiculum Sorōris', desc: 'Hoc est cubiculum sorōris tuae. Est lectus et armārium.', exits: { east: 'atrium' } },
-    'cubiculum_parentum': { x: 2, y: 1, name: 'Cubiculum Parentum', desc: 'Hoc est cubiculum parentum. Duo lectī sunt.', exits: { west: 'atrium' } },
-    'ala_larum': { x: 2, y: 2, name: 'Āla Lārum', desc: 'Hic est ala. In alā est larārium. Deī domūs sunt in larāriō. Silentium est.', exits: { northwest: 'atrium' } },
-    'ala_hermae': { x: 0, y: 2, name: 'Āla Hermae', desc: 'Hic est ala. Magna herma avī in angulō est.', exits: { northeast: 'atrium' } },
-    'tablinum': { x: 1, y: 2, name: 'Tablīnum', desc: 'Hoc est tablinum. Dominus saepe hic labōrat. Magna mēnsa in tablinō est.', exits: { north: 'atrium', south: 'peristylum' } },
-    'peristylum': { x: 1, y: 3, name: 'Peristȳlum', desc: 'Hoc est peristylum. In peristylō est hortus magnus. Multae columnae sunt.', exits: { north: 'tablinum', south: 'triclinium', east: 'cubiculum_tuum', west: 'culina' } },
-    'cubiculum_tuum': { x: 2, y: 3, name: 'Cubiculum Tuum', desc: 'Hoc est cubiculum tuum. Lectus tuus est prope.', exits: { west: 'peristylum' } },
-    'triclinium': { x: 1, y: 4, name: 'Triclīnium', desc: 'Hoc est triclīnium. Trēs lectī et mēnsa parva in triclīniō sunt. Figūrae in murīs sunt.', exits: { north: 'peristylum' } },
-    'culina': { x: 0, y: 3, name: 'Culīna', desc: 'Hic est culīna. In culinā est aqua et focus. Latrīna in culinā est.', exits: { east: 'peristylum', west: 'cella' } },
-    'cella': { x: -1, y: 3, name: 'Cella', desc: 'Hic est cella. Multae amphorae in cellā sunt.', exits: { east: 'culina' } }
+    'via_west': { x: 0, y: -1, name: 'Via', desc: 'Nox est. Haec via obscūra et tranquilla est, neque est sonus.', exits: { south: 'taberna', east: 'via_east' } },
+    'via_east': { x: 1, y: -1, name: 'Via', desc: 'Haec quoque via obscūra est. Haec est domus tua, et iānua domūs aperta est.', exits: { south: 'fauces', west: 'via_west' } },
+    'taberna': { x: 0, y: 0, name: 'Taberna', desc: 'Haec taberna obscūra est. In tabernā est mēnsa, et in mēnsā sunt multa et varia.', exits: { north: 'via_west' } },
+    'fauces': { x: 1, y: 0, name: 'Faucēs', desc: 'Hae faucēs obscūrae sunt. Ubīque sunt pictūrae, et in pictūrīs sunt virī Rōmānī. Oculī virōrum tē vident!', exits: { north: 'via_east', south: 'atrium' } },
+    'atrium': { x: 1, y: 1, name: 'Ātrium', desc: 'Hoc ātrium obscūrum tranquillumque est. In ātriō est impluvium, et ubīque est silentium.', exits: { north: 'fauces', south: 'tablinum', east: 'cubiculum_parentum', west: 'cubiculum_sororis', southeast: 'ala_larum', southwest: 'ala_hermae' } },
+    'cubiculum_sororis': { x: 0, y: 1, name: 'Cubiculum Sorōris', desc: 'Hoc est cubiculum sorōris tuae. Soror tua domī nōn est. In cubiculō sunt lectus sellaque.', exits: { east: 'atrium' } },
+    'cubiculum_parentum': { x: 2, y: 1, name: 'Cubiculum Parentum', desc: 'Hoc est cubiculum parentum tuōrum. Hī duo lectī sunt parentum, sed parentēs domī nōn sunt.', exits: { west: 'atrium' } },
+    'ala_larum': { x: 2, y: 2, name: 'Āla Lārum', desc: 'In hāc ālā est larārium, in quō sunt Larēs, deī domūs tuae.', exits: { northwest: 'atrium' } },
+    'ala_hermae': { x: 0, y: 2, name: 'Āla Hermae', desc: 'Haec quoque āla est. In ālā stat pater patris tuī — sed immōbilis: herma est!', exits: { northeast: 'atrium' } },
+    'tablinum': { x: 1, y: 2, name: 'Tablīnum', desc: 'Hoc est tablīnum patris tuī. In tablīnō sunt mēnsa sellaque. Est etiam armārium, sed hoc armārium clausum est.', exits: { north: 'atrium', south: 'peristylum' } },
+    'peristylum': { x: 1, y: 3, name: 'Peristȳlum', desc: 'Hoc peristȳlum obscūrum est. In peristȳlō sunt arborēs, herbae rosaeque. In arbore est noctua.', exits: { north: 'tablinum', south: 'triclinium', east: 'cubiculum_tuum', west: 'culina' } },
+    'cubiculum_tuum': { x: 2, y: 3, name: 'Cubiculum Tuum', desc: 'Hoc est cubiculum tuum. Nox est; dormīre vīs, sed īnsomniam habēs. Iānua cubiculī aperta est.', exits: { west: 'peristylum' } },
+    'triclinium': { x: 1, y: 4, name: 'Triclīnium', desc: 'Hoc est triclīnium. In triclīniō sunt mēnsa lectīque, immōbilēs. Silentium est, sed aliquid sentīs.', exits: { north: 'peristylum' } },
+    'culina': { x: 0, y: 3, name: 'Culīna', desc: 'Haec est culīna. In mēnsā est pānis, et in culīnā est etiam lātrīna.', exits: { east: 'peristylum', west: 'cella' } },
+    'cella': { x: -1, y: 3, name: 'Cella', desc: 'Haec cella obscūrissima est. In cellā sunt multae amphorae.', exits: { east: 'culina' } }
 };
 
 // The movement verbs, recognised by lemma. `stem` forgives forms the vocabulary does not list.
@@ -61,7 +61,9 @@ const VOCAB_LEMMA = {
     'ambulo': { pos:'verb', lemma: 'ambulō, -āre, -āvī', def: 'to walk', level: 'core', forms: { 'ambulō':{person:1, num:'sg', tense:'present'}, 'ambulat':{person:3, num:'sg', tense:'present'}, 'ambulāre':{}, 'ambulā':{def:'walk!'} } },
     'amphora': { pos:'noun', lemma: 'amphora, -ae, f.', def: 'jar', level: 'novum', forms: { 'amphora': {num:'sg'}, 'amphorae': {num:'pl'} } },
     'angulus': { pos:'noun', lemma: 'angulus, -ī, m.', def: 'corner', level: 'novum', forms: { 'angulō':{num:'sg', case:'abl'} } },
+    'aperio': { pos:'verb', lemma: 'aperiō, aperīre, aperuī', def: 'to open', level: 'core', forms: { 'aperit':{person:3, num:'sg', tense:'present'}, 'aperta':{def:'open'}, 'apertum':{def:'open'} } },
     'aqua': { pos:'noun', lemma: 'aqua, -ae, f.', def: 'water', level: 'core', forms: {'aqua': {num:'sg'}} },
+    'arbor': { pos:'noun', lemma: 'arbor, arboris, f.', def: 'tree', level: 'core', forms: { 'arbor':{num:'sg'}, 'arbore':{num:'sg', case:'abl'}, 'arborēs':{num:'pl'} } },
     'armarium': { pos:'noun', lemma: 'armārium, -ī, n.', def: ['closet', 'cupboard'], level: 'outer', forms: { 'armarium': {num:'sg'}, 'armario': {num:'sg', case:'abl'} } },
     'atrium': { pos:'noun', lemma: 'ātrium, -ī, n.', def: ['atrium', 'main hall'], level: 'outer', forms: { 'atrium':{num:'sg'}, 'ātrium':{num:'sg'}, 'ātriō':{num:'sg', case:'abl'} } },
     'attat': { pos:'interjection', lemma: 'attat!', def: 'aha!', level: 'outer', forms: {'attat':{}} },
@@ -70,9 +72,10 @@ const VOCAB_LEMMA = {
     'caelum': { pos:'noun', lemma: 'caelum, -ī, n.', def: 'sky', level: 'outer', forms: { 'caelum':{num:'sg'}, 'caelō':{num:'sg', case:'abl'} } },
     'cella': { pos:'noun', lemma: 'cella, -ae, f.', def: 'storeroom', level: 'outer', forms: { 'cella':{num:'sg'}, 'cellā':{num:'sg', case:'abl'}, 'cellam':{num:'sg', case:'acc'} } },
     'clarus': { pos:'adj', lemma: 'clārus, -a, -um', def: 'clear, bright', level: 'outer', forms: { 'clarum':{}, 'clārum':{} } },
+    'claudo': { pos:'verb', lemma: 'claudō, claudere, clausī', def: 'to close', level: 'core', forms: { 'claudit':{person:3, num:'sg', tense:'present'}, 'clausa':{def:'closed'}, 'clausum':{def:'closed'} } },
     'columna': { pos:'noun', lemma: 'columna, -ae, f.', def: ['column', 'pillar'], level: 'novum', forms: { 'columna':{num:'sg'}, 'columnae':{num:'pl'} } },
     'coram': { pos:'adv', lemma: 'cōram (adv.)', def: ['face to face', 'in person'], level: 'outer', forms: {'coram':{}} },
-    'cubiculum': { pos:'noun', lemma: 'cubiculum, -ī, n.', def: 'bedroom', level: 'outer', forms: { 'cubiculum':{num:'sg'}, 'cubiculō':{num:'sg', case:'abl'} } },
+    'cubiculum': { pos:'noun', lemma: 'cubiculum, -ī, n.', def: 'bedroom', level: 'outer', forms: { 'cubiculum':{num:'sg'}, 'cubiculō':{num:'sg', case:'abl'}, 'cubiculī':{num:'sg', case:'gen'} } },
     'culina': { pos:'noun', lemma: 'culīna, -ae, f.', def: 'kitchen', level: 'core', forms: { 'culina':{num:'sg'}, 'culīna':{num:'sg'}, 'culīnā':{num:'sg', case:'abl'}, 'culīnam':{num:'sg', case:'acc'} } },
     'cum': { pos:'prep', lemma: 'cum (+abl.)', def: 'with', level: 'core', forms: {'mecum':{}} },
     'de': { pos:'prep', lemma: 'dē (+abl.)', def: 'from, down from, about', level: 'core', forms: {'de':{}} },
@@ -84,21 +87,24 @@ const VOCAB_LEMMA = {
     'dormio': { pos:'verb', lemma: 'dormiō, dormīre, dormīvī', def: 'to sleep', level: 'core', forms: { 'dormio':{person:1, num:'sg', tense:'present'}, 'dormit':{person:3, num:'sg', tense:'present'}, 'dormire':{}, 'dormiebam':{person:1, num:'sg', tense:'imperfect'}, 'dormiturus':{} } },
     'duo': { pos:'adj', lemma: 'duo, duae, duo', def: 'two', level: 'outer', forms: { 'duo':{} } },
     'eo': { pos:'verb', lemma: 'eō, īre, iī/īvī', def: 'to go', level: 'core', forms: {'eo':{person:1, num:'sg', tense:'present'}, 'ire':{}, 'it':{person:3, num:'sg', tense:'present'}, 'ī':{def:'go!'}} },
-    'etiam': { pos:'adv', lemma: 'etiam (adv.)', def: ['also', 'even', 'too'], level: 'outer', forms: { 'etiam':{} } },
     'et': { pos:'conj', lemma: 'et (conj.)', def: 'and', level: 'core', forms: {'et':{}} },
+    'etiam': { pos:'adv', lemma: 'etiam (adv.)', def: ['also', 'even', 'too'], level: 'outer', forms: { 'etiam':{} } },
     'fauces': { pos:'noun', lemma: 'faucēs, -ium, f.pl.', def: ['entrance', 'jaws'], level: 'outer', forms: { 'fauces':{num:'pl'}, 'faucēs':{num:'pl'}, 'faucibus':{num:'pl', case:'abl'} } },
     'figura': { pos:'noun', lemma: 'figūra, -ae, f.', def: ['figure', 'shape'], level: 'outer', forms: { 'figura':{num:'sg'}, 'figurae':{num:'pl'}, 'figuram':{num:'sg', case:'acc'} } },
     'focus': { pos:'noun', lemma: 'focus, -ī, m.', def: 'hearth', level: 'novum', forms: {'focus':{num:'sg'}} },
-    'habeo': { pos:'verb', lemma: 'habeō, -ēre, -uī', def: ['to have', 'to hold'], level: 'core', forms: { 'habet':{person:3, num:'sg', tense:'present'}, 'habeo':{person:1, num:'sg', tense:'present'}, 'habere':{}, 'habesne':{person:2, num:'sg', tense:'present', enclitic:'ne'}, 'habebant':{person:3, num:'pl', tense:'imperfect'} } },
+    'habeo': { pos:'verb', lemma: 'habeō, -ēre, -uī', def: ['to have', 'to hold'], level: 'core', forms: { 'habet':{person:3, num:'sg', tense:'present'}, 'habeo':{person:1, num:'sg', tense:'present'}, 'habere':{}, 'habesne':{person:2, num:'sg', tense:'present', enclitic:'ne'}, 'habebant':{person:3, num:'pl', tense:'imperfect'}, 'habēs':{person:2, num:'sg', tense:'present'} } },
+    'herba': { pos:'noun', lemma: 'herba, -ae, f.', def: 'plant', level: 'core', forms: { 'herba':{num:'sg'}, 'herbae':{num:'pl'} } },
     'herma': { pos:'noun', lemma: 'herma, -ae, f.', def: ['herm', 'bust'], level: 'novum', forms: {'herma':{num:'sg'}, 'hermae':{num:'sg', case:'gen'}} },
-    'hic': { pos:'pronoun', lemma: 'hic, haec, hoc', def: ['this', 'these'], level: 'core', forms: {'hic':{}, 'haec':{}, 'hoc':{}} },
+    'hic': { pos:'pronoun', lemma: 'hic, haec, hoc', def: ['this', 'these'], level: 'core', forms: {'hic':{}, 'haec':{}, 'hoc':{}, 'hae':{}, 'hī':{}, 'hāc':{} } },
     'hortus': { pos:'noun', lemma: 'hortus, -ī, m.', def: 'garden', level: 'novum', forms: {'hortus':{num:'sg'}} },
     'iam': { pos:'adv', lemma: 'iam (adv.)', def: 'now, already', level: 'core', forms: {'iam':{}} },
     'ianua': { pos:'noun', lemma: 'iānua, -ae, f.', def: 'door', level: 'outer', forms: { 'ianua':{num:'sg'}, 'ianuae':{num:'pl'}, 'ianuam':{num:'sg', case:'acc'} } },
     'illuc': { pos:'adv', lemma: 'illūc (adv.)', def: 'to that place, there', level: 'novum', forms: { 'illuc':{} } },
     'imago': { pos:'noun', lemma: 'imāgō, -inis, f.', def: ['image', 'bust', 'ancestral mask'], level: 'novum', forms: { 'imago':{num:'sg'}, 'imaginis':{num:'sg', case:'gen'}, 'imaginem':{num:'sg', case:'acc'}, 'imagines':{num:'pl'}, 'imāginēs':{num:'pl'} } },
-    'impluvium': { pos:'noun', lemma: 'impluvium, -ī, n.', def: 'impluvium (water basin)', level: 'novum', forms: { 'impluvium':{num:'sg'} } },
+    'immobilis': { pos:'adj', lemma: 'immōbilis, -e', def: 'motionless', level: 'outer', forms: { 'immōbilis':{}, 'immōbilēs':{num:'pl'} } },
+    'impluvium': { pos:'noun', lemma: 'impluvium, -ī, n.', def: 'impluvium (water basin)', level: 'novum', forms: { 'impluvium':{num:'sg'}, 'impluviō':{num:'sg', case:'abl'} } },
     'in': { pos:'prep', lemma: 'in (+abl./acc.)', def: 'in, on, into, onto', level: 'core', forms: {'in':{}} },
+    'insomnia': { pos:'noun', lemma: 'īnsomnia, -ae, f.', def: 'sleeplessness', level: 'outer', forms: { 'īnsomniam':{num:'sg', case:'acc'} } },
     'intellego': { pos:'verb', lemma: 'intellegō, -ere, -lēxī', def: 'to understand', level: 'novum', forms: { 'intellegō':{person:1, num:'sg', tense:'present' }, 'intellegis':{person:2, num:'sg', tense:'present' } } },
     'is': { pos:'pronoun', lemma: 'is, ea, id', def: ['he', 'she', 'it', 'that'], level: 'core', forms: {'is':{}, 'ea':{}, 'id':{}} },
     'iterum': { pos:'adv', lemma: 'iterum (adv.)', def: 'again', level: 'core', forms: {'iterum':{}} },
@@ -113,56 +119,67 @@ const VOCAB_LEMMA = {
     'mensa': { pos:'noun', lemma: 'mēnsa, -ae, f.', def: 'table', level: 'outer', forms: {'mensa':{num:'sg'}, 'mēnsa':{num:'sg'}, 'mensam':{num:'sg', case:'acc'}} },
     'meus': { pos:'adj', lemma: 'meus, -a, -um', def: 'my, mine', level: 'core', forms: { 'meum':{} } },
     'mortalis': { pos:'adj', lemma: 'mortālis, -e', def: 'mortal', level: 'core', forms: {'mortalis':{}, 'mortale':{}} },
-    'multus': { pos:'adj', lemma: 'multus, -a, -um', def: 'many, much', level: 'core', forms: { 'multae':{num:'pl'} } },
+    'multus': { pos:'adj', lemma: 'multus, -a, -um', def: 'many, much', level: 'core', forms: { 'multae':{num:'pl'}, 'multa':{num:'pl'} } },
     'murmur': { pos:'noun', lemma: 'murmur, murmuris, n.', def: ['a murmur', 'rumbling'], level: 'outer', forms: {'murmur':{num:'sg'}, 'murmure':{num:'sg', case:'abl'}} },
     'murus': { pos:'noun', lemma: 'murus, -ī, m.', def: 'wall', level: 'novum', forms: { 'murus':{num:'sg'}, 'muri':{num:'pl'}, 'murī':{num:'pl'}, 'murīs':{num:'pl', case:'abl'} } },
+    'neque': { pos:'conj', lemma: 'neque (conj.)', def: 'and not, nor', level: 'core', forms: { 'neque':{} } },
+    'noctua': { pos:'noun', lemma: 'noctua, -ae, f.', def: 'owl', level: 'core', forms: { 'noctua':{num:'sg'} } },
     'non': { pos:'adv', lemma: 'nōn (adv.)', def: 'not', level: 'core', forms: { 'nōn':{} } },
     'nox': { pos:'noun', lemma: 'nox, noctis, f.', def: 'night', level: 'core', forms: {'nox':{num:'sg'}, 'noctem':{num:'sg', case:'acc'}, 'nocte':{num:'sg', case:'abl'}} },
+    'obscurus': { pos:'adj', lemma: 'obscūrus, -a, -um', def: 'dark', level: 'outer', forms: { 'obscūra':{}, 'obscūrae':{num:'pl'}, 'obscūrum':{}, 'obscūrissima':{def:'very dark'} } },
     'oculus': { pos:'noun', lemma: 'oculus, -ī, m.', def: 'eye', level: 'core', forms: {'oculi':{num:'pl'}, 'oculis':{num:'pl', case:'abl'}, 'oculos':{num:'pl', case:'acc'}} },
+    'panis': { pos:'noun', lemma: 'pānis, pānis, m.', def: 'bread', level: 'core', forms: { 'pānis':{num:'sg'} } },
     'parens': { pos:'noun', lemma: 'parēns, parentis, m./f.', def: 'parent', level: 'core', forms: { 'parentum':{num:'pl', case:'gen'}, 'parentes':{num:'pl'} } },
     'parvus': { pos:'adj', lemma: 'parvus, -a, -um', def: 'small', level: 'outer', forms: {'parvus':{}, 'parva':{}} },
     'pater': { pos:'noun', lemma: 'pater, patris, m.', def: 'father', level: 'core', forms: { 'pater':{num:'sg'}, 'patris':{num:'sg', case:'gen'} } },
     'peristylum': { pos:'noun', lemma: 'peristylum, -ī, n.', def: 'peristyle', level: 'outer', forms: { 'peristylum':{num:'sg'}, 'peristylō':{num:'sg', case:'abl'} } },
     'phantasma': { pos:'noun', lemma: 'phantasma, -atis, n.', def: ['ghost', 'apparition'], level: 'outer', forms: {'phantasma':{}, 'phantasmate':{case:'abl'}, 'phantasmatis':{case:'gen'}, 'phantasmata':{}, 'phantasmatum':{case:'gen', num:'pl'}} },
+    'pictura': { pos:'noun', lemma: 'pictūra, -ae, f.', def: ['picture', 'painting'], level: 'outer', forms: { 'pictūra':{num:'sg'}, 'pictūrae':{num:'pl'}, 'pictūrīs':{num:'pl', case:'abl'} } },
     'possum': { pos:'verb', lemma: 'possum, posse, potuī', def: 'to be able, can', level: 'core', forms: { 'possum':{person:1, num:'sg', tense:'present'}, 'potes':{person:2, num:'sg', tense:'present'} } },
     'prope': { pos:'adv', lemma: 'prope (adv.)', def: 'near, nearby', level: 'core', forms: { 'prope':{} } },
     'prorsus': { pos:'adv', lemma: 'prōrsus (adv.)', def: 'forwards, straight ahead', level: 'outer', forms: { 'prōrsus':{} } },
     'puto': { pos:'verb', lemma: 'putō, putāre, putāvī', def: 'to think', level: 'core', forms: { 'putat':{person:3, num:'sg', tense:'present'}, 'putavit':{person:3, num:'sg', tense:'perfect'}, 'putabam':{person:1, num:'sg', tense:'imperfect'} } },
-    'qui': { pos:'pronoun', lemma: 'quī, quae, quod', def: ['who', 'which'], level: 'core', forms: {'qui':{}, 'quae':{}, 'quod':{}, 'quem':{}, 'quam':{}} },
+    'qui': { pos:'pronoun', lemma: 'quī, quae, quod', def: ['who', 'which'], level: 'core', forms: {'qui':{}, 'quae':{}, 'quod':{}, 'quem':{}, 'quam':{}, 'quō':{case:'abl'}} },
     'quid': { pos:'pronoun', lemma: 'quis, quid', def: 'what?', level: 'core', forms: { 'quid':{} } },
     'quintus': { pos:'noun', lemma: 'Quīntus, -ī, m.', def: 'Quintus', level: 'outer', forms: {'quintus':{}, 'quinti':{case:'gen'}, 'quinto':{case:'abl'}} },
     'quoque': { pos:'adv', lemma: 'quoque (adv.)', def: ['also', 'too'], level: 'novum', forms: {'quoque':{}} },
     'res': { pos:'noun', lemma: 'rēs, reī, f.', def: ['thing', 'matter', 'object'], level: 'core', forms: {'res':{}, 'rēs':{}} },
     'rideo': { pos:'verb', lemma: 'rīdeō, rīdēre, rīsī', def: ['to laugh', 'to smile'], level: 'core', forms: {'ridet':{person:3, num:'sg', tense:'present'}, 'rident':{person:3, num:'pl', tense:'present'}} },
     'romanus': { pos:'adj', lemma: 'Rōmānus, -a, -um', def: 'Roman', level: 'outer', forms: {'romanus':{}, 'romani':{num:'pl'}, 'romae':{case:'loc'}} },
+    'rosa': { pos:'noun', lemma: 'rosa, -ae, f.', def: 'rose', level: 'core', forms: { 'rosa':{num:'sg'}, 'rosae':{num:'pl'} } },
     'ruber': { pos:'adj', lemma: 'ruber, rubra, rubrum', def: 'red', level: 'novum', forms: {'ruber':{}, 'rubra':{}, 'rubrum':{}, 'rubri':{num:'pl'}, 'rubrī':{num:'pl'}} },
     'rursus': { pos:'adv', lemma: 'rūrsus (adv.)', def: 'backwards, again', level: 'outer', forms: { 'rūrsus':{} } },
     'saepe': { pos:'adv', lemma: 'saepe (adv.)', def: 'often', level: 'core', forms: {'saepe':{}} },
+    'sed': { pos:'conj', lemma: 'sed (conj.)', def: 'but', level: 'core', forms: { 'sed':{} } },
+    'sella': { pos:'noun', lemma: 'sella, -ae, f.', def: 'chair', level: 'core', forms: { 'sella':{num:'sg'} } },
     'semper': { pos:'adv', lemma: 'semper (adv.)', def: 'always', level: 'core', forms: {'semper':{}} },
-    'sentio': { pos:'verb', lemma: 'sentiō, sentīre, sēnsī', def: ['to feel', 'to sense', 'to perceive'], level: 'core', forms: {'sentit':{person:3, num:'sg', tense:'present'}, 'sentiens':{}, 'sentire':{}} },
+    'sentio': { pos:'verb', lemma: 'sentiō, sentīre, sēnsī', def: ['to feel', 'to sense', 'to perceive'], level: 'core', forms: {'sentit':{person:3, num:'sg', tense:'present'}, 'sentiens':{}, 'sentire':{}, 'sentīs':{person:2, num:'sg', tense:'present'} } },
     'significo': { pos:'verb', lemma: 'sīgnificō, -āre, -āvī', def: 'to mean, signify', level: 'novum', forms: { 'sīgnificat':{person:3, num:'sg', tense:'present'} } },
     'silentium': { pos:'noun', lemma: 'silentium, -ī, n.', def: 'silence', level: 'outer', forms: { 'silentium':{num:'sg'} } },
     'sinister': { pos:'adj', lemma: 'sinister, sinistra, sinistrum', def: 'left', level: 'outer', forms: { 'sinistram':{num:'sg', case:'acc'} } },
     'sonus': { pos:'noun', lemma: 'sonus, -ī, m.', def: 'sound', level: 'outer', forms: { 'sonus':{num:'sg'}, 'sonum':{num:'sg', case:'acc'}, 'soni':{num:'pl'}, 'sonos':{num:'pl', case:'acc'} } },
     'soror': { pos:'noun', lemma: 'soror, sorōris, f.', def: 'sister', level: 'novum', forms: {'soror':{num:'sg'}, 'sorōris':{num:'sg', case:'gen'}} },
     'specto': { pos:'verb', lemma: 'spectō, -āre, -āvī', def: 'to watch, look at', level: 'core', forms: { 'spectant':{person:3, num:'pl', tense:'present'} } },
+    'sto': { pos:'verb', lemma: 'stō, stāre, stetī', def: 'to stand', level: 'core', forms: { 'stat':{person:3, num:'sg', tense:'present'}, 'stant':{person:3, num:'pl', tense:'present'} } },
     'subito': { pos:'adv', lemma: 'subitō (adv.)', def: 'suddenly', level: 'core', forms: {'subito':{}} },
     'sui': { pos:'pronoun', lemma: 'sui, sibi, se, se', def: 'himself/herself/itself/themselves', level: 'core', forms: { 'sibi':{case:'dat', def:'for himself/herself/itself/themselves'} } },
     'sum': { pos:'verb', lemma: 'sum, esse, fuī', def: 'to be', level: 'core', forms: { 'sum':{person:1, num:'sg', tense:'present', def:'I am'}, 'esse':{}, 'fuit':{person:3, num:'sg', tense:'perfect', def:'was'}, 'fui':{person:1, num:'sg', tense:'perfect', def:'I was'}, 'fuisse':{}, 'es':{person:2, num:'sg', tense:'present', def:'you are'}, 'est':{person:3, num:'sg', tense:'present'}, 'estne':{person:3, num:'sg', tense:'present', enclitic:'ne'}, 'sunt':{person:3, num:'pl', tense:'present'}, 'eram':{person:1, num:'sg', tense:'imperfect', def:'I was'}, 'erat':{person:3, num:'sg', tense:'imperfect'}, 'erant':{person:3, num:'pl', tense:'imperfect'}, 'eramus':{person:1, num:'pl', tense:'imperfect'}, 'erantne':{person:3, num:'pl', tense:'imperfect', enclitic:'ne'}, 'sitne':{person:3, num:'sg', tense:'present', mood:'subjunctive', enclitic:'ne'}, 'sintne':{person:3, num:'pl', tense:'present', mood:'subjunctive', enclitic:'ne'} } },
     'surgo': { pos:'verb', lemma: 'surgō, surgere, surrēxī', def: ['to get up', 'to rise'], level: 'core', forms: {'surgit':{person:3, num:'sg', tense:'present'}, 'surgunt':{person:3, num:'pl', tense:'present'}, 'surrecta':{}, 'surrecti':{}, 'surrectis':{}} },
     'taberna': { pos:'noun', lemma: 'taberna, -ae, f.', def: ['shop', 'inn'], level: 'core', forms: { 'taberna':{num:'sg'}, 'tabernā':{num:'sg', case:'abl'}, 'tabernam':{num:'sg', case:'acc'} } },
     'tablinum': { pos:'noun', lemma: 'tablīnum, -ī, n.', def: ['study', 'office'], level: 'core', forms: { 'tablinum':{num:'sg'}, 'tablīnum':{num:'sg'}, 'tablinō':{num:'sg', case:'abl'} } },
+    'tranquillus': { pos:'adj', lemma: 'tranquillus, -a, -um', def: 'calm, quiet', level: 'outer', forms: { 'tranquilla':{}, 'tranquillum':{}, 'tranquillus':{} } },
     'tres': { pos:'adj', lemma: 'trēs, tria', def: 'three', level: 'outer', forms: {'tres':{}} },
     'triclinium': { pos:'noun', lemma: 'trīclīnium, -ī, n.', def: 'dining room', level: 'outer', forms: {'triclinium':{num:'sg'}, 'triclīniō':{num:'sg', case:'abl'}} },
     'tu': { pos:'pronoun', lemma: 'tū, tuī', def: 'you (s.)', level: 'core', forms: {'tu':{}, 'te':{}, 'tibi':{case:'dat'}} },
-    'tuus': { pos:'adj', lemma: 'tuus, -a, -um', def: 'your (s.)', level: 'core', forms: {'tuus':{}, 'tuum':{}, 'tua':{}, 'tuae':{case:'gen'}, 'tuō':{case:'abl'}} },
+    'tuus': { pos:'adj', lemma: 'tuus, -a, -um', def: 'your (s.)', level: 'core', forms: {'tuus':{}, 'tuum':{}, 'tua':{}, 'tuae':{case:'gen'}, 'tuō':{case:'abl'}, 'tuī':{case:'gen'}, 'tuōrum':{case:'gen', num:'pl'} } },
     'ubique': { pos:'adv', lemma: 'ubique (adv.)', def: 'everywhere', level: 'outer', forms: {'ubique':{}} },
     'uter': { pos:'pronoun', lemma: 'uter, utra, utrum', def: 'which (of two)?', level: 'novum', forms: { 'utrum':{}, 'utram':{case:'acc'} } },
-    'varius': { pos:'adj', lemma: 'varius, -a, -um', def: 'various, different', level: 'core', forms: { 'variae':{num:'pl'} } },
+    'varius': { pos:'adj', lemma: 'varius, -a, -um', def: 'various, different', level: 'core', forms: { 'variae':{num:'pl'}, 'varia':{num:'pl'} } },
     'verbum': { pos:'noun', lemma: 'verbum, -ī, n.', def: 'word', level: 'novum', forms: { 'verbum':{num:'sg'}, 'verba':{num:'pl'} } },
     'via': { pos:'noun', lemma: 'via, -ae, f.', def: ['road', 'way', 'street'], level: 'core', forms: { 'via':{num:'sg'}, 'viam':{num:'sg', case:'acc'} } },
-    'video': { pos:'verb', lemma: 'videō, vidēre, vīdī', def: 'to see', level: 'core', forms: {'videt':{person:3, num:'sg', tense:'present'}, 'vidistine':{person:2, num:'sg', tense:'perfect', enclitic:'ne'}, 'videre':{}} },
-    'volo': { pos:'verb', lemma: 'volō, velle, voluī', def: ['to want', 'to wish'], level: 'core', forms: {'vult':{person:3, num:'sg', tense:'present'}, 'voluit':{person:3, num:'sg', tense:'perfect'}} },
+    'video': { pos:'verb', lemma: 'videō, vidēre, vīdī', def: 'to see', level: 'core', forms: {'videt':{person:3, num:'sg', tense:'present'}, 'vidistine':{person:2, num:'sg', tense:'perfect', enclitic:'ne'}, 'videre':{}, 'vident':{person:3, num:'pl', tense:'present'} } },
+    'vir': { pos:'noun', lemma: 'vir, virī, m.', def: 'man', level: 'core', forms: { 'vir':{num:'sg'}, 'virī':{num:'pl'}, 'virōrum':{num:'pl', case:'gen'} } },
+    'volo': { pos:'verb', lemma: 'volō, velle, voluī', def: ['to want', 'to wish'], level: 'core', forms: {'vult':{person:3, num:'sg', tense:'present'}, 'voluit':{person:3, num:'sg', tense:'perfect'}, 'vīs':{person:2, num:'sg', tense:'present'} } },
 };
 
 // Multi-word phrases glossed as a whole, with the lemmas of their parts.
@@ -178,6 +195,10 @@ const IDIOMS = {
     'ad sinistram': {
         def: 'to the left',
         componentLemmas: ['ad', 'sinister']
+    },
+    'insomniam habes': {
+        def: 'you cannot sleep',
+        componentLemmas: ['insomnia', 'habeo']
     }
 };
 // Maps every known form, diacritics stripped, to its lemma key: formToLemmaKey['muris'] is 'murus'.
@@ -349,9 +370,11 @@ function defineWord(word) {
     if (IDIOMS[cleanQuery]) {
         definition = `"${IDIOMS[cleanQuery].def}"`;
     } else {
-        const data = getLemmaDataFromWord(cleanQuery);
-        if (data) {
+        const found = lookUpWord(cleanQuery);
+        if (found) {
+            const data = getLemmaDataFromWord(found.cleanWord);
             definition = buildDefinition(VOCAB_LEMMA[data.lemmaKey], data.form);
+            if (found.enclitic) definition += ` + -${found.enclitic}: ${ENCLITICS[found.enclitic]}`;
         }
     }
 
@@ -853,6 +876,22 @@ function setupTooltipListeners() {
     });
 }
 
+// Enclitics a word may carry, and what each adds to its gloss.
+const ENCLITICS = { que: 'and', ne: '(asks a yes-or-no question)', ve: 'or' };
+
+// Finds a word in the vocabulary, or failing that the word with its enclitic taken off:
+// "rosaeque" is "rosae" + "-que". A word that ends in -que by itself (quoque, neque) is found whole first.
+function lookUpWord(cleanWord) {
+    if (formToLemmaKey[cleanWord]) return { cleanWord, lemmaKey: formToLemmaKey[cleanWord], enclitic: null };
+    for (const enclitic in ENCLITICS) {
+        const base = cleanWord.slice(0, -enclitic.length);
+        if (cleanWord.endsWith(enclitic) && formToLemmaKey[base]) {
+            return { cleanWord: base, lemmaKey: formToLemmaKey[base], enclitic };
+        }
+    }
+    return null;
+}
+
 // Wraps every non-core word in a tooltip span carrying its context-aware definition.
 function processDescription(text) {
     // Idioms and teacher overrides become placeholders before the text is split into words,
@@ -863,7 +902,9 @@ function processDescription(text) {
 
     for (const idiom in IDIOMS) {
         const idiomData = IDIOMS[idiom];
-        const regex = new RegExp(`(?<!\\p{L})${idiom}(?!\\p{L})`, 'giu');
+        // Idioms are keyed without macrons; each vowel matches with or without one (habes finds habēs).
+        const pattern = idiom.replace(/[aeiouy]/g, v => `[${v}${'āēīōūȳ'['aeiouy'.indexOf(v)]}]`);
+        const regex = new RegExp(`(?<!\\p{L})${pattern}(?!\\p{L})`, 'giu');
         processedText = processedText.replace(regex, (match) =>
             protect(`<span class="idiom vocab" data-idiom-def="${escapeHtml(idiomData.def)}" data-component-lemmas="${idiomData.componentLemmas.join(',')}">${match}</span>`));
     }
@@ -872,15 +913,15 @@ function processDescription(text) {
     processedText = processedText.replace(/(\p{L}+)\[([^|\]]+)\|([^\]]+)\]/gu, (match, word, tag, def) =>
         protect(`<span class="vocab override" data-def="${escapeHtml(def)}">${word}</span>`));
 
-    const wordsAndSeparators = processedText.split(/([ \t\n\r.,!?;]+)/);
+    const wordsAndSeparators = processedText.split(/([\s.,!?;:—–()]+)/);
 
     return wordsAndSeparators.map(part => {
         if (!part.trim()) return part;
 
         // Quotes are stripped before the lookup.
-        const cleanWord = removeDiacritics(part.toLowerCase().replace(/['"]/g, ''));
-        const lemmaKey = formToLemmaKey[cleanWord];
-        if (!lemmaKey) return part;
+        const found = lookUpWord(removeDiacritics(part.toLowerCase().replace(/['"]/g, '')));
+        if (!found) return part;
+        const { cleanWord, lemmaKey, enclitic } = found;
 
         const lemmaData = VOCAB_LEMMA[lemmaKey];
         const level = levelOf(cleanWord, lemmaKey);
@@ -888,7 +929,8 @@ function processDescription(text) {
 
         const formKey = Object.keys(lemmaData.forms).find(f => removeDiacritics(f.toLowerCase()) === cleanWord);
         if (!formKey) return part;
-        const definition = buildDefinition(lemmaData, lemmaData.forms[formKey]);
+        let definition = buildDefinition(lemmaData, lemmaData.forms[formKey]);
+        if (enclitic) definition += ` + -${enclitic}: ${ENCLITICS[enclitic]}`;
 
         const vocabClass = level === 'novum' ? 'vocab novum' : 'vocab';
         return `<span class="${vocabClass}" data-lemma="${escapeHtml(lemmaData.lemma)}" data-def="${escapeHtml(definition)}">${part}</span>`;
@@ -952,10 +994,11 @@ function buildDefinition(lemmaData, formData) {
         if (lemmaData.pos === 'noun' && formData.num === 'pl') {
             currentDef = pluralize(currentDef);
         }
-        if (formData.case === 'gen') {
+        // Only a noun says "of the …": an adjective takes its case from the noun it goes with.
+        if (lemmaData.pos === 'noun' && formData.case === 'gen') {
             const possessive = formData.num === 'pl' ? currentDef + "'" : currentDef + "'s"; // "parents'", "sister's"
             currentDef = `of the ${currentDef}, the ${possessive}`;
-        } else if (formData.case === 'dat') {
+        } else if (lemmaData.pos === 'noun' && formData.case === 'dat') {
             currentDef = `to/for the ${currentDef}`;
         }
         if (lemmaData.pos === 'verb' && (formData.tense || formData.mood)) {
