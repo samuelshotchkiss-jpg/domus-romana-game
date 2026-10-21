@@ -1,10 +1,13 @@
 # Domus Romana: analysis (Claude, 2026-10-21)
 
-Status: no code changed yet. These are findings from reading `game.js`, `style.css`,
-`index.html` and Gemini's `README.md`, plus a look at the toolkit's `latin-i` corpus.
-**The GitHub repo is PUBLIC**, so nothing gets pushed until the owner previews locally.
+These are findings from reading `game.js`, `style.css`, `index.html` and Gemini's `README.md`,
+plus a look at the toolkit's `latin-i` corpus. **The GitHub repo is PUBLIC**, so nothing gets
+pushed until the owner previews locally.
 
-## 1. Bugs found (none fixed yet)
+## 1. Bugs found (all 12 fixed 2026-10-21, checked in the browser)
+
+The licence itself was not changed: GPL-3 stays until the owner decides on AGPL-3.0 / CC BY-NC-SA.
+Only the duplicate `LICENSE.txt` was removed.
 
 | # | Where | What goes wrong |
 |---|---|---|

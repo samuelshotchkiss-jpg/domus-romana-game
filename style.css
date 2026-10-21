@@ -1,22 +1,21 @@
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #fdf6e3; color: #586e75; max-width: 800px; margin: 20px auto; }
 #game-container { width: 100%; }
 
-/* --- ARCHITECTURAL FIX: New styles for arrow overlay --- */
 #map-container {
-    position: relative; /* This is the anchor for the absolute overlay */
+    position: relative;
     margin-bottom: 20px;
 }
-
-
-/* --- END OF FIX --- */
 
 #map-ui-container { text-align: center; }
 .map-label-top, .map-label-bottom { font-weight: bold; color: #268bd2; padding: 5px; }
 .map-side-labels { display: flex; align-items: center; gap: 10px; }
 .left-label, .right-label { writing-mode: vertical-rl; text-orientation: mixed; font-weight: bold; color: #268bd2; }
-#map-viewport { flex-grow: 1; height: 400px; border: 2px solid #eee8d5; border-radius: 5px; background-color: #fcf9f2; overflow: hidden; cursor: grab; }
+/* touch-action: none lets a finger drag the map instead of scrolling the page. */
+#map-viewport { flex-grow: 1; height: 400px; border: 2px solid #eee8d5; border-radius: 5px; background-color: #fcf9f2; overflow: hidden; cursor: grab; touch-action: none; }
 #map-viewport:active { cursor: grabbing; }
 #map-svg { width: 100%; height: 100%; }
+/* The map is moved with CSS transforms, measured from each group's own origin. */
+#map-svg g { transform-box: view-box; transform-origin: 0 0; }
 
 #main-content { padding: 0 10px; }
 #game-log { height: 300px; overflow-y: scroll; border: 1px solid #eee8d5; padding: 10px; background-color: #fcfcf7; margin-bottom: 10px; }
@@ -29,16 +28,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 #command-input { width: 100%; box-sizing: border-box; padding: 10px; font-size: 1em; border: 1px solid #93a1a1; border-radius: 4px; background-color: #fdf6e3; color: #073642; }
 
 .vocab { position: relative; display: inline-block; cursor: help; background-color: #eee8d5; padding: 0 4px; border-radius: 3px; }
-/* In style.css, DELETE the old ".vocab .tooltip" rule and REPLACE it with these two: */
 
+/* One global tooltip, fixed to the viewport so the scrolling log never clips it. */
 #tooltip {
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.3s;
-    
-    position: fixed; /* This is the key change: positions relative to the viewport */
-    z-index: 100; /* Ensure it's on top of everything */
-
+    position: fixed;
+    z-index: 100;
     width: 160px;
     background-color: #073642;
     color: #eee8d5;
@@ -50,7 +47,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 #tooltip.visible {
     visibility: visible;
     opacity: 1;
-}.vocab:hover .tooltip { visibility: visible; opacity: 1; }
+}
 .novum { text-decoration: underline dotted #d33682; }
 
 .map-connection { stroke: #93a1a1; stroke-width: 4; stroke-linecap: round; }
@@ -60,67 +57,58 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 .room-label { font-size: 14px; font-family: sans-serif; fill: #073642; text-anchor: middle; pointer-events: none; font-weight: bold; }
 .room-label.current { fill: #fdf6e3; }
 
-/* ADD THIS TO THE END of style.css */
-
-/* Style for bold keywords in the exits list */
+/* Bold keywords in the exits list */
 .log-exits strong {
-    color: #268bd2; /* A gentle blue to make it stand out */
+    color: #268bd2;
     font-weight: 600;
 }
 
-/* Style for the recast command log entry */
+/* A recast command */
 .log-recast {
     font-style: italic;
-    color: #859900; /* A pleasant green for corrections */
+    color: #859900;
     padding-left: 10px;
     border-left: 3px solid #eee8d5;
 }
 
-/* Style for the highlighted, corrected part of a recast */
+/* The corrected part of a recast */
 .recast-ending {
     text-decoration: underline;
     font-weight: bold;
     display: inline-block; /* Required for animation */
-    animation: jiggle 0.5s 2; /* Run the 'jiggle' animation twice */
+    animation: jiggle 0.5s 2;
 }
 
-/* The jiggle animation itself */
 @keyframes jiggle {
     0%, 100% { transform: scale(1.0); }
     25% { transform: scale(1.1) rotate(-2deg); }
     75% { transform: scale(1.1) rotate(2deg); }
 }
-/* ADD THIS BLOCK to the end of style.css */
+
 .log-error {
-    color: #dc322f; /* The same red as the old feedback */
+    color: #dc322f;
     font-style: italic;
     padding-left: 10px;
-    margin-bottom: 15px; /* Match spacing of other log entries */
+    margin-bottom: 15px;
 }
 
-/* Add this new rule to style.css */
-
-/* Style for vocab words specifically inside a red error message */
+/* Vocab inside a red feedback line */
 .log-error .vocab {
-    background-color: rgba(220, 50, 47, 0.1); /* A very faint, transparent red */
+    background-color: rgba(220, 50, 47, 0.1);
 }
 
-/* Add this new rule to style.css */
-
-/* Style for vocab words specifically inside a yellow room title */
+/* Vocab inside a room title */
 .log-room-title .vocab {
-    color: #cb4b16; /* Solarized Orange for better contrast and a "link" feel */
-    background-color: #eee8d5; /* The standard light tan vocab background */
-    font-weight: 600; /* A slightly bolder font to make it pop */
+    color: #cb4b16;
+    background-color: #eee8d5;
+    font-weight: 600;
 }
-/* Add this new rule to style.css */
 
-/* Style for vocab words inside the blue, bolded exit directions */
+/* Vocab inside the blue exit directions */
 .log-exits strong .vocab {
-    color: inherit; /* This keeps the text blue */
-    background-color: rgba(38, 139, 210, 0.05); /* An even SUBTLER 5% transparent blue */
+    color: inherit;
+    background-color: rgba(38, 139, 210, 0.05);
 }
-/* Add this to style.css */
 
 #tooltip .idiom-def {
     font-weight: bold;
@@ -133,9 +121,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
     margin-top: 8px;
     display: block;
 }
-/* Add this new rule to style.css */
 
 #tooltip .component-word {
     font-weight: bold;
-    color: #cb4b16; /* Solarized Orange, to make it stand out */
+    color: #cb4b16;
 }
