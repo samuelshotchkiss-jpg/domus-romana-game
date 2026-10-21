@@ -32,6 +32,9 @@ Only the duplicate `LICENSE.txt` was removed.
   limited set of forms, and that set can be exported.
 - **Phase 7, dynamic grammatical strings: keep it, but as data.** Put `nom/acc/abl` forms on each
   room and each object. The game has about 15 rooms and will have maybe 20 objects, so a table beats an engine.
+  **Done for rooms, 2026-10-21:** `nom/acc/abl` plus `said` (the player's voice, with `PLAYER_VOICE`
+  mapping *meus* to *tuus*); "which?" questions built from the shared noun's gender (*uter* for two,
+  *quī* for more); the jiggle marks exactly the letters that differ. Objects still owe the same table.
 - **Keep:** the recast with its jiggle (the best idea here), clarification prompts, the
   `meus`→`tuus` point-of-view swap, *quid significat*, the rotating map.
 

@@ -28,13 +28,18 @@ const VERBS = {
     'walk': { first_person: 'ambulō', lemma: 'ambulo', stem: 'ambul' }
 };
 
+// The player speaks in the first person where the narrator says "you": the game's "Cubiculum Tuum"
+// is "Cubiculum Meum" in the player's mouth. Each key is the player's lemma, its value the narrator's.
+const PLAYER_VOICE = { 'meus': 'tuus' };
+
 // Each room's name in the cases the game says it in: `acc` for "eō in …", `abl` for "in …".
+// `said` is the accusative as the PLAYER says it, where that differs from the narrator's.
 const ROOM_NAMES = {
-    'cubiculum_tuum': { nom: 'Cubiculum Tuum', acc: ['in', 'Cubiculum', 'Tuum'], abl: 'Cubiculō Tuō', requiredLemmas: ['cubiculum', 'tuus'] },
-    'cubiculum_sororis': { nom: 'Cubiculum Sorōris', acc: ['in', 'Cubiculum', 'Sorōris'], abl: 'Cubiculō Sorōris', requiredLemmas: ['cubiculum', 'soror'], recast: 'Sorōris' },
-    'cubiculum_parentum': { nom: 'Cubiculum Parentum', acc: ['in', 'Cubiculum', 'Parentum'], abl: 'Cubiculō Parentum', requiredLemmas: ['cubiculum', 'parens'], recast: 'Parentum' },
-    'ala_larum': { nom: 'Āla Lārum', acc: ['in', 'Ālam', 'Lārum'], abl: 'Ālā Lārum', requiredLemmas: ['ala', 'lar'], recast: 'Lārum' },
-    'ala_hermae': { nom: 'Āla Hermae', acc: ['in', 'Ālam', 'Hermae'], abl: 'Ālā Hermae', requiredLemmas: ['ala', 'herma'], recast: 'Hermae' },
+    'cubiculum_tuum': { nom: 'Cubiculum Tuum', acc: ['in', 'Cubiculum', 'Tuum'], said: ['in', 'Cubiculum', 'Meum'], abl: 'Cubiculō Tuō', requiredLemmas: ['cubiculum', 'tuus'] },
+    'cubiculum_sororis': { nom: 'Cubiculum Sorōris', acc: ['in', 'Cubiculum', 'Sorōris'], abl: 'Cubiculō Sorōris', requiredLemmas: ['cubiculum', 'soror'] },
+    'cubiculum_parentum': { nom: 'Cubiculum Parentum', acc: ['in', 'Cubiculum', 'Parentum'], abl: 'Cubiculō Parentum', requiredLemmas: ['cubiculum', 'parens'] },
+    'ala_larum': { nom: 'Āla Lārum', acc: ['in', 'Ālam', 'Lārum'], abl: 'Ālā Lārum', requiredLemmas: ['ala', 'lar'] },
+    'ala_hermae': { nom: 'Āla Hermae', acc: ['in', 'Ālam', 'Hermae'], abl: 'Ālā Hermae', requiredLemmas: ['ala', 'herma'] },
     'via_west': { nom: 'Via', acc: ['in', 'Viam'], abl: 'Viā', requiredLemmas: ['via'] },
     'via_east': { nom: 'Via', acc: ['in', 'Viam'], abl: 'Viā', requiredLemmas: ['via'] },
     'taberna': { nom: 'Taberna', acc: ['in', 'Tabernam'], abl: 'Tabernā', requiredLemmas: ['taberna'] },
@@ -123,7 +128,7 @@ const VOCAB_LEMMA = {
     'prope': { pos:'adv', lemma: 'prope (adv.)', def: 'near, nearby', level: 'core', forms: { 'prope':{} } },
     'prorsus': { pos:'adv', lemma: 'prōrsus (adv.)', def: 'forwards, straight ahead', level: 'outer', forms: { 'prōrsus':{} } },
     'puto': { pos:'verb', lemma: 'putō, putāre, putāvī', def: 'to think', level: 'core', forms: { 'putat':{person:3, num:'sg', tense:'present'}, 'putavit':{person:3, num:'sg', tense:'perfect'}, 'putabam':{person:1, num:'sg', tense:'imperfect'} } },
-    'qui': { pos:'pronoun', lemma: 'quī, quae, quod', def: ['who', 'which'], level: 'core', forms: {'qui':{}, 'quae':{}, 'quod':{}, 'quem':{}} },
+    'qui': { pos:'pronoun', lemma: 'quī, quae, quod', def: ['who', 'which'], level: 'core', forms: {'qui':{}, 'quae':{}, 'quod':{}, 'quem':{}, 'quam':{}} },
     'quid': { pos:'pronoun', lemma: 'quis, quid', def: 'what?', level: 'core', forms: { 'quid':{} } },
     'quintus': { pos:'noun', lemma: 'Quīntus, -ī, m.', def: 'Quintus', level: 'outer', forms: {'quintus':{}, 'quinti':{case:'gen'}, 'quinto':{case:'abl'}} },
     'quoque': { pos:'adv', lemma: 'quoque (adv.)', def: ['also', 'too'], level: 'novum', forms: {'quoque':{}} },
@@ -248,11 +253,54 @@ const exitTo = (roomId) => Object.keys(rooms[gameState.currentRoom].exits).find(
 
 const jiggle = (text) => `<span class="recast-ending">${text}</span>`;
 
-// Jiggles only the ending of a word the player got partly right, or the whole word if no ending is recognised.
-function jiggleEnding(word) {
-    const endingMatch = word.match(/(um|am|em|ēs|is|ī|ae|us)$/i);
-    if (!endingMatch) return jiggle(word);
-    return word.slice(0, -endingMatch[0].length) + jiggle(endingMatch[0]);
+// Jiggles only the letters where the player's attempt differs from the correct form:
+// cubiculo -> cubicul[um], soror -> Sorōr[is], ala -> Āla[m], cubculum -> cub[i]culum.
+// No attempt at all jiggles the whole word.
+function jiggleDiff(correct, attempt) {
+    if (!attempt) return jiggle(correct);
+    const chars = [...correct];
+    const base = chars.map(c => removeDiacritics(c.toLowerCase()));
+    const typed = [...removeDiacritics(attempt.toLowerCase())];
+    let start = 0;
+    while (start < base.length && start < typed.length && base[start] === typed[start]) start++;
+    let end = 0;
+    while (end < base.length - start && end < typed.length - start
+           && base[base.length - 1 - end] === typed[typed.length - 1 - end]) end++;
+    // Extra letters leave nothing missing to mark: jiggle the letter where they went in.
+    if (start + end >= base.length) {
+        start = Math.min(start, base.length - 1);
+        end = base.length - start - 1;
+    }
+    if (start === 0 && end === 0) return jiggle(correct);
+    return chars.slice(0, start).join('') + jiggle(chars.slice(start, chars.length - end).join('')) + chars.slice(chars.length - end).join('');
+}
+
+// Every lemma that names a room, so the parser can tell which of the player's words point at one.
+const ROOM_LEMMAS = new Set(Object.values(ROOM_NAMES).flatMap(r => r.requiredLemmas));
+
+// Does this word stand for the lemma, directly or through the player's voice (meum for tuus)?
+function standsFor(word, lemmaKey) {
+    const key = getLemmaDataFromWord(word)?.lemmaKey;
+    return key === lemmaKey || PLAYER_VOICE[key] === lemmaKey;
+}
+
+// The word in a room's name, as the player says it, that stands for this lemma ('Sorōris' for soror).
+const playerFormOf = (roomData, lemmaKey) => (roomData.said || roomData.acc).slice(1).find(w => standsFor(w, lemmaKey));
+
+// The lemma every one of these rooms shares ('cubiculum' for the two bedrooms).
+const sharedLemmaOf = (roomIds) => ROOM_NAMES[roomIds[0]].requiredLemmas.find(l => roomIds.every(id => ROOM_NAMES[id].requiredLemmas.includes(l)));
+
+// The gender a noun's dictionary entry gives: 'āla, -ae, f.' is 'f'.
+const genderOf = (lemmaKey) => (VOCAB_LEMMA[lemmaKey].lemma.match(/\b([mfn])\./) || [])[1] || 'n';
+
+// "Which …?" in the accusative, agreeing with the noun: uter for a choice of two, quī for more.
+const WHICH = { two: { m: 'Utrum', f: 'Utram', n: 'Utrum' }, many: { m: 'Quem', f: 'Quam', n: 'Quod' } };
+
+// The verb as the player should have said it, jiggling what they got wrong or left out.
+function recastVerb(verbInfo) {
+    if (!verbInfo) return { html: jiggle('eō'), corrected: true };
+    if (verbInfo.isCorrect) return { html: verbInfo.correct, corrected: false };
+    return { html: jiggleDiff(verbInfo.correct, verbInfo.playerWord), corrected: true };
 }
 
 async function processInput(command) {
@@ -401,38 +449,30 @@ function parseCommand(command) {
     return action;
 }
 
-// Reads an answer to "Utrum cubiculum?" / "Utram ālam?". Returns a move, or null if it is not an answer.
+// Reads an answer to a "Utrum cubiculum?" question. Returns a move, or null if it is not an answer.
 function resolveClarification(words, lemmas) {
-    const optionIds = Object.values(gameState.clarificationState.options);
-    const [firstLemmas, secondLemmas] = optionIds.map(id => ROOM_NAMES[id].requiredLemmas);
-    const sharedLemma = firstLemmas.find(lemma => secondLemmas.includes(lemma));
+    const optionIds = gameState.clarificationState.options;
+    const sharedLemma = sharedLemmaOf(optionIds);
 
     for (const targetRoomId of optionIds) {
         const roomData = ROOM_NAMES[targetRoomId];
         const distinguishingLemma = roomData.requiredLemmas.find(l => l !== sharedLemma);
         if (!lemmas.includes(distinguishingLemma)) continue;
 
-        const correctForm = roomData.recast; // e.g. 'Sorōris'
-        const userAttempt = words.find(w => getLemmaDataFromWord(w)?.lemmaKey === distinguishingLemma);
-        const formIsRight = userAttempt === removeDiacritics(correctForm.toLowerCase());
-
         // "Sorōris" and "Cubiculum Sorōris" are equally good answers: recast in whichever shape the player chose.
-        let recastHtml, isPerfect;
-        if (lemmas.includes(sharedLemma)) {
-            const sharedForm = roomData.acc[1]; // e.g. 'Cubiculum'
-            recastHtml = `${sharedForm} ${correctForm}`;
-            isPerfect = formIsRight && words.includes(removeDiacritics(sharedForm.toLowerCase())) && words.length === 2;
-        } else {
-            recastHtml = correctForm;
-            isPerfect = formIsRight && words.length === 1;
-        }
-        if (!isPerfect) {
-            recastHtml = recastHtml.replace(correctForm, jiggleEnding(correctForm));
-        }
+        const wanted = lemmas.includes(sharedLemma) ? [sharedLemma, distinguishingLemma] : [distinguishingLemma];
+        let wasCorrected = words.length !== wanted.length;
+        const recastHtml = wanted.map(lemmaKey => {
+            const correctForm = playerFormOf(roomData, lemmaKey);
+            const attempt = words.find(w => standsFor(w, lemmaKey));
+            if (attempt === removeDiacritics(correctForm.toLowerCase())) return correctForm;
+            wasCorrected = true;
+            return jiggleDiff(correctForm, attempt);
+        }).join(' ');
 
         gameState.clarificationState = null;
         const dir = exitTo(targetRoomId);
-        return { type: 'move', direction: dir, newFacingAngle: DIRECTION_ROTATIONS[dir], wasCorrected: !isPerfect, recast: recastHtml };
+        return { type: 'move', direction: dir, newFacingAngle: DIRECTION_ROTATIONS[dir], wasCorrected, recast: recastHtml };
     }
     return null;
 }
@@ -440,20 +480,22 @@ function resolveClarification(words, lemmas) {
 function parseFreeCommand(words, lemmas) {
     const feedback = (text) => ({ type: 'feedback', feedback: text });
 
-    // The player says "meum" of the room the narrator calls "Cubiculum Tuum".
-    if (lemmas.includes('meus')) lemmas = [...lemmas, 'tuus'];
+    // A word in the player's voice also counts for the narrator's: "meum" finds "Cubiculum Tuum".
+    lemmas = lemmas.flatMap(l => PLAYER_VOICE[l] ? [l, PLAYER_VOICE[l]] : [l]);
     const verbInfo = findVerb(words);
     const hasPreposition = words.includes('in') || words.includes('ad');
 
-    if (gameState.currentRoom === 'atrium') {
-        if (lemmas.includes('cubiculum') && !['soror', 'parens', 'tuus'].some(l => lemmas.includes(l))) {
-            const { recastHtml, wasCorrected } = generateRecast(words, { acc: ['in', 'Cubiculum'] }, verbInfo);
-            return { type: 'clarify', prompt: "Utrum cubiculum?", options: { 'sororis': 'cubiculum_sororis', 'parentum': 'cubiculum_parentum' }, wasCorrected, recast: recastHtml };
-        }
-        if (lemmas.includes('ala') && !['lar', 'herma'].some(l => lemmas.includes(l))) {
-            const { recastHtml, wasCorrected } = generateRecast(words, { acc: ['in', 'Ālam'] }, verbInfo);
-            return { type: 'clarify', prompt: "Utram ālam?", options: { 'larum': 'ala_larum', 'hermae': 'ala_hermae' }, wasCorrected, recast: recastHtml };
-        }
+    // More than one room in reach fits everything the player named ("cubiculum" in the Ātrium):
+    // ask which, in Latin that agrees with the noun they share.
+    const named = lemmas.filter(l => ROOM_LEMMAS.has(l));
+    const fits = named.length === 0 ? [] : Object.values(rooms[gameState.currentRoom].exits)
+        .filter(id => named.every(l => ROOM_NAMES[id].requiredLemmas.includes(l)));
+    if (fits.length > 1) {
+        const sharedLemma = sharedLemmaOf(fits);
+        const sharedForm = playerFormOf(ROOM_NAMES[fits[0]], sharedLemma);
+        const which = WHICH[fits.length === 2 ? 'two' : 'many'][genderOf(sharedLemma)];
+        const { recastHtml, wasCorrected } = generateRecast(words, { acc: ['in', sharedForm] }, verbInfo);
+        return { type: 'clarify', prompt: `${which} ${sharedForm.toLowerCase()}?`, options: fits, wasCorrected, recast: recastHtml };
     }
 
     // Score each room by how many of its lemmas the player used. On a tie, prefer a room the
@@ -488,9 +530,8 @@ function parseFreeCommand(words, lemmas) {
     const turn = TURNS.find(t => t.needs.every(w => words.includes(w)));
     if (turn) {
         const newFacingAngle = (gameState.playerFacing + turn.angle) % 360;
-        const verbForRecast = verbInfo ? verbInfo.correct : 'eō';
-        const wasCorrected = !verbInfo || !verbInfo.isCorrect;
-        return { type: 'move', direction: ANGLE_TO_DIRECTION[newFacingAngle], newFacingAngle, wasCorrected, recast: `${verbForRecast} ${turn.phrase}` };
+        const verb = recastVerb(verbInfo);
+        return { type: 'move', direction: ANGLE_TO_DIRECTION[newFacingAngle], newFacingAngle, wasCorrected: verb.corrected, recast: `${verb.html} ${turn.phrase}` };
     }
 
     return feedback(NOT_UNDERSTOOD);
@@ -498,14 +539,9 @@ function parseFreeCommand(words, lemmas) {
 
 // Builds the corrected command, jiggling whatever the player left out or got wrong.
 function generateRecast(words, roomData, verbInfo) {
-    let wasCorrected = !verbInfo || !verbInfo.isCorrect;
-
     // Part 1: the verb
-    const verbForRecast = verbInfo ? verbInfo.correct : 'eō';
-    let verbHtml = verbForRecast;
-    if (wasCorrected) {
-        verbHtml = verbInfo?.key === 'walk' ? `ambul${jiggle('ō')}` : jiggle(verbForRecast);
-    }
+    const verb = recastVerb(verbInfo);
+    let wasCorrected = verb.corrected;
 
     // Part 2: the preposition
     let prepHtml = 'in';
@@ -516,12 +552,8 @@ function generateRecast(words, roomData, verbInfo) {
         prepHtml = jiggle('in');
     }
 
-    // Part 3: the destination, word by word
-    const recastWords = roomData.acc.slice(1).map(correctWord => {
-        // In the player's own mouth their room is "Cubiculum Meum", not "Tuum".
-        if (roomData === ROOM_NAMES['cubiculum_tuum'] && correctWord === 'Tuum') {
-            correctWord = 'Meum';
-        }
+    // Part 3: the destination, word by word, as the player says it ("Cubiculum Meum", not "Tuum")
+    const recastWords = (roomData.said || roomData.acc).slice(1).map(correctWord => {
         const lemmaKey = getLemmaDataFromWord(correctWord)?.lemmaKey;
         if (!lemmaKey) return correctWord;
 
@@ -529,11 +561,10 @@ function generateRecast(words, roomData, verbInfo) {
         if (userAttempt === removeDiacritics(correctWord.toLowerCase())) return correctWord;
 
         wasCorrected = true;
-        // A wrong ending jiggles the ending; a missing word jiggles the whole word.
-        return userAttempt ? jiggleEnding(correctWord) : jiggle(correctWord);
+        return jiggleDiff(correctWord, userAttempt);
     });
 
-    return { recastHtml: `${verbHtml} ${prepHtml} ${recastWords.join(' ')}`, wasCorrected };
+    return { recastHtml: `${verb.html} ${prepHtml} ${recastWords.join(' ')}`, wasCorrected };
 }
 
 async function performMove(moveDirection, newFacingAngle) {
@@ -556,7 +587,7 @@ async function performMove(moveDirection, newFacingAngle) {
     }
 }
 
-function askClarification(prompt, options) { gameState.clarificationState = { prompt, options }; let optionsString = Object.values(options).map(id => `&nbsp;&nbsp;- ${ROOM_NAMES[id].nom}`).join('<br>'); setFeedback(`${prompt}<br>${optionsString}`); }
+function askClarification(prompt, options) { gameState.clarificationState = { prompt, options }; let optionsString = options.map(id => `&nbsp;&nbsp;- ${ROOM_NAMES[id].nom}`).join('<br>'); setFeedback(`${prompt}<br>${optionsString}`); }
 
 // Every feedback line goes through the vocabulary engine, so its words get tooltips too.
 function setFeedback(message) {
