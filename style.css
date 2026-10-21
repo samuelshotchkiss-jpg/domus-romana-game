@@ -27,7 +27,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 
 #command-input { width: 100%; box-sizing: border-box; padding: 10px; font-size: 1em; border: 1px solid #93a1a1; border-radius: 4px; background-color: #fdf6e3; color: #073642; }
 
-.vocab { position: relative; display: inline-block; cursor: help; background-color: #eee8d5; padding: 0 4px; border-radius: 3px; }
+/* A word with a tooltip is quiet until the pointer reaches it: a student who knows it can ignore it.
+   Only a NEW word (.novum) is marked at rest. */
+.vocab { cursor: help; border-radius: 3px; transition: background-color 0.15s; }
+.vocab:hover { background-color: #eee8d5; }
 
 /* One global tooltip, fixed to the viewport so the scrolling log never clips it. */
 #tooltip {
@@ -48,7 +51,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
     visibility: visible;
     opacity: 1;
 }
-.novum { text-decoration: underline dotted #d33682; }
+.vocab.novum { background-color: rgba(211, 54, 130, 0.10); text-decoration: underline dotted #d33682; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.vocab.novum:hover { background-color: rgba(211, 54, 130, 0.22); }
 
 .map-connection { stroke: #93a1a1; stroke-width: 4; stroke-linecap: round; }
 .map-room rect { stroke: #93a1a1; stroke-width: 3; fill: #eee8d5; rx: 8; }
@@ -92,22 +96,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
     margin-bottom: 15px;
 }
 
-/* Vocab inside a red feedback line */
-.log-error .vocab {
+/* Hover tints that suit the colour of the line the word sits in */
+.log-error .vocab:hover {
     background-color: rgba(220, 50, 47, 0.1);
 }
 
-/* Vocab inside a room title */
-.log-room-title .vocab {
-    color: #cb4b16;
-    background-color: #eee8d5;
-    font-weight: 600;
-}
-
-/* Vocab inside the blue exit directions */
-.log-exits strong .vocab {
-    color: inherit;
-    background-color: rgba(38, 139, 210, 0.05);
+.log-exits strong .vocab:hover {
+    background-color: rgba(38, 139, 210, 0.12);
 }
 
 #tooltip .idiom-def {
