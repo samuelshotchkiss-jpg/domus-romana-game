@@ -182,8 +182,15 @@ const VOCAB_LEMMA = {
     'volo': { pos:'verb', lemma: 'volō, velle, voluī', def: ['to want', 'to wish'], level: 'core', forms: {'vult':{person:3, num:'sg', tense:'present'}, 'voluit':{person:3, num:'sg', tense:'perfect'}, 'vīs':{person:2, num:'sg', tense:'present'} } },
 };
 
-// Multi-word phrases glossed as a whole, with the lemmas of their parts.
+// Multi-word phrases glossed as a whole, with the lemmas of their parts. An idiom always has a tooltip;
+// `level: 'novum'` also marks it as new, for a phrase whose words are known but whose use must be
+// taught (multa et varia: neuter plurals standing alone as "things").
 const IDIOMS = {
+    'multa et varia': {
+        def: 'many different things',
+        componentLemmas: ['multus', 'et', 'varius'],
+        level: 'novum'
+    },
     'sibi vult': {
         def: 'means, signifies',
         componentLemmas: ['sui', 'volo']
@@ -906,7 +913,7 @@ function processDescription(text) {
         const pattern = idiom.replace(/[aeiouy]/g, v => `[${v}${'āēīōūȳ'['aeiouy'.indexOf(v)]}]`);
         const regex = new RegExp(`(?<!\\p{L})${pattern}(?!\\p{L})`, 'giu');
         processedText = processedText.replace(regex, (match) =>
-            protect(`<span class="idiom vocab" data-idiom-def="${escapeHtml(idiomData.def)}" data-component-lemmas="${idiomData.componentLemmas.join(',')}">${match}</span>`));
+            protect(`<span class="idiom vocab${idiomData.level === 'novum' ? ' novum' : ''}" data-idiom-def="${escapeHtml(idiomData.def)}" data-component-lemmas="${idiomData.componentLemmas.join(',')}">${match}</span>`));
     }
 
     // Teacher override: murīs[abl|by the walls] glosses this one word by hand.
