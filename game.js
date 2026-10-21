@@ -187,6 +187,27 @@ for (const key in VOCAB_LEMMA) {
     }
 }
 
+// What THIS class has met, from class_vocab.js (exported by the Latin Vocab Toolkit after each
+// Trial). A form the class was quizzed on is 'core' (no tooltip); a form it has seen is 'outer';
+// a form whose word it has met in another form is 'outer' too; anything else is 'novum'.
+// Without the file, each word keeps the level written in VOCAB_LEMMA.
+const classLevelOfForm = {};
+const classLemmaKeys = new Set();
+for (const word of (window.CLASS_VOCAB?.words || [])) {
+    for (const form of word.forms) {
+        const cleanForm = removeDiacritics(form.toLowerCase());
+        // A form shared by two headwords counts as known if either one is.
+        if (classLevelOfForm[cleanForm] !== 'core') classLevelOfForm[cleanForm] = word.level;
+    }
+    if (word.lemma_key) classLemmaKeys.add(removeDiacritics(word.lemma_key.toLowerCase()));
+}
+
+function levelOf(cleanWord, lemmaKey) {
+    if (!window.CLASS_VOCAB) return VOCAB_LEMMA[lemmaKey].level;
+    if (classLevelOfForm[cleanWord]) return classLevelOfForm[cleanWord];
+    return classLemmaKeys.has(lemmaKey) ? 'outer' : 'novum';
+}
+
 const DIRECTION_ROTATIONS = { 'north': 0, 'south': 180, 'east': 90, 'west': 270, 'northeast': 45, 'northwest': 315, 'southeast': 135, 'southwest': 225 };
 const ANGLE_TO_DIRECTION = { 0: 'north', 45: 'northeast', 90: 'east', 135: 'southeast', 180: 'south', 225: 'southwest', 270: 'west', 315: 'northwest' };
 const sleep = (ms) => new Promise(res => setTimeout(res, ms));
@@ -831,13 +852,14 @@ function processDescription(text) {
         if (!lemmaKey) return part;
 
         const lemmaData = VOCAB_LEMMA[lemmaKey];
-        if (lemmaData.level === 'core') return part;
+        const level = levelOf(cleanWord, lemmaKey);
+        if (level === 'core') return part;
 
         const formKey = Object.keys(lemmaData.forms).find(f => removeDiacritics(f.toLowerCase()) === cleanWord);
         if (!formKey) return part;
         const definition = buildDefinition(lemmaData, lemmaData.forms[formKey]);
 
-        const vocabClass = lemmaData.level === 'novum' ? 'vocab novum' : 'vocab';
+        const vocabClass = level === 'novum' ? 'vocab novum' : 'vocab';
         return `<span class="${vocabClass}" data-lemma="${escapeHtml(lemmaData.lemma)}" data-def="${escapeHtml(definition)}">${part}</span>`;
     }).join('').replace(/\u0000(\d+)\u0000/g, (match, index) => protectedSpans[index]);
 }
