@@ -5,7 +5,7 @@ Every object a room description names must be something the student can act on: 
 lists every object the descriptions currently name. **Rule: a new noun in a description adds a row
 here in the same commit.** Delete a row only when the object works in the game.
 
-Nothing below is built yet. The forms are the ones the parser and the recast will need (the same
+Rows are objects still to build; what works is under **Built**, at the end. The forms are the ones the parser and the recast will need (the same
 table pattern as `ROOM_NAMES`: `nom` / `acc` / `abl`, plus `said` where the player's voice differs).
 "Verbs to offer" uses only verbs this class has met (latin-i store), so the hints stay readable:
 *investīgō, īnspiciō, videō, audiō, aperiō, claudō, edō, stō, surgō, dormiō*.
@@ -16,8 +16,6 @@ table pattern as `ROOM_NAMES`: `nom` / `acc` / `abl`, plus `said` where the play
 
 | Room | Object | nom / acc / abl | Level | Verbs to offer | Notes for the fuller description |
 |---|---|---|---|---|---|
-| Via (east) | iānua domūs | iānua / iānuam / iānuā | Q | investīgō, aperiō, claudō | The front door, standing open. Why is it open at night? |
-| Via (west) | iānua tabernae | iānua / iānuam / iānuā | Q | investīgō, aperiō, claudō | **The shop door.** The text says *aperta* for now, because the shop can be walked into. In the real game it is **closed and locked, with something important inside**, so it needs a lock state, a key (or other way in), and the street description changing to *clausa* while it is locked |
 | Taberna | mēnsa | mēnsa / mēnsam / mēnsā | Q | investīgō | The shop counter |
 | Taberna | multa et varia (the wares) | — | Q | investīgō, īnspiciō | Needs a noun if it becomes takeable; for now only described |
 | Faucēs | pictūrae (virī Rōmānī) | pictūrae / pictūrās / pictūrīs | S | investīgō, videō | The men's eyes "see you": the first spooky beat |
@@ -33,8 +31,6 @@ table pattern as `ROOM_NAMES`: `nom` / `acc` / `abl`, plus `said` where the play
 | Peristȳlum | arborēs / arbor | arbor / arborem / arbore | Q | investīgō | *in arbore* is a class phrase |
 | Peristȳlum | herbae | herbae / herbās / herbīs | Q | investīgō | |
 | Peristȳlum | rosae | rosae / rosās / rosīs | Q | investīgō | |
-| Peristȳlum | noctua | noctua / noctuam / noctuā | Q | investīgō, audiō, videō | Could be a source of the night sounds, or a red herring |
-| Cubiculum Tuum | iānua cubiculī | iānua / iānuam / iānuā | Q | investīgō, aperiō, claudō | Quīntus opens and closes this door all through the book |
 | Triclīnium | mēnsa | mēnsa / mēnsam / mēnsā | Q | investīgō | In the book it rises (ch. V): the phantasma's room |
 | Triclīnium | lectī | lectī / lectōs / lectīs | S | investīgō | They rise too |
 | Culīna | mēnsa (implied by "in mēnsā") | mēnsa / mēnsam / mēnsā | Q | investīgō | |
@@ -44,11 +40,25 @@ table pattern as `ROOM_NAMES`: `nom` / `acc` / `abl`, plus `said` where the play
 
 ## Before building
 
-- **The verb itself.** *investīgō* is not yet a game verb. The class knows *investīgat, investīgāre,
-  investīgāns* (latin-i, from Quīntus), so the first-person *investīgō* is a form of a known word.
-  *īnspiciō* the same (*īnspicit, īnspicere*).
 - **Objects that repeat across rooms** (*mēnsa* ×4, *sella* ×2, *lectus/lectī* ×3, *iānua* ×2) are one
   word with several instances; the parser should resolve "the table" to the one in the current room.
 - **Commands the class cannot yet read.** *eō, ad, prōrsus, rūrsus, dexteram, sinistram* are all new
   to this class (not in the latin-i store), and they are the game's movement commands. That is the
   biggest comprehension cost in the game, larger than anything in the descriptions.
+
+## Built
+
+The machinery: `OBJECTS` (forms, rooms, door state, `look`, `refuse`) and `ACTIONS` (*investīgō, īnspiciō,
+spectō, aperiō, claudō*) in `game.js`. Any action recasts like a move; the verb alone asks *Quid vīs
+claudere?*; a door's state shows in room descriptions as `{state:ID}`; a closed door blocks the way.
+Adding an object is one `OBJECTS` entry plus its forms in `VOCAB_LEMMA`.
+
+| Object | Reached from | Works | Still owed |
+|---|---|---|---|
+| iānua domūs | Via (east), Faucēs | look, open, close; blocks the way when closed | |
+| iānua tabernae | Via (west), Taberna | look, open, close; blocks the way when closed | **Locked**, with something important inside: a lock state, a way in, the street line reading *clausa* |
+| iānua cubiculī | Cubiculum Tuum, Peristȳlum | look, open, close; blocks the way when closed | |
+| noctua | Peristȳlum | look ("pulcherrima … nōn cūrat. Quid cūrat haec noctua?"); every other action: *Noctua nōn cūrat.* | **The early puzzle:** get her to care, so she shares hints from her wisdom. Her name (2026-27: Rebecca) is data in `OBJECTS.noctua.name`, not shown yet; the class renames and redescribes her each year |
+
+Until an object is built, looking at a noun the room describes answers *Nihil aliud vidēs*; acting on it
+answers *Hoc claudere nōn potes* (or the verb in question).

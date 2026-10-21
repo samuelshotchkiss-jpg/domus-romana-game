@@ -23,6 +23,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 .log-command { font-style: italic; color: #93a1a1; padding-left: 10px; border-left: 3px solid #eee8d5; }
 .log-room-title { color: #b58900; }
 .log-description { font-size: 1.1em; line-height: 1.6; }
+.log-object { font-size: 1.1em; line-height: 1.6; margin: 0 0 15px; padding-left: 10px; }
 .log-exits { margin-top: 20px; padding-top: 15px; border-top: 2px solid #eee8d5; font-style: italic; color: #657b83; }
 
 #command-input { width: 100%; box-sizing: border-box; padding: 10px; font-size: 1em; border: 1px solid #93a1a1; border-radius: 4px; background-color: #fdf6e3; color: #073642; }
