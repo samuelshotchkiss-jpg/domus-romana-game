@@ -68,6 +68,39 @@ window.CLASS_VOCAB = {
    "dcc_rank": 958
   },
   {
+   "headword": "agrīs",
+   "forms": [
+    "agrīs"
+   ],
+   "lemma": "ager, agrī, m.",
+   "lemma_key": "ager",
+   "pos": "Noun",
+   "gloss": "fields",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 324
+  },
+  {
+   "headword": "aliās",
+   "forms": [
+    "aliās",
+    "aliā",
+    "aliī"
+   ],
+   "lemma": "alius, alia, aliud",
+   "lemma_key": "alius",
+   "pos": "Adjective",
+   "gloss": "others",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01",
+    "trial-01"
+   ],
+   "dcc_rank": 37
+  },
+  {
    "headword": "aliquid",
    "forms": [
     "aliquid"
@@ -81,6 +114,37 @@ window.CLASS_VOCAB = {
     "trial-04"
    ],
    "dcc_rank": 77
+  },
+  {
+   "headword": "amat",
+   "forms": [
+    "amat"
+   ],
+   "lemma": "amō, amāre, amāvī",
+   "lemma_key": "amo",
+   "pos": "Verb",
+   "gloss": "loves",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 219
+  },
+  {
+   "headword": "amīcī",
+   "forms": [
+    "amīcī",
+    "amīcōrum"
+   ],
+   "lemma": "amīcus, amīcī, m.",
+   "lemma_key": "amicus",
+   "pos": "Noun",
+   "gloss": "friends",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 198
   },
   {
    "headword": "an",
@@ -98,6 +162,36 @@ window.CLASS_VOCAB = {
     "trial-02"
    ],
    "dcc_rank": 94
+  },
+  {
+   "headword": "animal",
+   "forms": [
+    "animal"
+   ],
+   "lemma": "animal, animālis, n.",
+   "lemma_key": "animal",
+   "pos": "Noun",
+   "gloss": "animal",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 547
+  },
+  {
+   "headword": "animālia",
+   "forms": [
+    "animālia"
+   ],
+   "lemma": "animal, animālis, n.",
+   "lemma_key": "animal",
+   "pos": "Noun",
+   "gloss": "animals",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 547
   },
   {
    "headword": "aperīte",
@@ -169,6 +263,20 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "ātra",
+   "forms": [
+    "ātra",
+    "ātrā"
+   ],
+   "lemma": "āter, ātra, ātrum",
+   "lemma_key": "ater",
+   "pos": "Adjective",
+   "gloss": "black",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
    "headword": "ātrium",
    "forms": [
     "ātrium",
@@ -233,6 +341,51 @@ window.CLASS_VOCAB = {
    "dcc_rank": 855
   },
   {
+   "headword": "babae",
+   "forms": [
+    "babae"
+   ],
+   "lemma": "babae",
+   "lemma_key": "babae",
+   "pos": "Interjection",
+   "gloss": "wow!",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "basipilāris",
+   "forms": [
+    "basipilāris",
+    "basipilārem"
+   ],
+   "lemma": "basipilāris, basipilāre",
+   "lemma_key": "basipilaris",
+   "pos": "Adjective",
+   "gloss": "baseball",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "bellī",
+   "forms": [
+    "bellī"
+   ],
+   "lemma": "bellum, bellī, n.",
+   "lemma_key": "bellum",
+   "pos": "Noun",
+   "gloss": "of war",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01",
+    "trial-01"
+   ],
+   "dcc_rank": 86
+  },
+  {
    "headword": "bene valeō",
    "forms": [
     "bene valeō"
@@ -246,6 +399,24 @@ window.CLASS_VOCAB = {
     "swyk-01"
    ],
    "dcc_rank": 235
+  },
+  {
+   "headword": "bona",
+   "forms": [
+    "bona",
+    "bonus",
+    "bonī"
+   ],
+   "lemma": "bonus, bona, bonum",
+   "lemma_key": "bonus",
+   "pos": "Adjective",
+   "gloss": "good",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01",
+    "trial-01"
+   ],
+   "dcc_rank": 68
   },
   {
    "headword": "cacat",
@@ -281,6 +452,23 @@ window.CLASS_VOCAB = {
    "dcc_rank": 210
   },
   {
+   "headword": "canis",
+   "forms": [
+    "canis",
+    "canem",
+    "canī"
+   ],
+   "lemma": "canis, canis, m./f.",
+   "lemma_key": "canis",
+   "pos": "Noun",
+   "gloss": "dog",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 687
+  },
+  {
    "headword": "cautus",
    "forms": [
     "cautus",
@@ -293,6 +481,21 @@ window.CLASS_VOCAB = {
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 0
+  },
+  {
+   "headword": "celeriter",
+   "forms": [
+    "celeriter"
+   ],
+   "lemma": "celeriter",
+   "lemma_key": "celeriter",
+   "pos": "Adverb",
+   "gloss": "quickly",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 967
   },
   {
    "headword": "clārē",
@@ -421,6 +624,22 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "cūr",
+   "forms": [
+    "cūr"
+   ],
+   "lemma": "cūr",
+   "lemma_key": "cur",
+   "pos": "Adverb",
+   "gloss": "why",
+   "level": "core",
+   "quiz_sets": [
+    "noctua-togata",
+    "swyk-02"
+   ],
+   "dcc_rank": 404
+  },
+  {
    "headword": "cūrat",
    "forms": [
     "cūrat"
@@ -452,6 +671,21 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "currus",
+   "forms": [
+    "currus",
+    "curruum",
+    "currūs"
+   ],
+   "lemma": "currus, currūs, m.",
+   "lemma_key": "currus",
+   "pos": "Noun",
+   "gloss": "cart, chariot",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 491
+  },
+  {
    "headword": "dēfessa sum",
    "forms": [
     "dēfessa sum"
@@ -476,6 +710,22 @@ window.CLASS_VOCAB = {
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 380
+  },
+  {
+   "headword": "deus",
+   "forms": [
+    "deus"
+   ],
+   "lemma": "deus, deī, m.",
+   "lemma_key": "deus",
+   "pos": "Noun",
+   "gloss": "god",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01",
+    "trial-01"
+   ],
+   "dcc_rank": 42
   },
   {
    "headword": "Diēs Iovis",
@@ -601,6 +851,21 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "dīxit",
+   "forms": [
+    "dīxit"
+   ],
+   "lemma": "dīcō, dīcere, dīxī",
+   "lemma_key": "dico",
+   "pos": "Verb",
+   "gloss": "said",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 33
+  },
+  {
    "headword": "domī",
    "forms": [
     "domī"
@@ -662,6 +927,34 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "duo",
+   "forms": [
+    "duo"
+   ],
+   "lemma": "duo, duae, duo",
+   "lemma_key": "duo",
+   "pos": "Adjective",
+   "gloss": "two",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 221
+  },
+  {
+   "headword": "duodecim",
+   "forms": [
+    "duodecim"
+   ],
+   "lemma": "duodecim",
+   "lemma_key": "duodecim",
+   "pos": "Adjective",
+   "gloss": "twelve",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
    "headword": "edam",
    "forms": [
     "edam"
@@ -691,6 +984,81 @@ window.CLASS_VOCAB = {
     "swyk-02"
    ],
    "dcc_rank": 0
+  },
+  {
+   "headword": "eī",
+   "forms": [
+    "eī",
+    "eius",
+    "eōs"
+   ],
+   "lemma": "is, ea, id",
+   "lemma_key": "is",
+   "pos": "Pronoun",
+   "gloss": "to him, to her",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 13
+  },
+  {
+   "headword": "ēlectricum",
+   "forms": [
+    "ēlectricum",
+    "ēlectricōrum",
+    "ēlectricī"
+   ],
+   "lemma": "ēlectricus, ēlectrica, ēlectricum",
+   "lemma_key": "electricus",
+   "pos": "Adjective",
+   "gloss": "electric",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "ēlūdunt",
+   "forms": [
+    "ēlūdunt"
+   ],
+   "lemma": "ēlūdō, ēlūdere, ēlūsī",
+   "lemma_key": "eludo",
+   "pos": "Verb",
+   "gloss": "dodge",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "ēlūsōrēs",
+   "forms": [
+    "ēlūsōrēs"
+   ],
+   "lemma": "ēlūsor, ēlūsōris, m.",
+   "lemma_key": "elusor",
+   "pos": "Noun",
+   "gloss": "dodgers",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "equus",
+   "forms": [
+    "equus",
+    "equī",
+    "equōs"
+   ],
+   "lemma": "equus, equī, m.",
+   "lemma_key": "equus",
+   "pos": "Noun",
+   "gloss": "horse",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 248
   },
   {
    "headword": "erant",
@@ -774,6 +1142,22 @@ window.CLASS_VOCAB = {
    "dcc_rank": 1
   },
   {
+   "headword": "etiam",
+   "forms": [
+    "etiam"
+   ],
+   "lemma": "etiam",
+   "lemma_key": "etiam",
+   "pos": "Adverb",
+   "gloss": "also",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01",
+    "trial-01"
+   ],
+   "dcc_rank": 67
+  },
+  {
    "headword": "eugepae!",
    "forms": [
     "eugepae!"
@@ -801,6 +1185,38 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "ex",
+   "forms": [
+    "ex"
+   ],
+   "lemma": "ex, ē",
+   "lemma_key": "ex",
+   "pos": "Preposition",
+   "gloss": "out of",
+   "level": "core",
+   "quiz_sets": [
+    "noctua-togata",
+    "swyk-02",
+    "trial-02"
+   ],
+   "dcc_rank": 26
+  },
+  {
+   "headword": "explōrātor",
+   "forms": [
+    "explōrātor"
+   ],
+   "lemma": "explōrātor, explōrātōris, m.",
+   "lemma_key": "explorator",
+   "pos": "Noun",
+   "gloss": "Scout",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 0
+  },
+  {
    "headword": "falsum",
    "forms": [
     "falsum",
@@ -818,6 +1234,32 @@ window.CLASS_VOCAB = {
    "dcc_rank": 633
   },
   {
+   "headword": "favent",
+   "forms": [
+    "favent"
+   ],
+   "lemma": "faveō, favēre, fāvī",
+   "lemma_key": "faveo",
+   "pos": "Verb",
+   "gloss": "they cheer for, support",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "fautōrēs",
+   "forms": [
+    "fautōrēs"
+   ],
+   "lemma": "fautor, fautōris, m.",
+   "lemma_key": "fautor",
+   "pos": "Noun",
+   "gloss": "fans, supporters",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
    "headword": "fefellērunt",
    "forms": [
     "fefellērunt",
@@ -830,6 +1272,22 @@ window.CLASS_VOCAB = {
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 503
+  },
+  {
+   "headword": "fēlēs",
+   "forms": [
+    "fēlēs",
+    "fēlem"
+   ],
+   "lemma": "fēlēs, fēlis, f.",
+   "lemma_key": "feles",
+   "pos": "Noun",
+   "gloss": "cat",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 0
   },
   {
    "headword": "ferē",
@@ -847,6 +1305,21 @@ window.CLASS_VOCAB = {
    "dcc_rank": 907
   },
   {
+   "headword": "ferōx",
+   "forms": [
+    "ferōx"
+   ],
+   "lemma": "ferōx, ferōcis",
+   "lemma_key": "ferox",
+   "pos": "Adjective",
+   "gloss": "fierce",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 0
+  },
+  {
    "headword": "figūra",
    "forms": [
     "figūra",
@@ -859,6 +1332,51 @@ window.CLASS_VOCAB = {
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 0
+  },
+  {
+   "headword": "fīlia",
+   "forms": [
+    "fīlia"
+   ],
+   "lemma": "fīlia, fīliae, f.",
+   "lemma_key": "filia",
+   "pos": "Noun",
+   "gloss": "daughter",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 909
+  },
+  {
+   "headword": "flōs",
+   "forms": [
+    "flōs"
+   ],
+   "lemma": "flōs, flōris, m.",
+   "lemma_key": "flos",
+   "pos": "Noun",
+   "gloss": "flower",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 818
+  },
+  {
+   "headword": "formās",
+   "forms": [
+    "formās"
+   ],
+   "lemma": "fōrma, fōrmae, f.",
+   "lemma_key": "forma",
+   "pos": "Noun",
+   "gloss": "forms",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 422
   },
   {
    "headword": "fuit",
@@ -897,6 +1415,20 @@ window.CLASS_VOCAB = {
    "dcc_rank": 39
   },
   {
+   "headword": "Hadriānus",
+   "forms": [
+    "Hadriānus",
+    "Hadriānī"
+   ],
+   "lemma": "Hadriānus, Hadriānī, m.",
+   "lemma_key": "hadrianus",
+   "pos": "Noun",
+   "gloss": "Hadrian (Roman emperor)",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
    "headword": "haec",
    "forms": [
     "haec",
@@ -920,6 +1452,22 @@ window.CLASS_VOCAB = {
     "trial-02"
    ],
    "dcc_rank": 7
+  },
+  {
+   "headword": "herba",
+   "forms": [
+    "herba",
+    "herbae"
+   ],
+   "lemma": "herba, herbae, f.",
+   "lemma_key": "herba",
+   "pos": "Noun",
+   "gloss": "plant",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 0
   },
   {
    "headword": "herī",
@@ -1042,6 +1590,20 @@ window.CLASS_VOCAB = {
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 0
+  },
+  {
+   "headword": "Imperātor",
+   "forms": [
+    "Imperātor",
+    "Imperātōris"
+   ],
+   "lemma": "imperātor, imperātōris, m.",
+   "lemma_key": "imperator",
+   "pos": "Noun",
+   "gloss": "general, emperor",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 723
   },
   {
    "headword": "in",
@@ -1171,6 +1733,22 @@ window.CLASS_VOCAB = {
    "dcc_rank": 707
   },
   {
+   "headword": "in urbe",
+   "forms": [
+    "in urbe",
+    "urbs"
+   ],
+   "lemma": "urbs, urbis, f.",
+   "lemma_key": "urbs",
+   "pos": "Noun",
+   "gloss": "in the city",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 82
+  },
+  {
    "headword": "ita vērō",
    "forms": [
     "ita vērō"
@@ -1215,6 +1793,21 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "locō",
+   "forms": [
+    "locō"
+   ],
+   "lemma": "locus, locī, m.",
+   "lemma_key": "locus",
+   "pos": "Noun",
+   "gloss": "place",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 62
+  },
+  {
    "headword": "Lūcia",
    "forms": [
     "Lūcia",
@@ -1224,6 +1817,19 @@ window.CLASS_VOCAB = {
    "lemma_key": "lucia",
    "pos": "Noun",
    "gloss": "Lucia (a girl's name)",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "lūdit",
+   "forms": [
+    "lūdit"
+   ],
+   "lemma": "lūdō, lūdere, lūsī",
+   "lemma_key": "ludo",
+   "pos": "Verb",
+   "gloss": "plays",
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 0
@@ -1285,6 +1891,51 @@ window.CLASS_VOCAB = {
    "dcc_rank": 357
   },
   {
+   "headword": "marītus",
+   "forms": [
+    "marītus"
+   ],
+   "lemma": "marītus, marītī, m.",
+   "lemma_key": "maritus",
+   "pos": "Noun",
+   "gloss": "husband",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 654
+  },
+  {
+   "headword": "Martem",
+   "forms": [
+    "Martem"
+   ],
+   "lemma": "Mārs, Mārtis, m.",
+   "lemma_key": "mars",
+   "pos": "Noun",
+   "gloss": "Mars",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "Martēs",
+   "forms": [
+    "Martēs"
+   ],
+   "lemma": "mārtēs, mārtis, f.",
+   "lemma_key": "martes",
+   "pos": "Noun",
+   "gloss": "martens",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 0
+  },
+  {
    "headword": "mē",
    "forms": [
     "mē"
@@ -1298,6 +1949,20 @@ window.CLASS_VOCAB = {
     "trial-04"
    ],
    "dcc_rank": 11
+  },
+  {
+   "headword": "mēdica",
+   "forms": [
+    "mēdica",
+    "mēdicā"
+   ],
+   "lemma": "mēdica, mēdicae, f.",
+   "lemma_key": "medica",
+   "pos": "Noun",
+   "gloss": "clover",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
   },
   {
    "headword": "mēnsa",
@@ -1391,6 +2056,40 @@ window.CLASS_VOCAB = {
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 950
+  },
+  {
+   "headword": "movent",
+   "forms": [
+    "movent",
+    "sē movent"
+   ],
+   "lemma": "moveō, movēre, mōvī",
+   "lemma_key": "moveo",
+   "pos": "Verb",
+   "gloss": "they move",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 192
+  },
+  {
+   "headword": "multa",
+   "forms": [
+    "multa",
+    "multī",
+    "multōs"
+   ],
+   "lemma": "multus, multa, multum",
+   "lemma_key": "multus",
+   "pos": "Adjective",
+   "gloss": "many",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01",
+    "trial-01"
+   ],
+   "dcc_rank": 43
   },
   {
    "headword": "murmur",
@@ -1504,6 +2203,37 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "nōmen",
+   "forms": [
+    "nōmen"
+   ],
+   "lemma": "nōmen, nōminis, n.",
+   "lemma_key": "nomen",
+   "pos": "Noun",
+   "gloss": "name",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01",
+    "trial-01"
+   ],
+   "dcc_rank": 135
+  },
+  {
+   "headword": "nōmine",
+   "forms": [
+    "nōmine"
+   ],
+   "lemma": "nōmen, nōminis, n.",
+   "lemma_key": "nomen",
+   "pos": "Noun",
+   "gloss": "by name",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 135
+  },
+  {
    "headword": "nōn",
    "forms": [
     "nōn"
@@ -1601,6 +2331,21 @@ window.CLASS_VOCAB = {
    "dcc_rank": 206
   },
   {
+   "headword": "ōlim",
+   "forms": [
+    "ōlim"
+   ],
+   "lemma": "ōlim",
+   "lemma_key": "olim",
+   "pos": "Adverb",
+   "gloss": "a long time ago",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 574
+  },
+  {
    "headword": "omnēs",
    "forms": [
     "omnēs"
@@ -1612,6 +2357,53 @@ window.CLASS_VOCAB = {
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 18
+  },
+  {
+   "headword": "omnia",
+   "forms": [
+    "omnia"
+   ],
+   "lemma": "omnis, omne",
+   "lemma_key": "omnis",
+   "pos": "Adjective",
+   "gloss": "all, everything",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01",
+    "trial-01"
+   ],
+   "dcc_rank": 18
+  },
+  {
+   "headword": "optima",
+   "forms": [
+    "optima",
+    "optimī"
+   ],
+   "lemma": "optimus, optima, optimum",
+   "lemma_key": "optimus",
+   "pos": "Adjective",
+   "gloss": "the best",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01",
+    "trial-01"
+   ],
+   "dcc_rank": 68
+  },
+  {
+   "headword": "ōrātiōnem",
+   "forms": [
+    "ōrātiōnem",
+    "ōrātiōne"
+   ],
+   "lemma": "ōrātiō, ōrātiōnis, f.",
+   "lemma_key": "oratio",
+   "pos": "Noun",
+   "gloss": "speech",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 736
   },
   {
    "headword": "pancraticē valeō",
@@ -1669,6 +2461,50 @@ window.CLASS_VOCAB = {
     "trial-04"
    ],
    "dcc_rank": 190
+  },
+  {
+   "headword": "pater",
+   "forms": [
+    "pater"
+   ],
+   "lemma": "pater, patris, m.",
+   "lemma_key": "pater",
+   "pos": "Noun",
+   "gloss": "father",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 71
+  },
+  {
+   "headword": "pedēs",
+   "forms": [
+    "pedēs",
+    "pedibus"
+   ],
+   "lemma": "pēs, pedis, m.",
+   "lemma_key": "pes",
+   "pos": "Noun",
+   "gloss": "feet",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 199
+  },
+  {
+   "headword": "pedifoliō",
+   "forms": [
+    "pedifoliō"
+   ],
+   "lemma": "pedifolium, pedifoliī, n.",
+   "lemma_key": "pedifolium",
+   "pos": "Noun",
+   "gloss": "soccer",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
   },
   {
    "headword": "peristȳlum",
@@ -1747,6 +2583,35 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "pictūra",
+   "forms": [
+    "pictūra",
+    "pictūrā"
+   ],
+   "lemma": "pictūra, pictūrae, f.",
+   "lemma_key": "pictura",
+   "pos": "Noun",
+   "gloss": "picture",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "pictūrīs",
+   "forms": [
+    "pictūrīs"
+   ],
+   "lemma": "pictūra, pictūrae, f.",
+   "lemma_key": "pictura",
+   "pos": "Noun",
+   "gloss": "pictures",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 0
+  },
+  {
    "headword": "pīrātae",
    "forms": [
     "pīrātae"
@@ -1760,6 +2625,22 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "placent",
+   "forms": [
+    "placent",
+    "placet"
+   ],
+   "lemma": "placeō, placēre, placuī",
+   "lemma_key": "placeo",
+   "pos": "Verb",
+   "gloss": "they are pleasing",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 287
+  },
+  {
    "headword": "prologus",
    "forms": [
     "prologus"
@@ -1770,6 +2651,70 @@ window.CLASS_VOCAB = {
    "gloss": "prologue",
    "level": "outer",
    "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "puella",
+   "forms": [
+    "puella"
+   ],
+   "lemma": "puella, puellae, f.",
+   "lemma_key": "puella",
+   "pos": "Noun",
+   "gloss": "girl",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 233
+  },
+  {
+   "headword": "puer",
+   "forms": [
+    "puer",
+    "puerī"
+   ],
+   "lemma": "puer, puerī, m.",
+   "lemma_key": "puer",
+   "pos": "Noun",
+   "gloss": "boy",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 191
+  },
+  {
+   "headword": "pulcher",
+   "forms": [
+    "pulcher",
+    "pulchrī"
+   ],
+   "lemma": "pulcher, pulchra, pulchrum",
+   "lemma_key": "pulcher",
+   "pos": "Adjective",
+   "gloss": "beautiful",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 569
+  },
+  {
+   "headword": "pullus",
+   "forms": [
+    "pullus",
+    "pullī",
+    "pullōs"
+   ],
+   "lemma": "pullus, pullī, m.",
+   "lemma_key": "pullus",
+   "pos": "Noun",
+   "gloss": "chicken",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
    "dcc_rank": 0
   },
   {
@@ -1806,6 +2751,24 @@ window.CLASS_VOCAB = {
    "dcc_rank": 4
   },
   {
+   "headword": "quid?",
+   "forms": [
+    "quid?",
+    "quid"
+   ],
+   "lemma": "quis, quid",
+   "lemma_key": "quis",
+   "pos": "Pronoun",
+   "gloss": "what?",
+   "level": "core",
+   "quiz_sets": [
+    "noctua-togata",
+    "swyk-02",
+    "trial-02"
+   ],
+   "dcc_rank": 212
+  },
+  {
    "headword": "Quīntus",
    "forms": [
     "Quīntus",
@@ -1823,6 +2786,25 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "quis?",
+   "forms": [
+    "quis?",
+    "quis",
+    "cuius"
+   ],
+   "lemma": "quis, quid",
+   "lemma_key": "quis",
+   "pos": "Pronoun",
+   "gloss": "who?",
+   "level": "core",
+   "quiz_sets": [
+    "noctua-togata",
+    "swyk-02",
+    "trial-02"
+   ],
+   "dcc_rank": 212
+  },
+  {
    "headword": "quod",
    "forms": [
     "quod"
@@ -1838,6 +2820,35 @@ window.CLASS_VOCAB = {
     "trial-02"
    ],
    "dcc_rank": 3
+  },
+  {
+   "headword": "quoque",
+   "forms": [
+    "quoque"
+   ],
+   "lemma": "quoque",
+   "lemma_key": "quoque",
+   "pos": "Adverb",
+   "gloss": "also (second)",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01",
+    "trial-01"
+   ],
+   "dcc_rank": 76
+  },
+  {
+   "headword": "quot",
+   "forms": [
+    "quot"
+   ],
+   "lemma": "quot",
+   "lemma_key": "quot",
+   "pos": "Adjective",
+   "gloss": "how many",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
   },
   {
    "headword": "reālis",
@@ -1887,6 +2898,23 @@ window.CLASS_VOCAB = {
    "quiz_sets": [
     "noctua-togata",
     "swyk-02"
+   ],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "rosae",
+   "forms": [
+    "rosae",
+    "rosa",
+    "rosam"
+   ],
+   "lemma": "rosa, rosae, f.",
+   "lemma_key": "rosa",
+   "pos": "Noun",
+   "gloss": "roses",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
    ],
    "dcc_rank": 0
   },
@@ -1966,6 +2994,21 @@ window.CLASS_VOCAB = {
    "dcc_rank": 235
   },
   {
+   "headword": "saxōsus",
+   "forms": [
+    "saxōsus"
+   ],
+   "lemma": "saxōsus, saxōsa, saxōsum",
+   "lemma_key": "saxosus",
+   "pos": "Adjective",
+   "gloss": "rocky",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 0
+  },
+  {
    "headword": "sed",
    "forms": [
     "sed"
@@ -2014,6 +3057,22 @@ window.CLASS_VOCAB = {
    "dcc_rank": 302
   },
   {
+   "headword": "sē trānsformant",
+   "forms": [
+    "sē trānsformant",
+    "sē trānsformat"
+   ],
+   "lemma": "trānsformō, trānsformāre",
+   "lemma_key": "transformo",
+   "pos": "Verb",
+   "gloss": "they transform themselves",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 17
+  },
+  {
    "headword": "Sextus",
    "forms": [
     "Sextus",
@@ -2026,6 +3085,21 @@ window.CLASS_VOCAB = {
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 0
+  },
+  {
+   "headword": "sīcut",
+   "forms": [
+    "sīcut"
+   ],
+   "lemma": "sīcut",
+   "lemma_key": "sicut",
+   "pos": "Adverb",
+   "gloss": "just as",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 791
   },
   {
    "headword": "significat",
@@ -2086,6 +3160,35 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "sōlum",
+   "forms": [
+    "sōlum"
+   ],
+   "lemma": "sōlum",
+   "lemma_key": "solum",
+   "pos": "Adverb",
+   "gloss": "only",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 897
+  },
+  {
+   "headword": "somnium",
+   "forms": [
+    "somnium",
+    "somniō"
+   ],
+   "lemma": "somnium, somniī, n.",
+   "lemma_key": "somnium",
+   "pos": "Noun",
+   "gloss": "a dream",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
    "headword": "sonus",
    "forms": [
     "sonus",
@@ -2100,6 +3203,24 @@ window.CLASS_VOCAB = {
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 0
+  },
+  {
+   "headword": "stāte",
+   "forms": [
+    "stāte",
+    "stant"
+   ],
+   "lemma": "stō, stāre, stetī",
+   "lemma_key": "sto",
+   "pos": "Verb",
+   "gloss": "stand (command to a group)",
+   "level": "core",
+   "quiz_sets": [
+    "noctua-togata",
+    "swyk-02",
+    "trial-02"
+   ],
+   "dcc_rank": 168
   },
   {
    "headword": "stomachus",
@@ -2192,6 +3313,23 @@ window.CLASS_VOCAB = {
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 0
+  },
+  {
+   "headword": "tam… quam",
+   "forms": [
+    "tam… quam",
+    "quam",
+    "tam"
+   ],
+   "lemma": "tam",
+   "lemma_key": "tam",
+   "pos": "Adverb",
+   "gloss": "as … as",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 29
   },
   {
    "headword": "tandem",
@@ -2331,6 +3469,21 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "turma",
+   "forms": [
+    "turma",
+    "turmae",
+    "turmam"
+   ],
+   "lemma": "turma, turmae, f.",
+   "lemma_key": "turma",
+   "pos": "Noun",
+   "gloss": "team",
+   "level": "outer",
+   "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
    "headword": "variī",
    "forms": [
     "variī",
@@ -2347,6 +3500,23 @@ window.CLASS_VOCAB = {
    "dcc_rank": 631
   },
   {
+   "headword": "ubi",
+   "forms": [
+    "ubi"
+   ],
+   "lemma": "ubi",
+   "lemma_key": "ubi",
+   "pos": "Adverb",
+   "gloss": "where, when",
+   "level": "core",
+   "quiz_sets": [
+    "noctua-togata",
+    "swyk-02",
+    "trial-02"
+   ],
+   "dcc_rank": 92
+  },
+  {
    "headword": "ubīque",
    "forms": [
     "ubīque"
@@ -2357,6 +3527,23 @@ window.CLASS_VOCAB = {
    "gloss": "everywhere",
    "level": "outer",
    "quiz_sets": [],
+   "dcc_rank": 0
+  },
+  {
+   "headword": "venusta",
+   "forms": [
+    "venusta",
+    "venustus",
+    "venustī"
+   ],
+   "lemma": "venustus, venusta, venustum",
+   "lemma_key": "venustus",
+   "pos": "Adjective",
+   "gloss": "cute, blessed by Venus",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
    "dcc_rank": 0
   },
   {
@@ -2420,6 +3607,23 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
+   "headword": "vir",
+   "forms": [
+    "vir",
+    "virī",
+    "virīs"
+   ],
+   "lemma": "vir, virī, m.",
+   "lemma_key": "vir",
+   "pos": "Noun",
+   "gloss": "man",
+   "level": "core",
+   "quiz_sets": [
+    "trial-03"
+   ],
+   "dcc_rank": 85
+  },
+  {
    "headword": "vīvitur",
    "forms": [
     "vīvitur"
@@ -2448,6 +3652,22 @@ window.CLASS_VOCAB = {
     "swyk-01"
    ],
    "dcc_rank": 539
+  },
+  {
+   "headword": "vulpēs",
+   "forms": [
+    "vulpēs",
+    "vulpem"
+   ],
+   "lemma": "vulpēs, vulpis, f.",
+   "lemma_key": "vulpes",
+   "pos": "Noun",
+   "gloss": "fox",
+   "level": "core",
+   "quiz_sets": [
+    "swyk-01"
+   ],
+   "dcc_rank": 0
   },
   {
    "headword": "vult",
