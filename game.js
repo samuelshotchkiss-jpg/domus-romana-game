@@ -5,8 +5,8 @@
 const removeDiacritics = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
 const rooms = {
-    'via_west': { x: 0, y: -1, name: 'Via', desc: 'Nox est. Haec via obscūra et tranquilla est, neque est sonus.', exits: { south: 'taberna', east: 'via_east' } },
-    'via_east': { x: 1, y: -1, name: 'Via', desc: 'Haec quoque via obscūra est. Haec est domus tua, et iānua domūs aperta est.', exits: { south: 'fauces', west: 'via_west' } },
+    'via_west': { x: 0, y: -1, name: 'Via', intro: 'via', desc: 'Haec est taberna, et iānua tabernae aperta est.', exits: { south: 'taberna', east: 'via_east' } },
+    'via_east': { x: 1, y: -1, name: 'Via', intro: 'via', desc: 'Haec est domus tua, et iānua domūs aperta est.', exits: { south: 'fauces', west: 'via_west' } },
     'taberna': { x: 0, y: 0, name: 'Taberna', desc: 'Haec taberna obscūra est. In tabernā est mēnsa, et in mēnsā sunt multa et varia.', exits: { north: 'via_west' } },
     'fauces': { x: 1, y: 0, name: 'Faucēs', desc: 'Hae faucēs obscūrae sunt. Ubīque sunt pictūrae, et in pictūrīs sunt virī Rōmānī. Oculī virōrum tē vident!', exits: { north: 'via_east', south: 'atrium' } },
     'atrium': { x: 1, y: 1, name: 'Ātrium', desc: 'Hoc ātrium obscūrum tranquillumque est. In ātriō est impluvium, et ubīque est silentium.', exits: { north: 'fauces', south: 'tablinum', east: 'cubiculum_parentum', west: 'cubiculum_sororis', southeast: 'ala_larum', southwest: 'ala_hermae' } },
@@ -20,6 +20,16 @@ const rooms = {
     'triclinium': { x: 1, y: 4, name: 'Triclīnium', desc: 'Hoc est triclīnium. In triclīniō sunt mēnsa lectīque, immōbilēs. Silentium est, sed aliquid sentīs.', exits: { north: 'peristylum' } },
     'culina': { x: 0, y: 3, name: 'Culīna', desc: 'Haec est culīna. In mēnsā est pānis, et in culīnā est etiam lātrīna.', exits: { east: 'peristylum', west: 'cella' } },
     'cella': { x: -1, y: 3, name: 'Cella', desc: 'Haec cella obscūrissima est. In cellā sunt multae amphorae.', exits: { east: 'culina' } }
+};
+
+// Openings that depend on the order rooms are entered. A room with `intro: 'via'` begins with `first`
+// if it is the first room of that group the player enters, and with `later` otherwise; each room keeps
+// the opening it got on its first visit. Its own `desc` follows.
+const INTROS = {
+    'via': {
+        first: 'Nox est. Haec via obscūra et tranquilla est, neque est sonus.',
+        later: 'Haec quoque via obscūra est.'
+    }
 };
 
 // The movement verbs, recognised by lemma. `stem` forgives forms the vocabulary does not list.
@@ -165,7 +175,7 @@ const VOCAB_LEMMA = {
     'sui': { pos:'pronoun', lemma: 'sui, sibi, se, se', def: 'himself/herself/itself/themselves', level: 'core', forms: { 'sibi':{case:'dat', def:'for himself/herself/itself/themselves'} } },
     'sum': { pos:'verb', lemma: 'sum, esse, fuī', def: 'to be', level: 'core', forms: { 'sum':{person:1, num:'sg', tense:'present', def:'I am'}, 'esse':{}, 'fuit':{person:3, num:'sg', tense:'perfect', def:'was'}, 'fui':{person:1, num:'sg', tense:'perfect', def:'I was'}, 'fuisse':{}, 'es':{person:2, num:'sg', tense:'present', def:'you are'}, 'est':{person:3, num:'sg', tense:'present'}, 'estne':{person:3, num:'sg', tense:'present', enclitic:'ne'}, 'sunt':{person:3, num:'pl', tense:'present'}, 'eram':{person:1, num:'sg', tense:'imperfect', def:'I was'}, 'erat':{person:3, num:'sg', tense:'imperfect'}, 'erant':{person:3, num:'pl', tense:'imperfect'}, 'eramus':{person:1, num:'pl', tense:'imperfect'}, 'erantne':{person:3, num:'pl', tense:'imperfect', enclitic:'ne'}, 'sitne':{person:3, num:'sg', tense:'present', mood:'subjunctive', enclitic:'ne'}, 'sintne':{person:3, num:'pl', tense:'present', mood:'subjunctive', enclitic:'ne'} } },
     'surgo': { pos:'verb', lemma: 'surgō, surgere, surrēxī', def: ['to get up', 'to rise'], level: 'core', forms: {'surgit':{person:3, num:'sg', tense:'present'}, 'surgunt':{person:3, num:'pl', tense:'present'}, 'surrecta':{}, 'surrecti':{}, 'surrectis':{}} },
-    'taberna': { pos:'noun', lemma: 'taberna, -ae, f.', def: ['shop', 'inn'], level: 'core', forms: { 'taberna':{num:'sg'}, 'tabernā':{num:'sg', case:'abl'}, 'tabernam':{num:'sg', case:'acc'} } },
+    'taberna': { pos:'noun', lemma: 'taberna, -ae, f.', def: ['shop', 'inn'], level: 'core', forms: { 'taberna':{num:'sg'}, 'tabernae':{num:'sg', case:'gen'}, 'tabernā':{num:'sg', case:'abl'}, 'tabernam':{num:'sg', case:'acc'} } },
     'tablinum': { pos:'noun', lemma: 'tablīnum, -ī, n.', def: ['study', 'office'], level: 'core', forms: { 'tablinum':{num:'sg'}, 'tablīnum':{num:'sg'}, 'tablinō':{num:'sg', case:'abl'} } },
     'tranquillus': { pos:'adj', lemma: 'tranquillus, -a, -um', def: 'calm, quiet', level: 'outer', forms: { 'tranquilla':{}, 'tranquillum':{}, 'tranquillus':{} } },
     'tres': { pos:'adj', lemma: 'trēs, tria', def: 'three', level: 'outer', forms: {'tres':{}} },
@@ -248,7 +258,7 @@ const sleep = (ms) => new Promise(res => setTimeout(res, ms));
 // =============================================================================
 // ### 2. GAME STATE
 // =============================================================================
-const gameState = { currentRoom: 'cubiculum_tuum', playerFacing: 270, currentVisualRotation: -270, visitedRooms: new Set(['cubiculum_tuum']), panOffset: { x: 0, y: 0 }, isDragging: false, dragStart: { x: 0, y: 0 }, isPlayerActionLocked: false, inputHistory: [], historyIndex: -1, clarificationState: null, hasRenderedFirstRoom: false };
+const gameState = { currentRoom: 'cubiculum_tuum', playerFacing: 270, currentVisualRotation: -270, visitedRooms: new Set(['cubiculum_tuum']), panOffset: { x: 0, y: 0 }, isDragging: false, dragStart: { x: 0, y: 0 }, isPlayerActionLocked: false, inputHistory: [], historyIndex: -1, clarificationState: null, hasRenderedFirstRoom: false, introByRoom: {} };
 const mapSettings = { GRID_SIZE: 150, ROOM_WIDTH: 100, ROOM_HEIGHT: 60 };
 let elements = {};
 let mapGroup;
@@ -529,13 +539,14 @@ function parseFreeCommand(words, lemmas) {
         return { type: 'clarify', prompt: `${which} ${sharedForm.toLowerCase()}?`, options: fits, wasCorrected, recast: recastHtml };
     }
 
-    // Score each room by how many of its lemmas the player used. On a tie, prefer a room the
-    // player is in or can walk to: both street rooms are just "Via".
-    const reachable = (roomId) => roomId === gameState.currentRoom || Boolean(exitTo(roomId));
+    // Score each room by how many of its lemmas the player used. On a tie, prefer a room the player
+    // can walk to, then the room they are in: both streets are just "Via", so from one street
+    // "eō in viam" means the other.
+    const reachable = (roomId) => (exitTo(roomId) ? 2 : roomId === gameState.currentRoom ? 1 : 0);
     let bestMatch = { score: 0, id: null };
     for (const roomId in ROOM_NAMES) {
         const score = ROOM_NAMES[roomId].requiredLemmas.filter(lemma => lemmas.includes(lemma)).length;
-        const winsTie = score === bestMatch.score && score > 0 && !reachable(bestMatch.id) && reachable(roomId);
+        const winsTie = score === bestMatch.score && score > 0 && reachable(roomId) > reachable(bestMatch.id);
         if (score > bestMatch.score || winsTie) {
             bestMatch = { score, id: roomId };
         }
@@ -808,6 +819,17 @@ function logCommand(commandHtml, wasCorrected, replaceLast = false) {
     log.scrollTop = log.scrollHeight;
 }
 
+// A room's description, with the opening its INTROS group gives it (decided on its first visit).
+function roomDescription(roomId) {
+    const room = rooms[roomId];
+    if (!room.intro) return room.desc;
+    if (!gameState.introByRoom[roomId]) {
+        const groupSeen = Object.keys(gameState.introByRoom).some(id => rooms[id].intro === room.intro);
+        gameState.introByRoom[roomId] = groupSeen ? 'later' : 'first';
+    }
+    return `${INTROS[room.intro][gameState.introByRoom[roomId]]} ${room.desc}`;
+}
+
 function logRoom() {
     const log = elements.gameLog;
     if (!gameState.hasRenderedFirstRoom) {
@@ -822,7 +844,7 @@ function logRoom() {
     title.innerHTML = processDescription(room.name);
     const desc = document.createElement('p');
     desc.className = 'log-description';
-    desc.innerHTML = processDescription(room.desc);
+    desc.innerHTML = processDescription(roomDescription(gameState.currentRoom));
     const exits = document.createElement('div');
     exits.className = 'log-exits';
     exits.innerHTML = generateExitsString();

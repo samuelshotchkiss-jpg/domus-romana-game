@@ -17,6 +17,7 @@ table pattern as `ROOM_NAMES`: `nom` / `acc` / `abl`, plus `said` where the play
 | Room | Object | nom / acc / abl | Level | Verbs to offer | Notes for the fuller description |
 |---|---|---|---|---|---|
 | Via (east) | iānua domūs | iānua / iānuam / iānuā | Q | investīgō, aperiō, claudō | The front door, standing open. Why is it open at night? |
+| Via (west) | iānua tabernae | iānua / iānuam / iānuā | Q | investīgō, aperiō, claudō | **The shop door.** The text says *aperta* for now, because the shop can be walked into. In the real game it is **closed and locked, with something important inside**, so it needs a lock state, a key (or other way in), and the street description changing to *clausa* while it is locked |
 | Taberna | mēnsa | mēnsa / mēnsam / mēnsā | Q | investīgō | The shop counter |
 | Taberna | multa et varia (the wares) | — | Q | investīgō, īnspiciō | Needs a noun if it becomes takeable; for now only described |
 | Faucēs | pictūrae (virī Rōmānī) | pictūrae / pictūrās / pictūrīs | S | investīgō, videō | The men's eyes "see you": the first spooky beat |
