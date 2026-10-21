@@ -326,9 +326,9 @@ const WHICH = { two: { m: 'Utrum', f: 'Utram', n: 'Utrum' }, many: { m: 'Quem', 
 
 // The verb as the player should have said it, jiggling what they got wrong or left out.
 function recastVerb(verbInfo) {
-    if (!verbInfo) return { html: jiggle('eō'), corrected: true };
-    if (verbInfo.isCorrect) return { html: verbInfo.correct, corrected: false };
-    return { html: jiggleDiff(verbInfo.correct, verbInfo.playerWord), corrected: true };
+    if (!verbInfo) return { html: glossed('eō', jiggle('eō')), corrected: true };
+    if (verbInfo.isCorrect) return { html: glossed(verbInfo.correct), corrected: false };
+    return { html: glossed(verbInfo.correct, jiggleDiff(verbInfo.correct, verbInfo.playerWord)), corrected: true };
 }
 
 async function processInput(command) {
@@ -336,7 +336,8 @@ async function processInput(command) {
     gameState.isPlayerActionLocked = true;
     elements.commandInput.disabled = true;
 
-    logCommand(escapeHtml(command), false);
+    // What the player typed gets tooltips too, until a recast replaces it.
+    logCommand(processDescription(escapeHtml(command)), false);
     gameState.inputHistory.unshift(command);
     gameState.historyIndex = -1;
 
@@ -495,9 +496,9 @@ function resolveClarification(words, lemmas) {
         const recastHtml = wanted.map(lemmaKey => {
             const correctForm = playerFormOf(roomData, lemmaKey);
             const attempt = words.find(w => standsFor(w, lemmaKey));
-            if (attempt === removeDiacritics(correctForm.toLowerCase())) return correctForm;
+            if (attempt === removeDiacritics(correctForm.toLowerCase())) return glossed(correctForm);
             wasCorrected = true;
-            return jiggleDiff(correctForm, attempt);
+            return glossed(correctForm, jiggleDiff(correctForm, attempt));
         }).join(' ');
 
         gameState.clarificationState = null;
@@ -561,7 +562,7 @@ function parseFreeCommand(words, lemmas) {
     if (turn) {
         const newFacingAngle = (gameState.playerFacing + turn.angle) % 360;
         const verb = recastVerb(verbInfo);
-        return { type: 'move', direction: ANGLE_TO_DIRECTION[newFacingAngle], newFacingAngle, wasCorrected: verb.corrected, recast: `${verb.html} ${turn.phrase}` };
+        return { type: 'move', direction: ANGLE_TO_DIRECTION[newFacingAngle], newFacingAngle, wasCorrected: verb.corrected, recast: `${verb.html} ${processDescription(turn.phrase)}` };
     }
 
     return feedback(NOT_UNDERSTOOD);
@@ -581,6 +582,7 @@ function generateRecast(words, roomData, verbInfo) {
         wasCorrected = true;
         prepHtml = jiggle('in');
     }
+    prepHtml = glossed(words.includes('ad') ? 'ad' : 'in', prepHtml);
 
     // Part 3: the destination, word by word, as the player says it ("Cubiculum Meum", not "Tuum")
     const recastWords = (roomData.said || roomData.acc).slice(1).map(correctWord => {
@@ -588,10 +590,10 @@ function generateRecast(words, roomData, verbInfo) {
         if (!lemmaKey) return correctWord;
 
         const userAttempt = words.find(w => getLemmaDataFromWord(w)?.lemmaKey === lemmaKey);
-        if (userAttempt === removeDiacritics(correctWord.toLowerCase())) return correctWord;
+        if (userAttempt === removeDiacritics(correctWord.toLowerCase())) return glossed(correctWord);
 
         wasCorrected = true;
-        return jiggleDiff(correctWord, userAttempt);
+        return glossed(correctWord, jiggleDiff(correctWord, userAttempt));
     });
 
     return { recastHtml: `${verb.html} ${prepHtml} ${recastWords.join(' ')}`, wasCorrected };
@@ -922,27 +924,33 @@ function processDescription(text) {
 
     const wordsAndSeparators = processedText.split(/([\s.,!?;:—–()]+)/);
 
-    return wordsAndSeparators.map(part => {
-        if (!part.trim()) return part;
-
-        // Quotes are stripped before the lookup.
-        const found = lookUpWord(removeDiacritics(part.toLowerCase().replace(/['"]/g, '')));
-        if (!found) return part;
-        const { cleanWord, lemmaKey, enclitic } = found;
-
-        const lemmaData = VOCAB_LEMMA[lemmaKey];
-        const level = levelOf(cleanWord, lemmaKey);
-        if (level === 'core') return part;
-
-        const formKey = Object.keys(lemmaData.forms).find(f => removeDiacritics(f.toLowerCase()) === cleanWord);
-        if (!formKey) return part;
-        let definition = buildDefinition(lemmaData, lemmaData.forms[formKey]);
-        if (enclitic) definition += ` + -${enclitic}: ${ENCLITICS[enclitic]}`;
-
-        const vocabClass = level === 'novum' ? 'vocab novum' : 'vocab';
-        return `<span class="${vocabClass}" data-lemma="${escapeHtml(lemmaData.lemma)}" data-def="${escapeHtml(definition)}">${part}</span>`;
-    }).join('').replace(/\u0000(\d+)\u0000/g, (match, index) => protectedSpans[index]);
+    return wordsAndSeparators.map(part => (part.trim() && glossSpan(part)) || part)
+        .join('').replace(/\u0000(\d+)\u0000/g, (match, index) => protectedSpans[index]);
 }
+
+// The tooltip span for one word, or null if the word needs none (core, or not in the vocabulary).
+// `inner` is the HTML shown inside it: by default the word, but a recast passes its jiggled version.
+function glossSpan(word, inner = word) {
+    // Quotes are stripped before the lookup.
+    const found = lookUpWord(removeDiacritics(word.toLowerCase().replace(/['"]/g, '')));
+    if (!found) return null;
+    const { cleanWord, lemmaKey, enclitic } = found;
+
+    const lemmaData = VOCAB_LEMMA[lemmaKey];
+    const level = levelOf(cleanWord, lemmaKey);
+    if (level === 'core') return null;
+
+    const formKey = Object.keys(lemmaData.forms).find(f => removeDiacritics(f.toLowerCase()) === cleanWord);
+    if (!formKey) return null;
+    let definition = buildDefinition(lemmaData, lemmaData.forms[formKey]);
+    if (enclitic) definition += ` + -${enclitic}: ${ENCLITICS[enclitic]}`;
+
+    const vocabClass = level === 'novum' ? 'vocab novum' : 'vocab';
+    return `<span class="${vocabClass}" data-lemma="${escapeHtml(lemmaData.lemma)}" data-def="${escapeHtml(definition)}">${inner}</span>`;
+}
+
+// A word of a recast, with its tooltip around whatever jiggle it carries.
+const glossed = (word, inner = word) => glossSpan(word, inner) || inner;
 
 // English verb forms no rule can derive. `third` is the he/she/it present; `ing` overrides doubling.
 const IRREGULAR_ENGLISH = {
@@ -978,8 +986,12 @@ function inflectEnglishVerb(phrase, form) {
         const auxiliary = plural ? 'were' : 'was';
         verb = head === 'be' ? auxiliary : `${auxiliary} ${irregular.ing || ingForm(head)}`;
     }
-    return verb + tail;
+    // First and second person name their subject: eō is "I go", vīs is "you want".
+    const subject = ENGLISH_SUBJECTS[`${form.person}${form.num}`];
+    return (subject ? `${subject} ` : '') + verb + tail;
 }
+
+const ENGLISH_SUBJECTS = { '1sg': 'I', '1pl': 'we', '2sg': 'you', '2pl': 'you (pl.)' };
 
 /**
  * The Grammar Engine. Builds a context-aware English definition from vocabulary data.
