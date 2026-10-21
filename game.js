@@ -22,9 +22,10 @@ const rooms = {
     'cella': { x: -1, y: 3, name: 'Cella', desc: 'Haec cella obscūrissima est. In cellā sunt multae amphorae.', exits: { east: 'culina' } }
 };
 
-// Openings that depend on the order rooms are entered. A room with `intro: 'via'` begins with `first`
-// if it is the first room of that group the player enters, and with `later` otherwise; each room keeps
-// the opening it got on its first visit. Its own `desc` follows.
+// Openings that depend on where the player came from. A room with `intro: 'via'` begins with `first`
+// when the player arrives from outside the group (stepping out of the house or the shop), and with
+// `later` when they arrive from another room of the same group (one street to the next). Its own
+// `desc` follows.
 const INTROS = {
     'via': {
         first: 'Nox est. Haec via obscūra et tranquilla est, neque est sonus.',
@@ -258,7 +259,7 @@ const sleep = (ms) => new Promise(res => setTimeout(res, ms));
 // =============================================================================
 // ### 2. GAME STATE
 // =============================================================================
-const gameState = { currentRoom: 'cubiculum_tuum', playerFacing: 270, currentVisualRotation: -270, visitedRooms: new Set(['cubiculum_tuum']), panOffset: { x: 0, y: 0 }, isDragging: false, dragStart: { x: 0, y: 0 }, isPlayerActionLocked: false, inputHistory: [], historyIndex: -1, clarificationState: null, hasRenderedFirstRoom: false, introByRoom: {} };
+const gameState = { currentRoom: 'cubiculum_tuum', playerFacing: 270, currentVisualRotation: -270, visitedRooms: new Set(['cubiculum_tuum']), panOffset: { x: 0, y: 0 }, isDragging: false, dragStart: { x: 0, y: 0 }, isPlayerActionLocked: false, inputHistory: [], historyIndex: -1, clarificationState: null, hasRenderedFirstRoom: false, previousRoom: null };
 const mapSettings = { GRID_SIZE: 150, ROOM_WIDTH: 100, ROOM_HEIGHT: 60 };
 let elements = {};
 let mapGroup;
@@ -615,6 +616,7 @@ async function performMove(moveDirection, newFacingAngle) {
     const nextRoomId = rooms[gameState.currentRoom].exits[moveDirection];
     if (nextRoomId) {
         const previousRoomId = gameState.currentRoom;
+        gameState.previousRoom = previousRoomId;
         gameState.currentRoom = nextRoomId;
         gameState.visitedRooms.add(nextRoomId);
         gameState.panOffset = { x: 0, y: 0 };
@@ -819,15 +821,12 @@ function logCommand(commandHtml, wasCorrected, replaceLast = false) {
     log.scrollTop = log.scrollHeight;
 }
 
-// A room's description, with the opening its INTROS group gives it (decided on its first visit).
+// A room's description, with the opening its INTROS group gives it for where the player came from.
 function roomDescription(roomId) {
     const room = rooms[roomId];
     if (!room.intro) return room.desc;
-    if (!gameState.introByRoom[roomId]) {
-        const groupSeen = Object.keys(gameState.introByRoom).some(id => rooms[id].intro === room.intro);
-        gameState.introByRoom[roomId] = groupSeen ? 'later' : 'first';
-    }
-    return `${INTROS[room.intro][gameState.introByRoom[roomId]]} ${room.desc}`;
+    const cameFromGroup = gameState.previousRoom && rooms[gameState.previousRoom].intro === room.intro;
+    return `${INTROS[room.intro][cameFromGroup ? 'later' : 'first']} ${room.desc}`;
 }
 
 function logRoom() {
