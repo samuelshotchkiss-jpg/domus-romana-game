@@ -53,6 +53,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 }
 .vocab.novum { background-color: rgba(211, 54, 130, 0.10); text-decoration: underline dotted #d33682; text-decoration-thickness: 2px; text-underline-offset: 3px; }
 .vocab.novum:hover { background-color: rgba(211, 54, 130, 0.22); }
+/* In the command log a new word looks like a known one: the green recast and its jiggle already mark
+   what changed, and what changed is what a student will want to hover. */
+.log-command .vocab.novum, .log-recast .vocab.novum { background-color: transparent; text-decoration: none; }
+.log-command .vocab:hover, .log-recast .vocab:hover { background-color: #eee8d5; }
 
 .map-connection { stroke: #93a1a1; stroke-width: 4; stroke-linecap: round; }
 .map-room rect { stroke: #93a1a1; stroke-width: 3; fill: #eee8d5; rx: 8; }
