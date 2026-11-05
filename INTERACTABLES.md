@@ -1,64 +1,82 @@
-# Interactables worklist
+# Interactables
 
-Every object a room description names must be something the student can act on: at the very least
-**investīgō X** (a fuller description, plus a hint at what else they might do with it). This file
-lists every object the descriptions currently name. **Rule: a new noun in a description adds a row
-here in the same commit.** Delete a row only when the object works in the game.
+Every object a description names must be something the student can act on: at the very least
+**investīgō X** (also *īnspiciō, spectō*), which gives a fuller description ending in a hint at a verb
+to try. **Rule: a new noun in any description (a room's, or an object's `look`) adds an object in the
+same commit**, or is cut. An object still to build goes under **Owed**.
 
-Rows are objects still to build; what works is under **Built**, at the end. The forms are the ones the parser and the recast will need (the same
-table pattern as `ROOM_NAMES`: `nom` / `acc` / `abl`, plus `said` where the player's voice differs).
-"Verbs to offer" uses only verbs this class has met (latin-i store), so the hints stay readable:
-*investīgō, īnspiciō, videō, audiō, aperiō, claudō, edō, stō, surgō, dormiō*.
+How it works (`game.js`): `OBJECTS` holds each object's forms, the rooms it is reached from, its
+gender, an optional open/closed state (`openable`; in two rooms it is a door and blocks the way while
+closed), its `look` text, and `on` lines answering particular verbs. `ACTIONS` holds the verbs. A verb
+with no `on` line for an object falls back to a default (*Mēnsam tangis.*) or a refusal
+(*In impluviō dormīre nōn potes.*). Adding an object is one `OBJECTS` entry plus its forms in
+`VOCAB_LEMMA`; the game's sweep (every text an object can produce, looked up word by word) must find
+nothing missing.
 
-"Level" is the noun's standing in `class_vocab.js` today: **Q** quizzed, **S** in the store, **N** new.
+## Objects
 
-## Objects, room by room
-
-| Room | Object | nom / acc / abl | Level | Verbs to offer | Notes for the fuller description |
-|---|---|---|---|---|---|
-| Taberna | mēnsa | mēnsa / mēnsam / mēnsā | Q | investīgō | The shop counter |
-| Taberna | multa et varia (the wares) | — | Q | investīgō, īnspiciō | Needs a noun if it becomes takeable; for now only described |
-| Faucēs | pictūrae (virī Rōmānī) | pictūrae / pictūrās / pictūrīs | S | investīgō, videō | The men's eyes "see you": the first spooky beat |
-| Ātrium | impluvium | impluvium / impluvium / impluviō | N | investīgō, videō | Water in the basin; a reflection is a good place for a figūra |
-| Cubiculum Sorōris | lectus | lectus / lectum / lectō | S | investīgō, dormiō | Empty: the sister is away |
-| Cubiculum Sorōris | sella | sella / sellam / sellā | Q | investīgō | |
-| Cubiculum Parentum | duo lectī | lectī / lectōs / lectīs | S | investīgō | The parents are not home (book, ch. I) |
-| Āla Lārum | larārium (Larēs) | larārium / larārium / larāriō | N | investīgō, īnspiciō | The household gods: a natural place for a protective object |
-| Āla Hermae | herma | herma / hermam / hermā | N | investīgō, īnspiciō | "pater patris tuī": immōbilis, with eyes |
-| Tablīnum | mēnsa | mēnsa / mēnsam / mēnsā | Q | investīgō | The father's desk |
-| Tablīnum | sella | sella / sellam / sellā | Q | investīgō | |
-| Tablīnum | armārium | armārium / armārium / armāriō | S | investīgō, aperiō, claudō, īnspiciō | Closed. In the book the monster's eyes are in it (ch. VII) |
-| Peristȳlum | arborēs / arbor | arbor / arborem / arbore | Q | investīgō | *in arbore* is a class phrase |
-| Peristȳlum | herbae | herbae / herbās / herbīs | Q | investīgō | |
-| Peristȳlum | rosae | rosae / rosās / rosīs | Q | investīgō | |
-| Triclīnium | mēnsa | mēnsa / mēnsam / mēnsā | Q | investīgō | In the book it rises (ch. V): the phantasma's room |
-| Triclīnium | lectī | lectī / lectōs / lectīs | S | investīgō | They rise too |
-| Culīna | mēnsa (implied by "in mēnsā") | mēnsa / mēnsam / mēnsā | Q | investīgō | |
-| Culīna | pānis | pānis / pānem / pāne | Q | investīgō, edō | The one thing so far a student can eat |
-| Culīna | lātrīna | lātrīna / lātrīnam / lātrīnā | N | investīgō | The class knows *cacat* |
-| Cella | amphorae | amphorae / amphorās / amphorīs | N | investīgō, īnspiciō | A hiding place, or what is hidden |
-
-## Before building
-
-- **Objects that repeat across rooms** (*mēnsa* ×4, *sella* ×2, *lectus/lectī* ×3, *iānua* ×2) are one
-  word with several instances; the parser should resolve "the table" to the one in the current room.
-- **Commands the class cannot yet read.** *eō, ad, prōrsus, rūrsus, dexteram, sinistram* are all new
-  to this class (not in the latin-i store), and they are the game's movement commands. That is the
-  biggest comprehension cost in the game, larger than anything in the descriptions.
-
-## Built
-
-The machinery: `OBJECTS` (forms, rooms, door state, `look`, `refuse`) and `ACTIONS` (*investīgō, īnspiciō,
-spectō, aperiō, claudō*) in `game.js`. Any action recasts like a move; the verb alone asks *Quid vīs
-claudere?*; a door's state shows in room descriptions as `{state:ID}`; a closed door blocks the way.
-Adding an object is one `OBJECTS` entry plus its forms in `VOCAB_LEMMA`.
-
-| Object | Reached from | Works | Still owed |
+| Room | Object | Verbs that answer | Notes |
 |---|---|---|---|
-| iānua domūs | Via (east), Faucēs | look, open, close; blocks the way when closed | |
-| iānua tabernae | Via (west), Taberna | look, open, close; blocks the way when closed | **Locked**, with something important inside: a lock state, a way in, the street line reading *clausa* |
-| iānua cubiculī | Cubiculum Tuum, Peristȳlum | look, open, close; blocks the way when closed | |
-| noctua | Peristȳlum | look ("pulcherrima … nōn cūrat. Quid cūrat haec noctua?"); every other action: *Noctua nōn cūrat.* | **The early puzzle:** get her to care, so she shares hints from her wisdom. Her name (2026-27: Rebecca) is data in `OBJECTS.noctua.name`, not shown yet; the class renames and redescribes her each year |
+| Via (east), Faucēs | iānua domūs | aperiō, claudō | a door |
+| Via (west), Taberna | iānua tabernae | aperiō, claudō | a door; see Owed |
+| Faucēs | pictūrae | tangō | a portrait stops smiling |
+| Taberna | mēnsa | tangō | the wares (*multa et varia*) are on it |
+| Ātrium | impluvium | — | its hint points to *aqua* |
+| Ātrium | aqua | bibō | reached through the impluvium's description |
+| Cubiculum Sorōris | lectus | dormiō, cōnsīdō | |
+| Cubiculum Sorōris | sella | cōnsīdō | |
+| Cubiculum Parentum | lectī | dormiō, cōnsīdō | |
+| Āla Lārum | larārium | — | its hint points to the Larēs |
+| Āla Lārum | Larēs | salūtō | "Larēs domum tuam cūrant" |
+| Āla Hermae | herma | salūtō | |
+| Tablīnum | mēnsa | tangō (default) | its hint points to the sella |
+| Tablīnum | sella | cōnsīdō | "Nunc tū es dominus!" |
+| Tablīnum | armārium | aperiō, claudō | closed; its state shows in the room description |
+| Peristȳlum | arborēs | tangō | |
+| Peristȳlum | herbae | olfaciō | |
+| Peristȳlum | rosae | olfaciō | |
+| Peristȳlum | noctua | — (every verb: *Noctua nōn cūrat.*) | see Owed |
+| Cubiculum Tuum, Peristȳlum | iānua cubiculī | aperiō, claudō | a door |
+| Triclīnium | mēnsa | moveō | "sē nōn movet" |
+| Triclīnium | lectī | cōnsīdō | "Subitō lectus sē movet! … Minimē" |
+| Culīna | mēnsa | tangō (default) | its hint points to the pānis |
+| Culīna | pānis | edō | |
+| Culīna | lātrīna | cacō | "Deīs est grātia!" |
+| Cella | amphorae | moveō | "Quid est in amphorīs?" |
 
-Until an object is built, looking at a noun the room describes answers *Nihil aliud vidēs*; acting on it
-answers *Hoc claudere nōn potes* (or the verb in question).
+`tangō` answers every object (the default line); `investīgō / īnspiciō / spectō` look at every object.
+
+## Verbs
+
+Introduced through the hints (*Potes rosās olfacere.*), so new verbs are allowed here. "Class" is the
+lemma's standing in `class_vocab.js`: **Q** quizzed, **S** in the store, **N** new.
+
+| Verb | Takes | Class | Answered by |
+|---|---|---|---|
+| investīgō, īnspiciō, spectō | acc. | S, S, N | every object (its `look`) |
+| aperiō, claudō | acc. | Q, Q | doors, armārium |
+| tangō | acc. | N | every object (default), with lines for some |
+| moveō | acc. | Q | mēnsa (triclīnium), amphorae |
+| olfaciō | acc. | N | herbae, rosae |
+| salūtō | acc. | N | Larēs, herma |
+| bibō | acc. | N | aqua |
+| edō | acc. | Q (*edam*) | pānis |
+| cōnsīdō | *in* + abl. | N (see below) | lectus, sella, lectī |
+| dormiō | *in* + abl. | S | lectus, lectī |
+| cacō | *in* + abl. | S | lātrīna |
+
+A verb used alone asks *Quid vīs …?*, or *Ubi vīs …?* for the three verbs of place.
+
+## Owed
+
+- **The shop door is locked**, with something important inside: a lock, a way in, and the street line
+  reading *clausa* while it is locked. Today it opens like any door.
+- **The owl's puzzle:** get her to care, so she shares hints from her wisdom. Her name (2026-27:
+  Rebecca) is data in `OBJECTS.noctua.name`, not shown yet; the class renames and redescribes her each year.
+- **What is in the armārium** (and the amphorae: "Quid est in amphorīs?"). Opening it shows nothing yet.
+- **Taking things.** *tollō* (the class knows *tollite manūs!*) needs an inventory first.
+- **Two objects of the same word in one room** are not yet told apart. No room has two today.
+- **cōnsīdō vs. the class's cōnsidēte.** The store has the classroom command as *cōnsidēte* (keyed to
+  a verb *cōnsideō*); the classical verb is *cōnsīdō, cōnsīdere*, command *cōnsīdite*. The game uses
+  *cōnsīdō*, so it shows as new. Owner's ruling wanted: correct the store's entry, or switch the game
+  to *sedeō* (*sedēte*).
