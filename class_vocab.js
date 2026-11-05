@@ -2,7 +2,7 @@
 // re-export after each Trial. The class's vocabulary: which words it has been quizzed on.
 window.CLASS_VOCAB = {
  "corpus": "latin-i",
- "generated": "2026-10-21",
+ "generated": "2026-11-05",
  "core_sets": [
   "trial-*",
   "swyk-*"
@@ -13,10 +13,11 @@ window.CLASS_VOCAB = {
  },
  "words": [
   {
-   "headword": "ā",
+   "headword": "ā, ab",
    "forms": [
-    "ā",
-    "ab"
+    "ā, ab",
+    "ab",
+    "ā"
    ],
    "lemma": "ā, ab",
    "lemma_key": "a",
@@ -536,12 +537,12 @@ window.CLASS_VOCAB = {
    "dcc_rank": 392
   },
   {
-   "headword": "cōnsidēte",
+   "headword": "cōnsīdite",
    "forms": [
-    "cōnsidēte"
+    "cōnsīdite"
    ],
-   "lemma": "cōnsideō, cōnsidēre, cōnsēdī",
-   "lemma_key": "consideo",
+   "lemma": "cōnsīdō, cōnsīdere, cōnsēdī",
+   "lemma_key": "consido",
    "pos": "Verb",
    "gloss": "sit down (command to a group)",
    "level": "core",
@@ -1835,14 +1836,14 @@ window.CLASS_VOCAB = {
    "dcc_rank": 0
   },
   {
-   "headword": "macte",
+   "headword": "mactī",
    "forms": [
-    "macte"
+    "mactī"
    ],
-   "lemma": "macte",
-   "lemma_key": "macte",
+   "lemma": "mactus, macta, mactum",
+   "lemma_key": "mactus",
    "pos": "Interjection",
-   "gloss": "well done!",
+   "gloss": "well done! (to more than one person)",
    "level": "outer",
    "quiz_sets": [],
    "dcc_rank": 0

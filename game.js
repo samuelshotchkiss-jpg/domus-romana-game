@@ -128,8 +128,11 @@ const OBJECTS = {
     'sella_tablini': {
         lemma: 'sella', forms: { nom: 'sella', acc: 'sellam', abl: 'sellā' }, gender: 'f',
         rooms: ['tablinum'],
-        look: 'Haec est sella patris tuī, magna et gravis. Potes in sellā cōnsīdere.',
-        on: { 'consido': 'In sellā patris tuī cōnsīdis. Nunc tū es dominus!' }
+        look: 'Haec est sella patris tuī, magna et gravis. Potes in sellā sedēre.',
+        on: {
+            'sedeo': 'In sellā patris tuī sedēs. Nunc tū es dominus!',
+            'consido': 'In sellā patris tuī cōnsīdis. Nunc tū es dominus!'
+        }
     },
     'armarium': {
         // Shut. In Quīntus the monster's eyes are in it (ch. VII); here it will hide something.
@@ -180,8 +183,11 @@ const OBJECTS = {
     'lecti_triclinii': {
         lemma: 'lectus', forms: { nom: 'lectī', acc: 'lectōs', abl: 'lectō' }, gender: 'm',
         rooms: ['triclinium'],
-        look: 'Trēs lectī circum mēnsam sunt. In hīs lectīs Rōmānī cēnant. Potes in lectō cōnsīdere.',
-        on: { 'consido': 'In lectō cōnsīdis. Subitō lectus sē movet! … Minimē: lectus immōbilis est.' }
+        look: 'Trēs lectī circum mēnsam sunt. In hīs lectīs Rōmānī recumbunt et cēnant. Potes in lectō recumbere.',
+        on: {
+            'recumbo': 'In lectō recumbis, sīcut Rōmānus. Subitō lectus sē movet! … Minimē: lectus immōbilis est.',
+            'consido': 'In lectō cōnsīdis. Subitō lectus sē movet! … Minimē: lectus immōbilis est.'
+        }
     },
     // Culīna, Cella
     'mensa_culinae': {
@@ -212,10 +218,13 @@ const OBJECTS = {
 // The verbs of acting on things, keyed by lemma. `does`: look, open, close, or respond (the object's
 // `on` line, else `fallback`, else a refusal). A verb with `prep` takes "in" + the ablative instead
 // of an accusative object ("in lectō dormiō"), and asks "Ubi vīs …?" when used alone.
+// Be generous with synonyms: a verb with `sameAs` answers with that verb's lines, so a synonym costs
+// one entry here (and its forms in VOCAB_LEMMA). The recast keeps the verb the player chose.
 const ACTIONS = {
     'investigo': { first_person: 'investīgō', infinitive: 'investīgāre', does: 'look' },
     'inspicio': { first_person: 'īnspiciō', infinitive: 'īnspicere', does: 'look' },
     'specto': { first_person: 'spectō', infinitive: 'spectāre', does: 'look' },
+    'video': { first_person: 'videō', infinitive: 'vidēre', does: 'look' },
     'aperio': { first_person: 'aperiō', infinitive: 'aperīre', does: 'open' },
     'claudo': { first_person: 'claudō', infinitive: 'claudere', does: 'close' },
     'tango': { first_person: 'tangō', infinitive: 'tangere', does: 'respond', fallback: '{Acc} tangis.' },
@@ -224,7 +233,10 @@ const ACTIONS = {
     'saluto': { first_person: 'salūtō', infinitive: 'salūtāre', does: 'respond' },
     'bibo': { first_person: 'bibō', infinitive: 'bibere', does: 'respond' },
     'edo': { first_person: 'edō', infinitive: 'edere', does: 'respond' },
+    'comedo': { first_person: 'comedō', infinitive: 'comedere', does: 'respond', sameAs: 'edo' },
     'consido': { first_person: 'cōnsīdō', infinitive: 'cōnsīdere', does: 'respond', prep: 'in' },
+    'sedeo': { first_person: 'sedeō', infinitive: 'sedēre', does: 'respond', prep: 'in', sameAs: 'consido' },
+    'recumbo': { first_person: 'recumbō', infinitive: 'recumbere', does: 'respond', prep: 'in', sameAs: 'consido' },
     'dormio': { first_person: 'dormiō', infinitive: 'dormīre', does: 'respond', prep: 'in' },
     'caco': { first_person: 'cacō', infinitive: 'cacāre', does: 'respond', prep: 'in' }
 };
@@ -289,6 +301,7 @@ const VOCAB_LEMMA = {
     'clarus': { pos:'adj', lemma: 'clārus, -a, -um', def: 'clear, bright', level: 'outer', forms: { 'clarum':{}, 'clārum':{} } },
     'claudo': { pos:'verb', lemma: 'claudō, claudere, clausī', def: 'to close', level: 'core', forms: { 'claudit':{person:3, num:'sg', tense:'present'}, 'clausa':{def:'closed'}, 'clausum':{def:'closed'}, 'claudō':{person:1, num:'sg', tense:'present'}, 'claudere':{} } },
     'columna': { pos:'noun', lemma: 'columna, -ae, f.', def: ['column', 'pillar'], level: 'novum', forms: { 'columna':{num:'sg'}, 'columnae':{num:'pl'} } },
+    'comedo': { pos:'verb', lemma: 'comedō, comedere, comēdī', def: 'to eat (up)', level: 'novum', forms: { 'comedō':{person:1, num:'sg', tense:'present'}, 'comedere':{}, 'comedis':{person:2, num:'sg', tense:'present'} } },
     'consido': { pos:'verb', lemma: 'cōnsīdō, cōnsīdere, cōnsēdī', def: 'to sit down', level: 'core', forms: { 'cōnsīdō':{person:1, num:'sg', tense:'present'}, 'cōnsīdere':{}, 'cōnsīdis':{person:2, num:'sg', tense:'present'} } },
     'coram': { pos:'adv', lemma: 'cōram (adv.)', def: ['face to face', 'in person'], level: 'outer', forms: {'coram':{}} },
     'cubiculum': { pos:'noun', lemma: 'cubiculum, -ī, n.', def: 'bedroom', level: 'outer', forms: { 'cubiculum':{num:'sg'}, 'cubiculō':{num:'sg', case:'abl'}, 'cubiculī':{num:'sg', case:'gen'} } },
@@ -385,6 +398,7 @@ const VOCAB_LEMMA = {
     'quid': { pos:'pronoun', lemma: 'quis, quid', def: 'what?', level: 'core', forms: { 'quid':{} } },
     'quintus': { pos:'noun', lemma: 'Quīntus, -ī, m.', def: 'Quintus', level: 'outer', forms: {'quintus':{}, 'quinti':{case:'gen'}, 'quinto':{case:'abl'}} },
     'quoque': { pos:'adv', lemma: 'quoque (adv.)', def: ['also', 'too'], level: 'novum', forms: {'quoque':{}} },
+    'recumbo': { pos:'verb', lemma: 'recumbō, recumbere, recubuī', def: 'to lie down, recline (at dinner)', level: 'novum', forms: { 'recumbō':{person:1, num:'sg', tense:'present'}, 'recumbere':{}, 'recumbis':{person:2, num:'sg', tense:'present'}, 'recumbunt':{person:3, num:'pl', tense:'present'} } },
     'res': { pos:'noun', lemma: 'rēs, reī, f.', def: ['thing', 'matter', 'object'], level: 'core', forms: {'res':{}, 'rēs':{}} },
     'respondeo': { pos:'verb', lemma: 'respondeō, respondēre, respondī', def: 'to answer', level: 'novum', forms: { 'respondet':{person:3, num:'sg', tense:'present'}, 'respondent':{person:3, num:'pl', tense:'present'} } },
     'rideo': { pos:'verb', lemma: 'rīdeō, rīdēre, rīsī', def: ['to laugh', 'to smile'], level: 'core', forms: {'ridet':{person:3, num:'sg', tense:'present'}, 'rident':{person:3, num:'pl', tense:'present'}} },
@@ -397,9 +411,11 @@ const VOCAB_LEMMA = {
     'saluto': { pos:'verb', lemma: 'salūtō, salūtāre, salūtāvī', def: 'to greet', level: 'novum', forms: { 'salūtō':{person:1, num:'sg', tense:'present'}, 'salūtāre':{} } },
     'salveo': { pos:'verb', lemma: 'salveō, salvēre', def: 'to be well', level: 'core', forms: { 'salvē':{def:'hello! (to one person)'}, 'salvēte':{def:'hello! (to more than one)'} } },
     'sed': { pos:'conj', lemma: 'sed (conj.)', def: 'but', level: 'core', forms: { 'sed':{} } },
+    'sedeo': { pos:'verb', lemma: 'sedeō, sedēre, sēdī', def: 'to sit', level: 'novum', forms: { 'sedeō':{person:1, num:'sg', tense:'present'}, 'sedēre':{}, 'sedēs':{person:2, num:'sg', tense:'present'} } },
     'sella': { pos:'noun', lemma: 'sella, -ae, f.', def: 'chair', level: 'core', forms: { 'sella':{num:'sg'}, 'sellam':{num:'sg', case:'acc'}, 'sellā':{num:'sg', case:'abl'} } },
     'semper': { pos:'adv', lemma: 'semper (adv.)', def: 'always', level: 'core', forms: {'semper':{}} },
     'sentio': { pos:'verb', lemma: 'sentiō, sentīre, sēnsī', def: ['to feel', 'to sense', 'to perceive'], level: 'core', forms: {'sentit':{person:3, num:'sg', tense:'present'}, 'sentiens':{}, 'sentire':{}, 'sentīs':{person:2, num:'sg', tense:'present'} } },
+    'sicut': { pos:'adv', lemma: 'sīcut (adv.)', def: 'just as, like', level: 'core', forms: { 'sīcut':{} } },
     'significo': { pos:'verb', lemma: 'sīgnificō, -āre, -āvī', def: 'to mean, signify', level: 'novum', forms: { 'sīgnificat':{person:3, num:'sg', tense:'present'} } },
     'silentium': { pos:'noun', lemma: 'silentium, -ī, n.', def: 'silence', level: 'outer', forms: { 'silentium':{num:'sg'} } },
     'sinister': { pos:'adj', lemma: 'sinister, sinistra, sinistrum', def: 'left', level: 'outer', forms: { 'sinistram':{num:'sg', case:'acc'} } },
@@ -427,7 +443,7 @@ const VOCAB_LEMMA = {
     'varius': { pos:'adj', lemma: 'varius, -a, -um', def: 'various, different', level: 'core', forms: { 'variae':{num:'pl'}, 'varia':{num:'pl'} } },
     'verbum': { pos:'noun', lemma: 'verbum, -ī, n.', def: 'word', level: 'novum', forms: { 'verbum':{num:'sg'}, 'verba':{num:'pl'} } },
     'via': { pos:'noun', lemma: 'via, -ae, f.', def: ['road', 'way', 'street'], level: 'core', forms: { 'via':{num:'sg'}, 'viam':{num:'sg', case:'acc'} } },
-    'video': { pos:'verb', lemma: 'videō, vidēre, vīdī', def: 'to see', level: 'core', forms: {'videt':{person:3, num:'sg', tense:'present'}, 'vidistine':{person:2, num:'sg', tense:'perfect', enclitic:'ne'}, 'videre':{}, 'vident':{person:3, num:'pl', tense:'present'}, 'vidēs':{person:2, num:'sg', tense:'present'} } },
+    'video': { pos:'verb', lemma: 'videō, vidēre, vīdī', def: 'to see', level: 'core', forms: {'videt':{person:3, num:'sg', tense:'present'}, 'vidistine':{person:2, num:'sg', tense:'perfect', enclitic:'ne'}, 'videre':{}, 'vident':{person:3, num:'pl', tense:'present'}, 'vidēs':{person:2, num:'sg', tense:'present'}, 'videō':{person:1, num:'sg', tense:'present'} } },
     'vir': { pos:'noun', lemma: 'vir, virī, m.', def: 'man', level: 'core', forms: { 'vir':{num:'sg'}, 'virī':{num:'pl'}, 'virōrum':{num:'pl', case:'gen'} } },
     'volo': { pos:'verb', lemma: 'volō, velle, voluī', def: ['to want', 'to wish'], level: 'core', forms: {'vult':{person:3, num:'sg', tense:'present'}, 'voluit':{person:3, num:'sg', tense:'perfect'}, 'vīs':{person:2, num:'sg', tense:'present'} } },
 };
@@ -865,9 +881,11 @@ function actionCommand(action, words, lemmas, shortAnswer = false) {
 // Does what the player asked to an object, and says what happened.
 function performAction(actionKey, objectId) {
     const obj = OBJECTS[objectId];
-    const { does, infinitive, prep, fallback } = ACTIONS[actionKey];
+    const { does, infinitive, prep, sameAs } = ACTIONS[actionKey];
+    const fallback = ACTIONS[actionKey].fallback || (sameAs && ACTIONS[sameAs].fallback);
     if (does === 'look') return fillState(obj.look, obj);
-    if (obj.on?.[actionKey]) return fillState(obj.on[actionKey], obj);
+    const line = obj.on?.[actionKey] || (sameAs && obj.on?.[sameAs]);
+    if (line) return fillState(line, obj);
     if ((does === 'open' || does === 'close') && obj.openable) {
         const wantOpen = does === 'open';
         if (obj.openable.open === wantOpen) return `${capitalize(obj.forms.nom)} iam ${doorState(obj)} est.`;

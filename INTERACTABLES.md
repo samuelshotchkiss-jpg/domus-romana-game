@@ -53,19 +53,23 @@ lemma's standing in `class_vocab.js`: **Q** quizzed, **S** in the store, **N** n
 
 | Verb | Takes | Class | Answered by |
 |---|---|---|---|
-| investīgō, īnspiciō, spectō | acc. | S, S, N | every object (its `look`) |
+| investīgō, īnspiciō, spectō, videō | acc. | S, S, N, Q | every object (its `look`) |
 | aperiō, claudō | acc. | Q, Q | doors, armārium |
 | tangō | acc. | N | every object (default), with lines for some |
 | moveō | acc. | Q | mēnsa (triclīnium), amphorae |
 | olfaciō | acc. | N | herbae, rosae |
 | salūtō | acc. | N | Larēs, herma |
 | bibō | acc. | N | aqua |
-| edō | acc. | Q (*edam*) | pānis |
-| cōnsīdō | *in* + abl. | N (see below) | lectus, sella, lectī |
+| edō; comedō | acc. | Q (*edam*); N | pānis |
+| cōnsīdō; sedeō; recumbō | *in* + abl. | Q (*cōnsīdite*); N; N | lectus, sella, lectī (recumbō: the triclīnium's lectī; sedeō: the father's sella) |
 | dormiō | *in* + abl. | S | lectus, lectī |
 | cacō | *in* + abl. | S | lātrīna |
 
-A verb used alone asks *Quid vīs …?*, or *Ubi vīs …?* for the three verbs of place.
+A verb used alone asks *Quid vīs …?*, or *Ubi vīs …?* for the verbs of place.
+
+**Be generous with synonyms** (owner, 2026-11-05). A synonym is one `ACTIONS` entry with `sameAs`: it
+answers with its partner's lines, and the recast keeps the verb the student chose. Where a hint names
+the synonym, give it its own `on` line so the answer uses the same verb (*sedēs*, *recumbis*).
 
 ## Owed
 
@@ -76,7 +80,3 @@ A verb used alone asks *Quid vīs …?*, or *Ubi vīs …?* for the three verbs 
 - **What is in the armārium** (and the amphorae: "Quid est in amphorīs?"). Opening it shows nothing yet.
 - **Taking things.** *tollō* (the class knows *tollite manūs!*) needs an inventory first.
 - **Two objects of the same word in one room** are not yet told apart. No room has two today.
-- **cōnsīdō vs. the class's cōnsidēte.** The store has the classroom command as *cōnsidēte* (keyed to
-  a verb *cōnsideō*); the classical verb is *cōnsīdō, cōnsīdere*, command *cōnsīdite*. The game uses
-  *cōnsīdō*, so it shows as new. Owner's ruling wanted: correct the store's entry, or switch the game
-  to *sedeō* (*sedēte*).
