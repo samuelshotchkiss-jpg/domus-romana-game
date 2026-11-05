@@ -40,14 +40,14 @@ nothing missing.
 | Tablīnum | armārium | aperiō, claudō | closed; its state shows in the room description |
 | Peristȳlum | arborēs / arbor | tangō | *tangō arborem*: one tree at a time, three reactions in turn |
 | Peristȳlum | herbae | olfaciō | |
-| Peristȳlum | rosae | olfaciō | |
+| Peristȳlum | rosae / rosa | olfaciō; capiō (one) | *capiō rosam* picks one rose (the `rosa` object, nowhere until then) |
 | Peristȳlum | noctua | — (every verb: *Noctua nōn cūrat.*) | see Owed |
 | Cubiculum Tuum, Peristȳlum | iānua cubiculī | aperiō, claudō | a door |
 | Cubiculum Tuum | lectus | dormiō | your own bed |
 | Triclīnium | mēnsa | moveō | "sē nōn movet" |
 | Triclīnium | lectī | cōnsīdō | "Subitō lectus sē movet! … Minimē" |
 | Culīna | mēnsa | stō, sedeō | its look follows the bread: *In hāc mēnsā nihil est* once it is eaten |
-| Culīna | pānis | edō, comedō | **edible**: eaten, it is gone, and the kitchen's descriptions change |
+| Culīna | pānis | edō, comedō; capiō, pōnō | **edible** and **portable**: eaten or taken, it is gone from the kitchen's descriptions |
 | Culīna | lātrīna | cacō | "Deīs est grātia!" |
 | Cella | amphorae / amphora | moveō, tangō | *moveō amphoram*: one at a time; the third *sonat* |
 
@@ -76,6 +76,8 @@ lemma's standing in `class_vocab.js`: **Q** quizzed, **S** in the store, **N** n
 | stō | *in* + abl. | Q (*stāte*) | every surface; *surgō in mēnsā* is recast as **stō** in mēnsā |
 | surgō; stō (alone) | — | Q (*surgite*) | gets up from a seat or a bed |
 | dēscendō | — | N | climbs down from what the player stands on |
+| capiō; tollō; sūmō | acc. | N; Q (*tollite manūs!*); N | portable things (pānis, a rose) |
+| pōnō | acc. | N | something carried: it stays in this room |
 | cacō | *in* + abl. | S | lātrīna |
 
 A verb used alone asks *Quid vīs …?*, or *Ubi vīs …?* for the verbs of place.
@@ -87,6 +89,16 @@ something: *In mēnsā stās! Prīmum dēscende.*
 answers with its partner's lines, and the recast keeps the verb the student chose. Where a hint names
 the synonym, give it its own `on` line so the answer uses the same verb (*sedēs*, *recumbis*).
 
+## Inventory
+
+*capiō X* (or *tollō*, *sūmō*) takes something `portable`; carried things are within reach in every room,
+so *edō pānem* works anywhere. *pōnō X* puts it down here: away from where it started, the room's
+description adds *In Ātriō est etiam pānis* (the room's ablative from `ROOM_NAMES`). *Quid habeō?* (or
+*habeō* alone) lists what is carried: *Habēs rosam et pānem.* / *Nihil habēs.*; *quid habēs?* is recast
+to *habeō*. A word that could mean a carried thing or one in the room picks the one whose form was
+typed (*rosās*: the garden's; *rosam*: the one in hand). Taking something non-portable is refused
+(*Mēnsam tollere nōn potes.*), and the owl still does not care.
+
 ## Owed
 
 - **The shop door is locked**, with something important inside: a lock, a way in, and the street line
@@ -94,5 +106,4 @@ the synonym, give it its own `on` line so the answer uses the same verb (*sedēs
 - **The owl's puzzle:** get her to care, so she shares hints from her wisdom. Her name (2026-27:
   Rebecca) is data in `OBJECTS.noctua.name`, not shown yet; the class renames and redescribes her each year.
 - **What is in the armārium** (and the amphorae: "Quid est in amphorīs?"). Opening it shows nothing yet.
-- **Taking things:** an inventory (*capiō*, *Quid habeō?*). Next.
 - **Two objects of the same word in one room** are not yet told apart. No room has two today.

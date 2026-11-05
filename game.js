@@ -39,13 +39,15 @@ const INTROS = {
 // it can be reached from ('*' = everywhere); `gender` makes its state words agree.
 // Flags: `openable` gives it a state, open or closed (in two rooms it is a door, and nobody passes it
 // while it is closed); `surface` means it can be sat or stood on; `bed`, slept in; `edible`, eaten,
-// after which it is gone.
+// after which it is gone; `portable`, taken (capiō) and carried, so that it is within reach everywhere
+// until it is put down (pōnō) in another room. `takeOne` names the single object that taking one of
+// many gives (capiō rosam: a rose from the roses).
 // Text: `look` is what investīgō / īnspiciō / spectō / videō shows, ending with a hint at a verb to
 // try (`lookIn` gives a room its own look, `lookSg` the look at just one); `on` answers particular
 // verbs (`onSg` when acting on just one; a list of lines is used in turn); `refuse` answers every
 // verb with no line of its own.
 // In any text, {state:ID} is that object's state ("aperta"/"apertum"…), {has:ID|A|B} is A while the
-// object exists and B once it is gone; in an object's own text, {state} and {toggle}
+// object is where it started and B once it is gone (eaten, or taken away); in an object's own text, {state} and {toggle}
 // ("claudere"/"aperīre") mean itself.
 const OBJECTS = {
     // Everywhere
@@ -199,10 +201,18 @@ const OBJECTS = {
         on: { 'olfacio': 'Herbās olfacis. Bene olent!' }
     },
     'rosae': {
-        lemma: 'rosa', forms: { nom: 'rosae', acc: 'rosās', abl: 'rosīs' }, gender: 'f',
+        lemma: 'rosa', forms: { nom: 'rosae', acc: 'rosās', abl: 'rosīs', accSg: 'rosam', ablSg: 'rosā' }, gender: 'f',
         rooms: ['peristylum'],
-        look: 'Hae rosae pulchrae sunt, sed nocte nōn sunt rubrae: obscūrae sunt. Potes rosās olfacere.',
-        on: { 'olfacio': 'Rosās olfacis. Rosae optimē olent!' }
+        look: 'Hae rosae pulchrae sunt, sed nocte nōn sunt rubrae: obscūrae sunt. Potes rosās olfacere, aut rosam capere.',
+        on: { 'olfacio': 'Rosās olfacis. Rosae optimē olent!' },
+        // capiō rosam picks one: the rose below, which is nowhere until then.
+        takeOne: 'rosa'
+    },
+    'rosa': {
+        lemma: 'rosa', forms: { nom: 'rosa', acc: 'rosam', abl: 'rosā' }, gender: 'f',
+        rooms: [], portable: true,
+        look: 'Haec rosa pulchra est, et optimē olet. Potes rosam olfacere.',
+        on: { 'olfacio': 'Rosam olfacis. Optimē olet!' }
     },
     'noctua': {
         // The owl of the class slides. The class names her, and describes her, afresh each year:
@@ -250,9 +260,9 @@ const OBJECTS = {
         // Edible, to exercise the machinery: eaten, it is gone. The finished game may need the bread
         // for something, and then loses `edible` (its `on` line for edō then says why not).
         lemma: 'panis', forms: { nom: 'pānis', acc: 'pānem', abl: 'pāne' }, gender: 'm',
-        rooms: ['culina'], edible: true,
-        look: 'Hic pānis bonus est, sed nōn novus. Potes pānem edere.',
-        on: { 'edo': 'Pānem edis. Pānis optimus erat! Iam in mēnsā nōn est pānis.' }
+        rooms: ['culina'], edible: true, portable: true,
+        look: 'Hic pānis bonus est, sed nōn novus. Potes pānem capere aut edere.',
+        on: { 'edo': 'Pānem edis. Pānis optimus erat! Iam nūllus pānis est.' }
     },
     'latrina': {
         lemma: 'latrina', forms: { nom: 'lātrīna', acc: 'lātrīnam', abl: 'lātrīnā' }, gender: 'f',
@@ -278,7 +288,9 @@ const OBJECTS = {
 };
 
 // The verbs of acting on things, keyed by lemma. `does`: look, open, close, respond (the object's `on`
-// line, else `fallback`, else a refusal), or rise (stand up: surgō, or stō with no object).
+// line, else `fallback`, else a refusal), rise (stand up: surgō, or stō with no object), take (into
+// the inventory: only something `portable`), or drop (out of it, here). `you` is the verb's second
+// person, for saying what the player did ("Pānem tollis.").
 // A verb with `prep` takes "in" + the ablative instead of an accusative ("in lectō dormiō") and asks
 // "Ubi vīs …?" when used alone. `requires` names the object flag the action needs (surface, bed);
 // `posture` is where the action leaves the player (sitting, lying, or standing on something), and
@@ -307,7 +319,11 @@ const ACTIONS = {
     'sto': { first_person: 'stō', infinitive: 'stāre', does: 'respond', prep: 'in', requires: 'surface', posture: 'stand', fallback: 'In {abl} stās!' },
     'surgo': { first_person: 'surgō', infinitive: 'surgere', does: 'rise', prep: 'in', withObject: 'sto' },
     'descendo': { first_person: 'dēscendō', infinitive: 'dēscendere', does: 'rise' },
-    'caco': { first_person: 'cacō', infinitive: 'cacāre', does: 'respond', prep: 'in' }
+    'caco': { first_person: 'cacō', infinitive: 'cacāre', does: 'respond', prep: 'in' },
+    'capio': { first_person: 'capiō', infinitive: 'capere', does: 'take', you: 'capis' },
+    'tollo': { first_person: 'tollō', infinitive: 'tollere', does: 'take', you: 'tollis' },
+    'sumo': { first_person: 'sūmō', infinitive: 'sūmere', does: 'take', you: 'sūmis' },
+    'pono': { first_person: 'pōnō', infinitive: 'pōnere', does: 'drop', you: 'pōnis' }
 };
 
 // The movement verbs, recognised by lemma. `stem` forgives forms the vocabulary does not list.
@@ -360,6 +376,7 @@ const VOCAB_LEMMA = {
     'atrium': { pos:'noun', lemma: 'ātrium, -ī, n.', def: ['atrium', 'main hall'], level: 'outer', forms: { 'atrium':{num:'sg'}, 'ātrium':{num:'sg'}, 'ātriō':{num:'sg', case:'abl'} } },
     'attat': { pos:'interjection', lemma: 'attat!', def: 'aha!', level: 'outer', forms: {'attat':{}} },
     'audio': { pos:'verb', lemma: 'audiō, audīre, audīvī', def: ['to hear', 'to listen'], level: 'core', forms: { 'audīs':{person:2, num:'sg', tense:'present'}, 'audit':{person:3, num:'sg', tense:'present'} } },
+    'aut': { pos:'conj', lemma: 'aut (conj.)', def: 'or', level: 'novum', forms: { 'aut':{} } },
     'avis': { pos:'noun', lemma: 'avis, avis, f.', def: 'bird', level: 'core', forms: { 'avis':{num:'sg'} } },
     'avus': { pos:'noun', lemma: 'avus, -ī, m.', def: 'grandfather', level: 'novum', forms: { 'avus': {num:'sg'}, 'avī': {num:'sg', case:'gen'} } },
     'bene': { pos:'adv', lemma: 'bene (adv.)', def: 'well', level: 'novum', forms: { 'bene':{} } },
@@ -368,6 +385,7 @@ const VOCAB_LEMMA = {
     'caco': { pos:'verb', lemma: 'cacō, cacāre, cacāvī', def: 'to poop', level: 'outer', forms: { 'cacō':{person:1, num:'sg', tense:'present'}, 'cacāre':{}, 'cacās':{person:2, num:'sg', tense:'present'}, 'cacat':{person:3, num:'sg', tense:'present'} } },
     'cado': { pos:'verb', lemma: 'cadō, cadere, cecidī', def: 'to fall', level: 'novum', forms: { 'cadit':{person:3, num:'sg', tense:'present'} } },
     'caelum': { pos:'noun', lemma: 'caelum, -ī, n.', def: 'sky', level: 'outer', forms: { 'caelum':{num:'sg'}, 'caelō':{num:'sg', case:'abl'} } },
+    'capio': { pos:'verb', lemma: 'capiō, capere, cēpī', def: ['to take', 'to pick up'], level: 'novum', forms: { 'capiō':{person:1, num:'sg', tense:'present'}, 'capere':{}, 'capis':{person:2, num:'sg', tense:'present'} } },
     'cautus': { pos:'adj', lemma: 'cautus, -a, -um', def: 'careful', level: 'outer', forms: { 'cautus':{} } },
     'cella': { pos:'noun', lemma: 'cella, -ae, f.', def: 'storeroom', level: 'outer', forms: { 'cella':{num:'sg'}, 'cellā':{num:'sg', case:'abl'}, 'cellam':{num:'sg', case:'acc'} } },
     'ceno': { pos:'verb', lemma: 'cēnō, cēnāre, cēnāvī', def: 'to dine, eat dinner', level: 'novum', forms: { 'cēnant':{person:3, num:'pl', tense:'present'} } },
@@ -450,6 +468,7 @@ const VOCAB_LEMMA = {
     'non': { pos:'adv', lemma: 'nōn (adv.)', def: 'not', level: 'core', forms: { 'nōn':{} } },
     'novus': { pos:'adj', lemma: 'novus, -a, -um', def: ['new', 'fresh'], level: 'novum', forms: { 'novus':{} } },
     'nox': { pos:'noun', lemma: 'nox, noctis, f.', def: 'night', level: 'core', forms: {'nox':{num:'sg'}, 'noctem':{num:'sg', case:'acc'}, 'nocte':{num:'sg', case:'abl'}} },
+    'nullus': { pos:'adj', lemma: 'nūllus, -a, -um', def: ['no', 'none'], level: 'novum', forms: { 'nūllus':{} } },
     'nunc': { pos:'adv', lemma: 'nunc (adv.)', def: 'now', level: 'outer', forms: { 'nunc':{} } },
     'obscurus': { pos:'adj', lemma: 'obscūrus, -a, -um', def: 'dark', level: 'outer', forms: { 'obscūra':{}, 'obscūrae':{num:'pl'}, 'obscūrum':{}, 'obscūrissima':{def:'very dark'}, 'obscūrī':{num:'pl'} } },
     'oculus': { pos:'noun', lemma: 'oculus, -ī, m.', def: 'eye', level: 'core', forms: {'oculi':{num:'pl'}, 'oculis':{num:'pl', case:'abl'}, 'oculos':{num:'pl', case:'acc'}} },
@@ -466,6 +485,7 @@ const VOCAB_LEMMA = {
     'phantasma': { pos:'noun', lemma: 'phantasma, -atis, n.', def: ['ghost', 'apparition'], level: 'outer', forms: {'phantasma':{}, 'phantasmate':{case:'abl'}, 'phantasmatis':{case:'gen'}, 'phantasmata':{}, 'phantasmatum':{case:'gen', num:'pl'}} },
     'pictura': { pos:'noun', lemma: 'pictūra, -ae, f.', def: ['picture', 'painting'], level: 'outer', forms: { 'pictūra':{num:'sg'}, 'pictūrae':{num:'pl'}, 'pictūrīs':{num:'pl', case:'abl'}, 'pictūrās':{num:'pl', case:'acc'} } },
     'plenus': { pos:'adj', lemma: 'plēnus, -a, -um', def: 'full', level: 'novum', forms: { 'plēna':{} } },
+    'pono': { pos:'verb', lemma: 'pōnō, pōnere, posuī', def: ['to put', 'to put down'], level: 'novum', forms: { 'pōnō':{person:1, num:'sg', tense:'present'}, 'pōnere':{}, 'pōnis':{person:2, num:'sg', tense:'present'} } },
     'possum': { pos:'verb', lemma: 'possum, posse, potuī', def: 'to be able, can', level: 'core', forms: { 'possum':{person:1, num:'sg', tense:'present'}, 'potes':{person:2, num:'sg', tense:'present'} } },
     'primum': { pos:'adv', lemma: 'prīmum (adv.)', def: 'first', level: 'novum', forms: { 'prīmum':{} } },
     'prope': { pos:'adv', lemma: 'prope (adv.)', def: 'near, nearby', level: 'core', forms: { 'prope':{} } },
@@ -484,7 +504,7 @@ const VOCAB_LEMMA = {
     'respondeo': { pos:'verb', lemma: 'respondeō, respondēre, respondī', def: 'to answer', level: 'novum', forms: { 'respondet':{person:3, num:'sg', tense:'present'}, 'respondent':{person:3, num:'pl', tense:'present'} } },
     'rideo': { pos:'verb', lemma: 'rīdeō, rīdēre, rīsī', def: ['to laugh', 'to smile'], level: 'core', forms: {'ridet':{person:3, num:'sg', tense:'present'}, 'rident':{person:3, num:'pl', tense:'present'}} },
     'romanus': { pos:'adj', lemma: 'Rōmānus, -a, -um', def: 'Roman', level: 'outer', forms: {'romanus':{}, 'romani':{num:'pl'}, 'romae':{case:'loc'}} },
-    'rosa': { pos:'noun', lemma: 'rosa, -ae, f.', def: 'rose', level: 'core', forms: { 'rosa':{num:'sg'}, 'rosae':{num:'pl'}, 'rosās':{num:'pl', case:'acc'}, 'rosīs':{num:'pl', case:'abl'} } },
+    'rosa': { pos:'noun', lemma: 'rosa, -ae, f.', def: 'rose', level: 'core', forms: { 'rosa':{num:'sg'}, 'rosae':{num:'pl'}, 'rosās':{num:'pl', case:'acc'}, 'rosīs':{num:'pl', case:'abl'}, 'rosam':{num:'sg', case:'acc'}, 'rosā':{num:'sg', case:'abl'} } },
     'ruber': { pos:'adj', lemma: 'ruber, rubra, rubrum', def: 'red', level: 'novum', forms: {'ruber':{}, 'rubra':{}, 'rubrum':{}, 'rubri':{num:'pl'}, 'rubrī':{num:'pl'}, 'rubrae':{num:'pl'} } },
     'rursus': { pos:'adv', lemma: 'rūrsus (adv.)', def: 'backwards, again', level: 'outer', forms: { 'rūrsus':{} } },
     'saepe': { pos:'adv', lemma: 'saepe (adv.)', def: 'often', level: 'core', forms: {'saepe':{}} },
@@ -509,10 +529,12 @@ const VOCAB_LEMMA = {
     'subito': { pos:'adv', lemma: 'subitō (adv.)', def: 'suddenly', level: 'core', forms: {'subito':{}} },
     'sui': { pos:'pronoun', lemma: 'sui, sibi, se, se', def: 'himself/herself/itself/themselves', level: 'core', forms: { 'sibi':{case:'dat', def:'for himself/herself/itself/themselves'}, 'sē':{def:'himself, herself, itself, themselves'} } },
     'sum': { pos:'verb', lemma: 'sum, esse, fuī', def: 'to be', level: 'core', forms: { 'sum':{person:1, num:'sg', tense:'present', def:'I am'}, 'esse':{}, 'fuit':{person:3, num:'sg', tense:'perfect', def:'was'}, 'fui':{person:1, num:'sg', tense:'perfect', def:'I was'}, 'fuisse':{}, 'es':{person:2, num:'sg', tense:'present', def:'you are'}, 'est':{person:3, num:'sg', tense:'present'}, 'estne':{person:3, num:'sg', tense:'present', enclitic:'ne'}, 'sunt':{person:3, num:'pl', tense:'present'}, 'eram':{person:1, num:'sg', tense:'imperfect', def:'I was'}, 'erat':{person:3, num:'sg', tense:'imperfect'}, 'erant':{person:3, num:'pl', tense:'imperfect'}, 'eramus':{person:1, num:'pl', tense:'imperfect'}, 'erantne':{person:3, num:'pl', tense:'imperfect', enclitic:'ne'}, 'sitne':{person:3, num:'sg', tense:'present', mood:'subjunctive', enclitic:'ne'}, 'sintne':{person:3, num:'pl', tense:'present', mood:'subjunctive', enclitic:'ne'} } },
+    'sumo': { pos:'verb', lemma: 'sūmō, sūmere, sūmpsī', def: ['to take', 'to pick up'], level: 'novum', forms: { 'sūmō':{person:1, num:'sg', tense:'present'}, 'sūmere':{}, 'sūmis':{person:2, num:'sg', tense:'present'} } },
     'surgo': { pos:'verb', lemma: 'surgō, surgere, surrēxī', def: ['to get up', 'to rise'], level: 'core', forms: {'surgit':{person:3, num:'sg', tense:'present'}, 'surgunt':{person:3, num:'pl', tense:'present'}, 'surrecta':{}, 'surrecti':{}, 'surrectis':{}, 'surgō':{person:1, num:'sg', tense:'present'}, 'surgere':{}, 'surgis':{person:2, num:'sg', tense:'present'}, 'surge':{def:'get up!'} } },
     'taberna': { pos:'noun', lemma: 'taberna, -ae, f.', def: ['shop', 'inn'], level: 'core', forms: { 'taberna':{num:'sg'}, 'tabernae':{num:'sg', case:'gen'}, 'tabernā':{num:'sg', case:'abl'}, 'tabernam':{num:'sg', case:'acc'} } },
     'tablinum': { pos:'noun', lemma: 'tablīnum, -ī, n.', def: ['study', 'office'], level: 'core', forms: { 'tablinum':{num:'sg'}, 'tablīnum':{num:'sg'}, 'tablinō':{num:'sg', case:'abl'} } },
     'tango': { pos:'verb', lemma: 'tangō, tangere, tetigī', def: 'to touch', level: 'novum', forms: { 'tangō':{person:1, num:'sg', tense:'present'}, 'tangere':{}, 'tangis':{person:2, num:'sg', tense:'present'} } },
+    'tollo': { pos:'verb', lemma: 'tollō, tollere, sustulī', def: ['to lift', 'to pick up', 'to raise'], level: 'core', forms: { 'tollō':{person:1, num:'sg', tense:'present'}, 'tollere':{}, 'tollis':{person:2, num:'sg', tense:'present'} } },
     'tranquillus': { pos:'adj', lemma: 'tranquillus, -a, -um', def: 'calm, quiet', level: 'outer', forms: { 'tranquilla':{}, 'tranquillum':{}, 'tranquillus':{} } },
     'tres': { pos:'adj', lemma: 'trēs, tria', def: 'three', level: 'outer', forms: {'tres':{}} },
     'triclinium': { pos:'noun', lemma: 'trīclīnium, -ī, n.', def: 'dining room', level: 'outer', forms: {'triclinium':{num:'sg'}, 'triclīniō':{num:'sg', case:'abl'}} },
@@ -671,16 +693,36 @@ const doorToggle = (obj) => (obj.openable.open ? 'claudere' : 'aperīre');
 // The question asked of a verb used alone: "Quid vīs claudere?", or "Ubi vīs dormīre?" for a verb of place.
 const askFor = (actionKey) => `${ACTIONS[actionKey].prep ? 'Ubi' : 'Quid'} vīs ${ACTIONS[actionKey].infinitive}?`;
 
+// Where each object starts, so a description can tell whether it is still there.
+for (const obj of Object.values(OBJECTS)) obj.home = obj.rooms;
+const atHome = (obj) => !obj.gone && !obj.carried && obj.rooms === obj.home;
+
 // Fills {has:ID|A|B}, {state:ID}, {state} and {toggle} in a text from the objects' current state.
 function fillState(text, obj = null) {
-    return text.replace(/\{has:(\w+)\|([^|}]*)\|([^}]*)\}/g, (m, id, present, gone) => (OBJECTS[id].gone ? gone : present))
+    return text.replace(/\{has:(\w+)\|([^|}]*)\|([^}]*)\}/g, (m, id, present, gone) => (atHome(OBJECTS[id]) ? present : gone))
                .replace(/\{state(?::(\w+))?\}/g, (m, id) => doorState(id ? OBJECTS[id] : obj))
                .replace(/\{toggle\}/g, () => doorToggle(obj));
 }
 
-// The objects within reach of the room the player is in, as [id, object] pairs. An eaten object is gone.
-const objectsHere = () => Object.entries(OBJECTS).filter(([, obj]) =>
-    !obj.gone && (obj.rooms === '*' || obj.rooms.includes(gameState.currentRoom)));
+// The objects within reach of the room the player is in, as [id, object] pairs: what is in the room,
+// and what the player carries (first, so "rosam" means the rose in hand). An eaten object is gone.
+const objectsHere = () => Object.entries(OBJECTS)
+    .filter(([, obj]) => !obj.gone && (obj.carried || obj.rooms === '*' || obj.rooms.includes(gameState.currentRoom)))
+    .sort(([, a], [, b]) => Boolean(b.carried) - Boolean(a.carried));
+
+// What the player carries, as an answer to "Quid habeō?": "Habēs pānem et rosam."
+function inventoryText() {
+    const carried = Object.values(OBJECTS).filter(obj => obj.carried && !obj.gone).map(obj => obj.forms.acc);
+    if (carried.length === 0) return 'Nihil habēs.';
+    const list = carried.length === 1 ? carried[0] : `${carried.slice(0, -1).join(', ')} et ${carried[carried.length - 1]}`;
+    return `Habēs ${list}.`;
+}
+
+// Is the command asking what the player carries? "Quid habeō?", or "habeō" alone; "quid habēs?" too.
+function isInventoryQuery(words) {
+    const habeo = words.find(w => getLemmaDataFromWord(w)?.lemmaKey === 'habeo');
+    return Boolean(habeo) && (words.length === 1 || (words.length === 2 && words.includes('quid')));
+}
 
 // Why the player cannot walk away yet: they are sitting, lying, or standing on something.
 function postureBlocks() {
@@ -785,6 +827,9 @@ async function processInput(command) {
             askClarification(action.prompt, action.options);
         } else if (action.type === 'define') {
             setFeedback(defineWord(action.word));
+        } else if (action.type === 'inventory') {
+            logCommand(action.recast, action.wasCorrected, true);
+            logObject(inventoryText());
         } else if (action.type === 'ask') {
             logCommand(action.recast, action.wasCorrected, true);
             // A looking verb alone shows the room first, so the student can see what there is to look at.
@@ -908,6 +953,14 @@ function getLemmaDataFromWord(word) {
 }
 
 function parseCommand(command) {
+    // "Quid habeō?" before the definition query, which would take any "quid" as "quid significat".
+    const inventoryWords = toWords(command);
+    if (isInventoryQuery(inventoryWords)) {
+        const habeo = recastWord('habeō', inventoryWords);
+        const quid = inventoryWords.includes('quid');
+        return { type: 'inventory', recast: quid ? `Quid ${habeo.html}?` : habeo.html, wasCorrected: habeo.corrected };
+    }
+
     const definitionQuery = parseDefinitionQuery(command);
     if (definitionQuery) {
         return { type: 'define', word: definitionQuery };
@@ -953,7 +1006,11 @@ function parseCommand(command) {
 // just "iānuam" (shortAnswer: the recast is the noun alone, and null means it was not an answer).
 function actionCommand(action, words, lemmas, shortAnswer = false) {
     const feedback = (text) => ({ type: 'feedback', feedback: text });
-    const here = objectsHere().find(([, obj]) => lemmas.includes(obj.lemma));
+    // Of the objects the player's word could mean, the one whose form they typed ("rosās": the roses
+    // in the garden, not the rose in hand); otherwise the first, carried things first.
+    const candidates = objectsHere().filter(([, obj]) => lemmas.includes(obj.lemma));
+    const typed = (obj) => Object.values(obj.forms).some(form => words.includes(removeDiacritics(form.toLowerCase())));
+    const here = candidates.find(([, obj]) => typed(obj)) || candidates[0];
 
     // "surgō in mēnsā" means "stō in mēnsā": with an object the verb becomes another, recast whole,
     // since it is a different word, not a wrong ending.
@@ -1024,6 +1081,21 @@ function performAction(actionKey, objectId, number = 'all') {
     const abl = (number === 'sg' && obj.forms.ablSg) || obj.forms.abl;
     if (does === 'look') {
         return fillState((number === 'sg' && obj.lookSg) || obj.lookIn?.[gameState.currentRoom] || obj.look, obj);
+    }
+
+    // Taking into the inventory, and putting down here. Taking one of many gives its `takeOne` object.
+    if (does === 'take') {
+        const target = number === 'sg' && obj.takeOne ? OBJECTS[obj.takeOne] : obj;
+        if (target.carried) return `Iam ${target.forms.acc} habēs.`;
+        if (!target.portable) return obj.refuse || `${capitalize(obj.forms.acc)} ${infinitive} nōn potes.`;
+        target.carried = true;
+        return `${capitalize(target.forms.acc)} ${action.you}. Nunc ${target.forms.acc} habēs.`;
+    }
+    if (does === 'drop') {
+        if (!obj.carried) return `${capitalize(obj.forms.acc)} nōn habēs.`;
+        obj.carried = false;
+        obj.rooms = obj.home.includes(gameState.currentRoom) ? obj.home : [gameState.currentRoom];
+        return `${capitalize(obj.forms.acc)} ${action.you}.`;
     }
 
     // A list of lines is used in turn, one per try: each tree reacts in its own way.
@@ -1401,9 +1473,18 @@ function logCommand(commandHtml, wasCorrected, replaceLast = false) {
 // A room's description, with the opening its INTROS group gives it for where the player came from.
 function roomDescription(roomId) {
     const room = rooms[roomId];
-    if (!room.intro) return fillState(room.desc);
-    const cameFromGroup = gameState.previousRoom && rooms[gameState.previousRoom].intro === room.intro;
-    return fillState(`${INTROS[room.intro][cameFromGroup ? 'later' : 'first']} ${room.desc}`);
+    let text = room.desc;
+    if (room.intro) {
+        const cameFromGroup = gameState.previousRoom && rooms[gameState.previousRoom].intro === room.intro;
+        text = `${INTROS[room.intro][cameFromGroup ? 'later' : 'first']} ${text}`;
+    }
+    // Something the player put down away from where it started: "In Ātriō est etiam pānis."
+    for (const obj of Object.values(OBJECTS)) {
+        if (!obj.gone && !obj.carried && obj.rooms !== obj.home && obj.rooms.includes(roomId)) {
+            text += ` In ${ROOM_NAMES[roomId].abl} est etiam ${obj.forms.nom}.`;
+        }
+    }
+    return fillState(text);
 }
 
 // Logs what an action on an object shows or does, in the style of a room description.
