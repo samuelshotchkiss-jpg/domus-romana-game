@@ -7,7 +7,9 @@ same commit**, or is cut. An object still to build goes under **Owed**.
 
 How it works (`game.js`): `OBJECTS` holds each object's forms, the rooms it is reached from, its
 gender, an optional open/closed state (`openable`; in two rooms it is a door and blocks the way while
-closed), its `look` text, and `on` lines answering particular verbs. `ACTIONS` holds the verbs. A verb
+closed), the flags `surface` (can be sat or stood on), `bed` and `edible` (eaten, it is gone), its `look`
+text, and `on` lines answering particular verbs; `accSg`/`ablSg` with `onSg`/`lookSg` let the player act on
+just one of many (*tangō arborem*), and a list of lines is used in turn. `ACTIONS` holds the verbs. A verb
 with no `on` line for an object falls back to a default (*Mēnsam tangis.*) or a refusal
 (*In impluviō dormīre nōn potes.*). Adding an object is one `OBJECTS` entry plus its forms in
 `VOCAB_LEMMA`; the game's sweep (every text an object can produce, looked up word by word) must find
@@ -19,9 +21,11 @@ nothing missing.
 |---|---|---|---|
 | Via (east), Faucēs | iānua domūs | aperiō, claudō | a door |
 | Via (west), Taberna | iānua tabernae | aperiō, claudō | a door; see Owed |
+| everywhere | ego (*mē*) | tangō | *videō mē*: in the ātrium, your reflection (*cūriōsus sed cautus*) |
 | Faucēs | pictūrae | tangō | a portrait stops smiling |
+| Faucēs | oculī (virōrum) | tangō | *nōn virī reālēs* |
 | Taberna | mēnsa | tangō | the wares (*multa et varia*) are on it |
-| Ātrium | impluvium | — | its hint points to *aqua* |
+| Ātrium | impluvium | sedeō/cōnsīdō, stō | a surface: *et nunc ūmidus es!* |
 | Ātrium | aqua | bibō | reached through the impluvium's description |
 | Cubiculum Sorōris | lectus | dormiō, cōnsīdō | |
 | Cubiculum Sorōris | sella | cōnsīdō | |
@@ -29,22 +33,28 @@ nothing missing.
 | Āla Lārum | larārium | — | its hint points to the Larēs |
 | Āla Lārum | Larēs | salūtō | "Larēs domum tuam cūrant" |
 | Āla Hermae | herma | salūtō | |
-| Tablīnum | mēnsa | tangō (default) | its hint points to the sella |
+| Āla Hermae | oculī (hermae) | tangō | *nōn sunt reālēs* |
+| Āla Lārum | larārium | stō, cōnsīdō | *Minimē!* (not a surface) |
+| Tablīnum | mēnsa | stō | *Nunc magnus es.* |
 | Tablīnum | sella | cōnsīdō | "Nunc tū es dominus!" |
 | Tablīnum | armārium | aperiō, claudō | closed; its state shows in the room description |
-| Peristȳlum | arborēs | tangō | |
+| Peristȳlum | arborēs / arbor | tangō | *tangō arborem*: one tree at a time, three reactions in turn |
 | Peristȳlum | herbae | olfaciō | |
 | Peristȳlum | rosae | olfaciō | |
 | Peristȳlum | noctua | — (every verb: *Noctua nōn cūrat.*) | see Owed |
 | Cubiculum Tuum, Peristȳlum | iānua cubiculī | aperiō, claudō | a door |
+| Cubiculum Tuum | lectus | dormiō | your own bed |
 | Triclīnium | mēnsa | moveō | "sē nōn movet" |
 | Triclīnium | lectī | cōnsīdō | "Subitō lectus sē movet! … Minimē" |
-| Culīna | mēnsa | tangō (default) | its hint points to the pānis |
-| Culīna | pānis | edō | |
+| Culīna | mēnsa | stō, sedeō | its look follows the bread: *In hāc mēnsā nihil est* once it is eaten |
+| Culīna | pānis | edō, comedō | **edible**: eaten, it is gone, and the kitchen's descriptions change |
 | Culīna | lātrīna | cacō | "Deīs est grātia!" |
-| Cella | amphorae | moveō | "Quid est in amphorīs?" |
+| Cella | amphorae / amphora | moveō, tangō | *moveō amphoram*: one at a time; the third *sonat* |
 
-`tangō` answers every object (the default line); `investīgō / īnspiciō / spectō` look at every object.
+`tangō` answers every object (the default line); `investīgō / īnspiciō / spectō / videō` look at every
+object. **Every surface** (each mēnsa, sella, lectus, and the impluvium) can be sat on (*cōnsīdō, sedeō,
+recumbō*) or stood on (*stō*); beds can be slept in (*dormiō*). A looking verb alone shows the room,
+then asks *Quid vīs investīgāre?*
 
 ## Verbs
 
@@ -62,10 +72,16 @@ lemma's standing in `class_vocab.js`: **Q** quizzed, **S** in the store, **N** n
 | bibō | acc. | N | aqua |
 | edō; comedō | acc. | Q (*edam*); N | pānis |
 | cōnsīdō; sedeō; recumbō | *in* + abl. | Q (*cōnsīdite*); N; N | lectus, sella, lectī (recumbō: the triclīnium's lectī; sedeō: the father's sella) |
-| dormiō | *in* + abl. | S | lectus, lectī |
+| dormiō | *in* + abl. | S | beds: every lectus |
+| stō | *in* + abl. | Q (*stāte*) | every surface; *surgō in mēnsā* is recast as **stō** in mēnsā |
+| surgō; stō (alone) | — | Q (*surgite*) | gets up from a seat or a bed |
+| dēscendō | — | N | climbs down from what the player stands on |
 | cacō | *in* + abl. | S | lātrīna |
 
 A verb used alone asks *Quid vīs …?*, or *Ubi vīs …?* for the verbs of place.
+
+**Posture.** Sitting or lying, the player cannot walk away: *In sellā sedēs! Prīmum surge.* Standing on
+something: *In mēnsā stās! Prīmum dēscende.*
 
 **Be generous with synonyms** (owner, 2026-11-05). A synonym is one `ACTIONS` entry with `sameAs`: it
 answers with its partner's lines, and the recast keeps the verb the student chose. Where a hint names
@@ -78,5 +94,5 @@ the synonym, give it its own `on` line so the answer uses the same verb (*sedēs
 - **The owl's puzzle:** get her to care, so she shares hints from her wisdom. Her name (2026-27:
   Rebecca) is data in `OBJECTS.noctua.name`, not shown yet; the class renames and redescribes her each year.
 - **What is in the armārium** (and the amphorae: "Quid est in amphorīs?"). Opening it shows nothing yet.
-- **Taking things.** *tollō* (the class knows *tollite manūs!*) needs an inventory first.
+- **Taking things:** an inventory (*capiō*, *Quid habeō?*). Next.
 - **Two objects of the same word in one room** are not yet told apart. No room has two today.
